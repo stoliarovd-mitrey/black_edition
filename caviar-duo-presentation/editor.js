@@ -80,9 +80,12 @@ async function jpegBytes(canvas,quality){
 function addPDFLinks(pdf,page,i){const {PDFName,PDFString}=PDFLib;const annotations=[];for(const link of adjustedLinks(i)){const [x,y,w,h]=link.rect;annotations.push(pdf.context.register(pdf.context.obj({Type:'Annot',Subtype:'Link',Rect:[x,deck.height-y-h,x+w,deck.height-y],Border:[0,0,0],A:{Type:'Action',S:'URI',URI:PDFString.of(link.url)}})));}if(annotations.length)page.node.set(PDFName.of('Annots'),pdf.context.obj(annotations));}
 async function buildPDF(base,plan,attempt){
  const pdf=await PDFLib.PDFDocument.create();pdf.setTitle('Новое поколение Caviar');pdf.setAuthor('Caviar');
+ const keptIndices=[];if(plan.copyOriginal)deck.slides.forEach((s,i)=>{if(!changed(s,i))keptIndices.push(i);});
+ const keptPages=keptIndices.length?await pdf.copyPages(base,keptIndices):[];
+ const copies=new Map(keptIndices.map((i,j)=>[i,keptPages[j]]));
  for(let i=0;i<deck.slides.length;i++){
   status(`${attempt===0?'Готовим PDF':'Сжимаем PDF до 3 МБ'}: слайд ${i+1} из ${deck.slides.length}`);
-  if(plan.copyOriginal&&!changed(deck.slides[i],i)){const [page]=await pdf.copyPages(base,[i]);pdf.addPage(page);}
+  if(copies.has(i)){pdf.addPage(copies.get(i));}
   else{const canvas=document.createElement('canvas');await render(i,canvas,false,plan.scale);const bytes=await jpegBytes(canvas,plan.quality);const image=await pdf.embedJpg(bytes),page=pdf.addPage([deck.width,deck.height]);page.drawImage(image,{x:0,y:0,width:deck.width,height:deck.height});addPDFLinks(pdf,page,i);canvas.width=0;canvas.height=0;}
  }
  return pdf.save({useObjectStreams:true});
