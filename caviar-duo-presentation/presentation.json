@@ -1,0 +1,824 @@
+{
+  "version": 1,
+  "width": 1080,
+  "height": 1620,
+  "slides": [
+    {
+      "name": "Новое поколение",
+      "fields": [
+        {
+          "label": "Подпись",
+          "text": "IPHONE 18 PRO / PRO MAX / DUO ОТ CAVIAR",
+          "rect": [
+            78,
+            687,
+            880,
+            45
+          ],
+          "size": 27,
+          "weight": 700,
+          "color": "#a99569",
+          "lineHeight": 32,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Заголовок",
+          "text": "НОВОЕ ПОКОЛЕНИЕ",
+          "rect": [
+            76,
+            739,
+            930,
+            100
+          ],
+          "size": 92,
+          "weight": 700,
+          "color": "#ffffff",
+          "lineHeight": 110,
+          "underline": false,
+          "spacing": -2
+        }
+      ],
+      "image": "assets/page-1.jpg",
+      "clean": "assets/clean-1.png",
+      "links": []
+    },
+    {
+      "name": "Black Edition",
+      "fields": [
+        {
+          "label": "Заголовок",
+          "text": "BLACK EDITION",
+          "rect": [
+            76,
+            88,
+            960,
+            100
+          ],
+          "size": 104,
+          "weight": 800,
+          "color": "#0e1117",
+          "lineHeight": 125,
+          "underline": false,
+          "spacing": -2.5
+        },
+        {
+          "label": "Описание",
+          "text": "Черный - цвет, который подходит всегда.\nОт натуральной кожи и золотых деталей до монолитных\nмоделей без основных камер.",
+          "rect": [
+            79,
+            224,
+            900,
+            106
+          ],
+          "size": 28,
+          "weight": 700,
+          "color": "#a99569",
+          "lineHeight": 33,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Текст кнопки",
+          "text": "ПОСМОТРЕТЬ НА САЙТЕ ↗",
+          "rect": [
+            128,
+            1440,
+            330,
+            46
+          ],
+          "size": 23,
+          "weight": 700,
+          "color": "#ffffff",
+          "lineHeight": 28,
+          "underline": false,
+          "spacing": 0
+        }
+      ],
+      "image": "assets/page-2.jpg",
+      "clean": "assets/clean-2.png",
+      "links": [
+        {
+          "rect": [
+            70.71700286865234,
+            1394.9859619140625,
+            437.1449966430664,
+            126.425048828125
+          ],
+          "url": "https://caviar-phones.ru/collections/black-edition/"
+        }
+      ]
+    },
+    {
+      "name": "Apple 50",
+      "fields": [
+        {
+          "label": "Заголовок",
+          "text": "APPLE 50",
+          "rect": [
+            76,
+            88,
+            960,
+            100
+          ],
+          "size": 104,
+          "weight": 800,
+          "color": "#0e1117",
+          "lineHeight": 125,
+          "underline": false,
+          "spacing": -2.5
+        },
+        {
+          "label": "Описание",
+          "text": "Обновление юбилейной коллекции, где цвет,\nметалл и фактура раскрывают новый\niPhone 18 Pro и Pro Max.",
+          "rect": [
+            79,
+            224,
+            900,
+            106
+          ],
+          "size": 28,
+          "weight": 700,
+          "color": "#a99569",
+          "lineHeight": 33,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Текст кнопки",
+          "text": "ПОСМОТРЕТЬ НА САЙТЕ ↗",
+          "rect": [
+            128,
+            1440,
+            330,
+            46
+          ],
+          "size": 23,
+          "weight": 700,
+          "color": "#ffffff",
+          "lineHeight": 28,
+          "underline": false,
+          "spacing": 0
+        }
+      ],
+      "image": "assets/page-3.jpg",
+      "clean": "assets/clean-3.png",
+      "links": [
+        {
+          "rect": [
+            68.56300354003906,
+            1392.8310546875,
+            441.45298767089844,
+            130.73388671875
+          ],
+          "url": "https://caviar-phones.ru/collections/50-years-of-apple/"
+        }
+      ]
+    },
+    {
+      "name": "Royal Colors",
+      "fields": [
+        {
+          "label": "Надзаголовок",
+          "text": "КЛАССИЧЕСКАЯ КОЛЛЕКЦИЯ",
+          "rect": [
+            79,
+            88,
+            900,
+            45
+          ],
+          "size": 28,
+          "weight": 700,
+          "color": "#0e1117",
+          "lineHeight": 34,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Заголовок",
+          "text": "ROYAL COLORS",
+          "rect": [
+            76,
+            138,
+            960,
+            100
+          ],
+          "size": 104,
+          "weight": 800,
+          "color": "#0e1117",
+          "lineHeight": 125,
+          "underline": false,
+          "spacing": -2.5
+        },
+        {
+          "label": "Описание",
+          "text": "Исторические оттенки, кожа, титан и золото\nв современном прочтении Caviar.",
+          "rect": [
+            79,
+            274,
+            900,
+            76
+          ],
+          "size": 28,
+          "weight": 700,
+          "color": "#a99569",
+          "lineHeight": 33,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Текст кнопки",
+          "text": "ПОСМОТРЕТЬ НА САЙТЕ ↗",
+          "rect": [
+            128,
+            1440,
+            330,
+            46
+          ],
+          "size": 23,
+          "weight": 700,
+          "color": "#ffffff",
+          "lineHeight": 28,
+          "underline": false,
+          "spacing": 0
+        }
+      ],
+      "image": "assets/page-4.jpg",
+      "clean": "assets/clean-4.png",
+      "links": [
+        {
+          "rect": [
+            70.71700286865234,
+            1399.2659912109375,
+            447.86002349853516,
+            128.5799560546875
+          ],
+          "url": "https://caviar-phones.ru/collections/royal-colors/"
+        }
+      ]
+    },
+    {
+      "name": "Россия",
+      "fields": [
+        {
+          "label": "Надзаголовок",
+          "text": "КОЛЛЕКЦИЯ CAVIAR",
+          "rect": [
+            79,
+            88,
+            900,
+            45
+          ],
+          "size": 28,
+          "weight": 700,
+          "color": "#0e1117",
+          "lineHeight": 34,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Заголовок",
+          "text": "РОССИЯ",
+          "rect": [
+            76,
+            138,
+            960,
+            100
+          ],
+          "size": 104,
+          "weight": 800,
+          "color": "#0e1117",
+          "lineHeight": 125,
+          "underline": false,
+          "spacing": -2.5
+        },
+        {
+          "label": "Подзаголовок",
+          "text": "История. Символы. Патриотизм.",
+          "rect": [
+            79,
+            282,
+            900,
+            50
+          ],
+          "size": 28,
+          "weight": 700,
+          "color": "#a99569",
+          "lineHeight": 34,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Описание",
+          "text": "Национальная символика и исторические образы\nв титане, ювелирной эмали и золоте.",
+          "rect": [
+            79,
+            332,
+            900,
+            78
+          ],
+          "size": 28,
+          "weight": 400,
+          "color": "#0e1117",
+          "lineHeight": 33,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Текст кнопки",
+          "text": "ПОСМОТРЕТЬ НА САЙТЕ ↗",
+          "rect": [
+            128,
+            1440,
+            330,
+            46
+          ],
+          "size": 23,
+          "weight": 700,
+          "color": "#ffffff",
+          "lineHeight": 28,
+          "underline": false,
+          "spacing": 0
+        }
+      ],
+      "image": "assets/page-5.jpg",
+      "clean": "assets/clean-5.png",
+      "links": [
+        {
+          "rect": [
+            74.99800109863281,
+            1401.4200439453125,
+            426.4300079345703,
+            122.1448974609375
+          ],
+          "url": "https://caviar-phones.ru/collections/russia/"
+        }
+      ]
+    },
+    {
+      "name": "iPhone Duo",
+      "fields": [
+        {
+          "label": "Заголовок",
+          "text": "IPHONE DUO",
+          "rect": [
+            76,
+            88,
+            960,
+            100
+          ],
+          "size": 104,
+          "weight": 800,
+          "color": "#0e1117",
+          "lineHeight": 125,
+          "underline": false,
+          "spacing": -2.5
+        },
+        {
+          "label": "Подзаголовок",
+          "text": "Новая форма вашей индивидуальности",
+          "rect": [
+            79,
+            224,
+            920,
+            54
+          ],
+          "size": 28,
+          "weight": 700,
+          "color": "#a99569",
+          "lineHeight": 34,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Дата старта: подпись",
+          "text": "Дата старта",
+          "rect": [
+            79,
+            1338,
+            230,
+            42
+          ],
+          "size": 26,
+          "weight": 400,
+          "color": "#777777",
+          "lineHeight": 31,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Дата старта",
+          "text": "23 ОКТЯБРЯ",
+          "rect": [
+            79,
+            1380,
+            245,
+            45
+          ],
+          "size": 30,
+          "weight": 700,
+          "color": "#0e1117",
+          "lineHeight": 36,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Отправки: подпись",
+          "text": "Старт отправок",
+          "rect": [
+            394,
+            1338,
+            420,
+            42
+          ],
+          "size": 26,
+          "weight": 400,
+          "color": "#777777",
+          "lineHeight": 31,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Отправки",
+          "text": "НОЯБРЬ",
+          "rect": [
+            394,
+            1380,
+            420,
+            45
+          ],
+          "size": 30,
+          "weight": 700,
+          "color": "#0e1117",
+          "lineHeight": 36,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Ссылка",
+          "text": "Предзаказ на сайте",
+          "rect": [
+            77,
+            1483,
+            540,
+            52
+          ],
+          "size": 33,
+          "weight": 700,
+          "color": "#0e1117",
+          "lineHeight": 40,
+          "underline": true,
+          "spacing": 0
+        }
+      ],
+      "image": "assets/page-6.jpg",
+      "clean": "assets/clean-6.png",
+      "links": [
+        {
+          "rect": [
+            60.00199890136719,
+            1461.429931640625,
+            368.5749969482422,
+            85.6910400390625
+          ],
+          "url": "https://caviar-phones.ru/catalog/custom-iphone/iphone-duo/"
+        }
+      ]
+    },
+    {
+      "name": "Предоплата 50%",
+      "fields": [
+        {
+          "label": "Заголовок",
+          "text": "ПРЕДЗАКАЗ\nIPHONE DUO",
+          "rect": [
+            76,
+            96,
+            950,
+            230
+          ],
+          "size": 104,
+          "weight": 800,
+          "color": "#ffffff",
+          "lineHeight": 112,
+          "underline": false,
+          "spacing": -2.5
+        },
+        {
+          "label": "Подзаголовок",
+          "text": "Кастомный iPhone Duo от Caviar",
+          "rect": [
+            80,
+            372,
+            930,
+            65
+          ],
+          "size": 30,
+          "weight": 700,
+          "color": "#a99569",
+          "lineHeight": 36,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Процент",
+          "text": "50%",
+          "rect": [
+            70,
+            620,
+            935,
+            325
+          ],
+          "size": 340,
+          "weight": 800,
+          "color": "#ffffff",
+          "lineHeight": 408,
+          "underline": false,
+          "spacing": -9
+        },
+        {
+          "label": "Подпись",
+          "text": "ПРЕДОПЛАТА",
+          "rect": [
+            80,
+            978,
+            930,
+            65
+          ],
+          "size": 30,
+          "weight": 700,
+          "color": "#a99569",
+          "lineHeight": 36,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Условия",
+          "text": "Для оформления предзаказа\nдоступна предоплата в размере\n50% стоимости устройства.",
+          "rect": [
+            80,
+            1100,
+            930,
+            190
+          ],
+          "size": 34,
+          "weight": 400,
+          "color": "#ffffff",
+          "lineHeight": 45,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Ссылка",
+          "text": "Оформить предзаказ",
+          "rect": [
+            80,
+            1490,
+            850,
+            56
+          ],
+          "size": 33,
+          "weight": 700,
+          "color": "#ffffff",
+          "lineHeight": 40,
+          "underline": true,
+          "spacing": 0
+        }
+      ],
+      "image": "assets/page-7.png",
+      "clean": "assets/clean-7.png",
+      "links": [
+        {
+          "rect": [
+            70.0,
+            1470.0,
+            850.0,
+            90.0
+          ],
+          "url": "https://caviar-phones.ru/catalog/custom-iphone/iphone-duo/"
+        }
+      ]
+    },
+    {
+      "name": "Контакты",
+      "fields": [
+        {
+          "label": "Заголовок",
+          "text": "КОНТАКТЫ",
+          "rect": [
+            76,
+            88,
+            960,
+            100
+          ],
+          "size": 104,
+          "weight": 800,
+          "color": "#ffffff",
+          "lineHeight": 125,
+          "underline": false,
+          "spacing": -2.5
+        },
+        {
+          "label": "Подзаголовок",
+          "text": "Выберите свой Caviar",
+          "rect": [
+            79,
+            279,
+            920,
+            48
+          ],
+          "size": 28,
+          "weight": 700,
+          "color": "#a99569",
+          "lineHeight": 34,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Описание",
+          "text": "Персональный менеджер поможет\nподобрать модель и оформить заказ.",
+          "rect": [
+            79,
+            330,
+            920,
+            84
+          ],
+          "size": 28,
+          "weight": 400,
+          "color": "#ffffff",
+          "lineHeight": 33,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Телефон: подпись",
+          "text": "Телефон",
+          "rect": [
+            79,
+            1118,
+            920,
+            39
+          ],
+          "size": 24,
+          "weight": 400,
+          "color": "#a99569",
+          "lineHeight": 29,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Телефон",
+          "text": "8 800 333 48 34",
+          "rect": [
+            79,
+            1154,
+            920,
+            44
+          ],
+          "size": 32,
+          "weight": 700,
+          "color": "#ffffff",
+          "lineHeight": 38,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "WhatsApp: подпись",
+          "text": "WhatsApp",
+          "rect": [
+            79,
+            1228,
+            920,
+            39
+          ],
+          "size": 24,
+          "weight": 400,
+          "color": "#a99569",
+          "lineHeight": 29,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "WhatsApp",
+          "text": "+7 910 104 04 90",
+          "rect": [
+            79,
+            1265,
+            920,
+            44
+          ],
+          "size": 32,
+          "weight": 700,
+          "color": "#ffffff",
+          "lineHeight": 38,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Telegram: подпись",
+          "text": "Telegram",
+          "rect": [
+            79,
+            1339,
+            920,
+            39
+          ],
+          "size": 24,
+          "weight": 400,
+          "color": "#a99569",
+          "lineHeight": 29,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Telegram",
+          "text": "@CAVIAR_RUSSIA_OFFICIALL",
+          "rect": [
+            79,
+            1377,
+            920,
+            48
+          ],
+          "size": 32,
+          "weight": 700,
+          "color": "#ffffff",
+          "lineHeight": 38,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Сайт: подпись",
+          "text": "Сайт",
+          "rect": [
+            79,
+            1449,
+            920,
+            39
+          ],
+          "size": 24,
+          "weight": 400,
+          "color": "#a99569",
+          "lineHeight": 29,
+          "underline": false,
+          "spacing": 0
+        },
+        {
+          "label": "Сайт",
+          "text": "CAVIAR-PHONES.RU",
+          "rect": [
+            79,
+            1487,
+            920,
+            47
+          ],
+          "size": 32,
+          "weight": 700,
+          "color": "#ffffff",
+          "lineHeight": 38,
+          "underline": false,
+          "spacing": 0
+        }
+      ],
+      "image": "assets/page-8.jpg",
+      "clean": "assets/clean-8.png",
+      "links": [
+        {
+          "rect": [
+            72.84300231933594,
+            1452.841064453125,
+            349.2989959716797,
+            90.0
+          ],
+          "url": "https://caviar-phones.ru/"
+        },
+        {
+          "rect": [
+            68.56300354003906,
+            1330.696044921875,
+            490.7200164794922,
+            102.868896484375
+          ],
+          "url": "https://t.me/Caviar_Russia_officiall"
+        },
+        {
+          "rect": [
+            66.43699645996094,
+            1219.2659912109375,
+            295.72401428222656,
+            87.8740234375
+          ],
+          "url": "https://wa.me/79101040490"
+        },
+        {
+          "rect": [
+            66.43699645996094,
+            1101.429931640625,
+            325.7150115966797,
+            98.56103515625
+          ],
+          "url": "tel:+78003334834"
+        }
+      ]
+    }
+  ]
+}
