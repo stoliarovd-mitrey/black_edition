@@ -51,7 +51,52 @@ function fields(){const root=$('fields');root.replaceChildren();deck.slides[curr
 function selectSlide(i){current=Math.max(0,Math.min(deck.slides.length-1,i));selected=-1;drag=null;$('slide-name').textContent=deck.slides[current].name;$('counter').textContent=`${current+1} / ${deck.slides.length}`;slideList();fields();geometryPanel();preview().catch(showError);}
 function download(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);}
 function showError(e){console.error(e);status(e.message||'Не удалось выполнить действие.');}
-async function exportPDF(){const button=$('export');button.disabled=true;selected=-1;await preview();try{status('Готовим PDF…');const {PDFDocument,PDFName,PDFString}=PDFLib;const base=await PDFDocument.load(sourcePDF),pdf=await PDFDocument.create();pdf.setTitle('Новое поколение Caviar');pdf.setAuthor('Caviar');for(let i=0;i<deck.slides.length;i++){status(`Готовим PDF: слайд ${i+1} из ${deck.slides.length}`);if(!changed(deck.slides[i],i)){const [page]=await pdf.copyPages(base,[i]);pdf.addPage(page);}else{const canvas=document.createElement('canvas');await render(i,canvas,false,2);const data=canvas.toDataURL('image/png'),im=await pdf.embedPng(data),page=pdf.addPage([deck.width,deck.height]);page.drawImage(im,{x:0,y:0,width:deck.width,height:deck.height});const annotations=[];for(const link of adjustedLinks(i)){const [x,y,w,h]=link.rect;annotations.push(pdf.context.register(pdf.context.obj({Type:'Annot',Subtype:'Link',Rect:[x,deck.height-y-h,x+w,deck.height-y],Border:[0,0,0],A:{Type:'Action',S:'URI',URI:PDFString.of(link.url)}})));}if(annotations.length)page.node.set(PDFName.of('Annots'),pdf.context.obj(annotations));}}download(new Blob([await pdf.save()],{type:'application/pdf'}),'Caviar_New_Generation.pdf');status('PDF готов. Все 8 слайдов и ссылки сохранены.');}catch(e){showError(e);}finally{button.disabled=false;}}
+const MAX_PDF_BYTES=3_000_000;
+const PDF_PLANS=[
+ {copyOriginal:true,scale:2,quality:.92},
+ {copyOriginal:true,scale:1.5,quality:.90},
+ {copyOriginal:true,scale:1,quality:.88},
+ {copyOriginal:false,scale:2,quality:.92},
+ {copyOriginal:false,scale:1.5,quality:.90},
+ {copyOriginal:false,scale:1.5,quality:.82},
+ {copyOriginal:false,scale:1,quality:.90},
+ {copyOriginal:false,scale:1,quality:.82},
+ {copyOriginal:false,scale:1,quality:.72},
+ {copyOriginal:false,scale:.85,quality:.72},
+ {copyOriginal:false,scale:.7,quality:.65},
+ {copyOriginal:false,scale:.5,quality:.60},
+ {copyOriginal:false,scale:.3,quality:.50},
+ {copyOriginal:false,scale:.15,quality:.40}
+];
+async function jpegBytes(canvas,quality){
+ if(typeof canvas.toBlob==='function'){
+  const blob=await new Promise((resolve,reject)=>canvas.toBlob(value=>value&&value.type==='image/jpeg'?resolve(value):reject(Error('Не удалось сжать изображение слайда.')),'image/jpeg',quality));
+  return new Uint8Array(await blob.arrayBuffer());
+ }
+ const data=canvas.toDataURL('image/jpeg',quality);
+ if(!data.startsWith('data:image/jpeg;base64,'))throw Error('Браузер не поддерживает JPEG-экспорт.');
+ return Uint8Array.from(atob(data.split(',')[1]),c=>c.charCodeAt(0));
+}
+function addPDFLinks(pdf,page,i){const {PDFName,PDFString}=PDFLib;const annotations=[];for(const link of adjustedLinks(i)){const [x,y,w,h]=link.rect;annotations.push(pdf.context.register(pdf.context.obj({Type:'Annot',Subtype:'Link',Rect:[x,deck.height-y-h,x+w,deck.height-y],Border:[0,0,0],A:{Type:'Action',S:'URI',URI:PDFString.of(link.url)}})));}if(annotations.length)page.node.set(PDFName.of('Annots'),pdf.context.obj(annotations));}
+async function buildPDF(base,plan,attempt){
+ const pdf=await PDFLib.PDFDocument.create();pdf.setTitle('Новое поколение Caviar');pdf.setAuthor('Caviar');
+ for(let i=0;i<deck.slides.length;i++){
+  status(`${attempt===0?'Готовим PDF':'Сжимаем PDF до 3 МБ'}: слайд ${i+1} из ${deck.slides.length}`);
+  if(plan.copyOriginal&&!changed(deck.slides[i],i)){const [page]=await pdf.copyPages(base,[i]);pdf.addPage(page);}
+  else{const canvas=document.createElement('canvas');await render(i,canvas,false,plan.scale);const bytes=await jpegBytes(canvas,plan.quality);const image=await pdf.embedJpg(bytes),page=pdf.addPage([deck.width,deck.height]);page.drawImage(image,{x:0,y:0,width:deck.width,height:deck.height});addPDFLinks(pdf,page,i);canvas.width=0;canvas.height=0;}
+ }
+ return pdf.save({useObjectStreams:true});
+}
+async function boundedPDF(){
+ const base=await PDFLib.PDFDocument.load(sourcePDF);
+ for(let attempt=0;attempt<PDF_PLANS.length;attempt++){
+  const result=await buildPDF(base,PDF_PLANS[attempt],attempt);
+  if(result.byteLength<=MAX_PDF_BYTES)return result;
+  status('Подбираем качество изображений, чтобы PDF не превышал 3 МБ…');
+ }
+ throw Error('Не удалось сжать PDF до 3 МБ. Файл не сохранён.');
+}
+async function exportPDF(){const button=$('export');button.disabled=true;selected=-1;try{await preview();status('Готовим PDF…');const result=await boundedPDF();if(result.byteLength>MAX_PDF_BYTES)throw Error('PDF превышает 3 МБ.');download(new Blob([result],{type:'application/pdf'}),'Caviar_New_Generation.pdf');status(`PDF готов: ${(result.byteLength/1_000_000).toFixed(2)} МБ. Все 8 слайдов и ссылки сохранены.`);}catch(e){showError(e);}finally{button.disabled=false;}}
 function toBase64(bytes){let str='';for(let i=0;i<bytes.length;i+=16384)str+=String.fromCharCode(...bytes.subarray(i,i+16384));return btoa(str);}
 async function standalone(){const button=$('download-html');button.disabled=true;try{status('Собираем автономную HTML-версию…');const assets={};const paths=[...new Set(deck.slides.flatMap(s=>[s.image,s.clean]).concat(['assets/NunitoSans.ttf','assets/presentation.pdf']))];for(const path of paths){assets[path]={mime:path.endsWith('.png')?'image/png':path.endsWith('.jpg')?'image/jpeg':path.endsWith('.ttf')?'font/ttf':'application/pdf',data:toBase64(await bytes(path))};}const embedded=window.CAVIAR_CODE;const css=embedded?.css||new TextDecoder().decode(await bytes('editor.css'));const js=embedded?.js||new TextDecoder().decode(await bytes('editor.js'));const lib=embedded?.lib||new TextDecoder().decode(await bytes('vendor/pdf-lib.min.js'));let html=document.documentElement.outerHTML;html=html.replace(/<link[^>]*href="editor.css(?:\?[^" ]*)?"[^>]*>/,`<style>${css.replace(/url\('assets\/NunitoSans.ttf'\)/,`url('${assetURLFrom(assets['assets/NunitoSans.ttf'])}')`)}</style>`);html=html.replace(/<script\b[\s\S]*?<\/script>/g,'');const payload={base:original,deck};const safe=x=>JSON.stringify(x).replace(/</g,'\\u003c');const code=`<script>window.CAVIAR_EMBED=${safe(payload)};window.CAVIAR_ASSETS=${safe(assets)};window.CAVIAR_CODE=${safe({css,js,lib})};<\/script><script>${lib.replace(/<\/script/gi,'<\\/script')}<\/script><script>${js.replace(/<\/script/gi,'<\\/script')}<\/script>`;html=html.replace('</body>',`${code}</body>`);download(new Blob(['<!doctype html>\n',html],{type:'text/html;charset=utf-8'}),'Caviar_Editable_Presentation.html');status('Автономный HTML готов. Его можно открыть без интернета.');}catch(e){showError(e);}finally{button.disabled=false;}}
 function assetURLFrom(a){return `data:${a.mime};base64,${a.data}`;}
