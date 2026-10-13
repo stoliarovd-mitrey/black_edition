@@ -189,7 +189,7 @@ body{background:var(--paper);color:var(--ink);font-family:"Nunito Sans","Nunito 
    fixed font sizes being mixed with a vw-scaled canvas. */
 @media(min-width:1121px){
   .section:not(.hero) .stage{min-height:unset}
-  .section.model .stage{min-height:730px}
+  .section.model .stage{min-height:680px}
   .section.inspiration .stage{min-height:335px}
   .section#idea .stage{min-height:465px}
   .section#craft .stage{min-height:570px}
