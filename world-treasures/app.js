@@ -173,66 +173,71 @@ function inspector(){
 }
 function store(){if(!edit)return;clearTimeout(draftTimer);draftTimer=setTimeout(function(){saveDraft().catch(function(e){console.warn('Черновик не сохранён',e)})},350)}document.getElementById('prev').onclick=function(){go(index-1)};document.getElementById('next').onclick=function(){go(index+1)};document.addEventListener('keydown',function(e){if(e.target.matches('input,textarea'))return;if(e.key==='ArrowRight')go(index+1);if(e.key==='ArrowLeft')go(index-1)});window.addEventListener('resize',render);if(edit){document.getElementById('addImage').onclick=function(){document.getElementById('quickImageFile').click()};document.getElementById('quickImageFile').onchange=function(){if(this.files&&this.files[0])appendImage(this.files[0]);this.value=''};document.getElementById('addText').onclick=function(){var o={id:'custom-'+Date.now(),type:'text',text:'Новый текст',x:500,y:255,w:320,h:55,size:22,color:'#263441',font:'sans'};deck.slides[index].objects.push(o);selected=o;store();render();inspector()};document.getElementById('saveDraft').onclick=async function(){try{await saveDraft();msg('Черновик сохранён в браузере')}catch(e){msg('Ошибка сохранения: '+e.message)}};document.getElementById('downloadJson').onclick=function(){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(deck,null,2)],{type:'application/json'}));a.download='world-treasures-deck.json';a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},2000)};
 document.getElementById('publish').onclick=async function(){
-  var token=document.getElementById('pat').value.trim();
-  if(!token){msg('Вставьте токен GitHub в поле слева');return}
-  var btn=this,status=document.getElementById('saveStatus');
-  btn.disabled=true;btn.textContent='Публикация…';
-  try{
-    status.textContent='Подготовка изменений и изображений…';
-    // All images are kept in a shared image dictionary inside deck.json.
-    // This avoids a separate GitHub asset-upload request and duplicates across slides.
-    var copy=JSON.parse(JSON.stringify(deck));
-    if(!copy.embeddedImages||typeof copy.embeddedImages!=='object')copy.embeddedImages={};
-    var pending=new Map();
-    for(var slide of copy.slides)for(var object of slide.objects){
-      if(object.type==='image' && typeof object.src==='string' && object.src.startsWith('data:image/')){
-        var data=object.src;
-        if(!pending.has(data)){
-          var b64=data.split(',')[1]||'';
-          var binary=Uint8Array.from(atob(b64),function(c){return c.charCodeAt(0)});
-          var digest=await crypto.subtle.digest('SHA-256',binary);
-          var hash=Array.from(new Uint8Array(digest)).map(function(c){return c.toString(16).padStart(2,'0')}).join('');
-          pending.set(data,hash);
-          copy.embeddedImages[hash]=data;
-        }
-        object.src='embedded:'+pending.get(data);
-      }
-    }
-    var used=new Set();
-    copy.slides.forEach(function(slide){slide.objects.forEach(function(o){
-      if(o.type==='image'&&typeof o.src==='string'&&o.src.startsWith('embedded:'))used.add(o.src.slice(9))
-    })});
-    Object.keys(copy.embeddedImages).forEach(function(key){if(!used.has(key))delete copy.embeddedImages[key]});
-    var content=JSON.stringify(copy,null,2);
-    var bytes=new TextEncoder().encode(content);
-    if(bytes.length>18*1024*1024)throw Error('Презентация больше 18 МБ. Сожмите добавленные изображения.');
-    var api='https://api.github.com/repos/'+repo+'/contents/'+path;
-    var h={'Accept':'application/vnd.github+json','Authorization':'Bearer '+token,'X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'};
-    status.textContent='Проверка доступа к презентации…';
-    var current=await fetch(api,{headers:h});
-    if(!current.ok){
-      var g=await current.json().catch(function(){return {}});
-      throw Error('GitHub '+current.status+': '+(g.message||'не удалось открыть файл презентации'));
-    }
-    var old=await current.json(),str='';
-    for(var i=0;i<bytes.length;i++)str+=String.fromCharCode(bytes[i]);
-    status.textContent='Сохранение презентации одним файлом…';
-    var saved=await fetch(api,{method:'PUT',headers:h,body:JSON.stringify({message:'Update World Treasures slides and embedded images',content:btoa(str),sha:old.sha,branch:'main'})});
-    if(!saved.ok){
-      var err=await saved.json().catch(function(){return {}});
-      var detail=String(err.message||'Ошибка GitHub');
-      if(saved.status===403||saved.status===401)throw Error('GitHub отказал в записи ('+saved.status+'). Проверьте, что токен имеет Contents: Read and write и доступ к stoliarovd-mitrey/black_edition. Ответ: '+detail);
-      throw Error('Не удалось сохранить: '+saved.status+'. '+detail);
-    }
-    deck=copy;
-    selected=null;
-    await saveDraft();
-    render();inspector();
-    status.textContent='Опубликовано! Слайды и изображения сохранены. GitHub Pages обновится в течение нескольких минут.';
-    msg('Слайды и изображения опубликованы')
-  }catch(e){
-    status.textContent=e.message||String(e);
-    msg('Не удалось опубликовать — черновик сохранён')
-  }finally{btn.disabled=false;btn.textContent='Опубликовать на GitHub'}
+ var token=document.getElementById('pat').value.trim(),btn=this,status=document.getElementById('saveStatus');
+ if(!token){msg('Вставьте токен GitHub слева');return}
+ btn.disabled=true;btn.textContent='Публикация…';
+ try{
+  var base='https://api.github.com/repos/'+repo;
+  var h={'Accept':'application/vnd.github+json','Authorization':'Bearer '+token,'X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'};
+  async function github(api,method,body){
+   var res=await fetch(base+api,{method:method||'GET',headers:h,body:body===undefined?undefined:JSON.stringify(body)});
+   if(!res.ok){
+     var d=await res.json().catch(function(){return {}});
+     var reason=String(d.message||'Ошибка GitHub');
+     if(res.status===401||res.status===403)throw Error('GitHub '+res.status+': '+reason+'. Проверьте Contents: Read and write и доступ к '+repo);
+     throw Error('GitHub '+res.status+': '+reason);
+   }
+   return res.json()
+  }
+  status.textContent='Подготовка файлов…';
+  var copy=JSON.parse(JSON.stringify(deck)),inlines=new Map();
+  var stored=copy.embeddedImages||{};
+  for(var slide of copy.slides){for(var o of slide.objects){
+   if(o.type!=='image'||typeof o.src!=='string')continue;
+   if(o.src.startsWith('data:image/webp;base64,'))inlines.set(o.src,null);
+   else if(o.src.startsWith('embedded:')){
+    var data=stored[o.src.slice(9)];
+    if(!data)throw Error('Не найдено изображение в черновике: '+o.id);
+    inlines.set(data,null);
+   }
+  }}
+  var paths=new Map(),treeItems=[],imageIndex=0;
+  for(var source of inlines.keys()){
+    imageIndex++;
+    status.textContent='Подготовка изображения '+imageIndex+' из '+inlines.size+'…';
+    var binary=Uint8Array.from(atob(source.slice(source.indexOf(',')+1)),function(c){return c.charCodeAt(0)});
+    var digest=await crypto.subtle.digest('SHA-256',binary);
+    var key=Array.from(new Uint8Array(digest)).map(function(n){return n.toString(16).padStart(2,'0')}).join('').slice(0,28);
+    paths.set(source,'assets/uploads/'+key+'.webp');
+    inlines.set(source,source.slice(source.indexOf(',')+1));
+  }
+  var ref=await github('/git/ref/heads/main');
+  var head=ref.object.sha;
+  var current=await github('/git/commits/'+head);
+  for(var source of inlines.keys()){
+    imageIndex--;
+    status.textContent='Сохранение изображений в GitHub ('+(inlines.size-imageIndex)+' из '+inlines.size+')…';
+    var uploaded=await github('/git/blobs','POST',{content:inlines.get(source),encoding:'base64'});
+    treeItems.push({path:'world-treasures/'+paths.get(source),mode:'100644',type:'blob',sha:uploaded.sha});
+  }
+  for(var slide of copy.slides){for(var o of slide.objects){
+   if(o.type!=='image'||typeof o.src!=='string')continue;
+   if(o.src.startsWith('embedded:'))o.src=paths.get(stored[o.src.slice(9)]);
+   else if(paths.has(o.src))o.src=paths.get(o.src);
+  }}
+  delete copy.embeddedImages;
+  var json=JSON.stringify(copy,null,2);
+  if(new TextEncoder().encode(json).length>900000)throw Error('Файл описания слайдов слишком велик.');
+  status.textContent='Сохранение данных слайдов…';
+  var deckBlob=await github('/git/blobs','POST',{content:json,encoding:'utf-8'});
+  treeItems.push({path:path,mode:'100644',type:'blob',sha:deckBlob.sha});
+  var tree=await github('/git/trees','POST',{base_tree:current.tree.sha,tree:treeItems});
+  var commit=await github('/git/commits','POST',{message:'Update World Treasures presentation',tree:tree.sha,parents:[head]});
+  await github('/git/refs/heads/main','PATCH',{sha:commit.sha,force:false});
+  deck=copy;selected=null;await saveDraft();render();inspector();
+  status.textContent='Готово. Фотографии и тексты опубликованы. Обновление страницы займёт 1–3 минуты.';
+  msg('Изменения опубликованы')
+ }catch(e){status.textContent=String(e.message||e);msg('Публикация не удалась: см. причину слева')}
+ finally{btn.disabled=false;btn.textContent='Опубликовать на GitHub'}
 }
 }else{document.getElementById('full').onclick=function(){document.documentElement.requestFullscreen?.()};document.getElementById('print').onclick=function(){var c=E('div','printwrap');deck.slides.forEach(function(s,i){c.appendChild(slideRender(s,i,true))});document.body.appendChild(c);window.print();setTimeout(function(){c.remove()},1000)}}fetch('deck.json?'+Date.now()).then(function(r){if(!r.ok)throw Error(r.status);return r.json()}).then(async function(data){deck=data;if(edit){var draft=await getDraft();if(draft&&draft.slides)deck=draft}render();if(edit)inspector()}).catch(function(e){frame.textContent='Не удалось загрузить данные презентации: '+e.message})})();
