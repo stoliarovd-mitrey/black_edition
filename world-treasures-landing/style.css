@@ -131,3 +131,6 @@ body{background:var(--paper);color:var(--ink);font-family:"Nunito Sans","Nunito 
   .editor-page .section.hero .item.image{pointer-events:auto}
 }
 @media(prefers-reduced-motion:reduce){.section.hero .item{transition:none!important}}
+
+/* Contrast-style landing does not add a secondary navigation ribbon. */
+.collection-nav{display:none!important}
