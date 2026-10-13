@@ -172,9 +172,21 @@ function inspector(){
   c.appendChild(del)
 }
 function store(){if(!edit)return;clearTimeout(draftTimer);draftTimer=setTimeout(function(){saveDraft().catch(function(e){console.warn('Черновик не сохранён',e)})},350)}document.getElementById('prev').onclick=function(){go(index-1)};document.getElementById('next').onclick=function(){go(index+1)};document.addEventListener('keydown',function(e){if(e.target.matches('input,textarea'))return;if(e.key==='ArrowRight')go(index+1);if(e.key==='ArrowLeft')go(index-1)});window.addEventListener('resize',render);if(edit){document.getElementById('addImage').onclick=function(){document.getElementById('quickImageFile').click()};document.getElementById('quickImageFile').onchange=function(){if(this.files&&this.files[0])appendImage(this.files[0]);this.value=''};document.getElementById('addText').onclick=function(){var o={id:'custom-'+Date.now(),type:'text',text:'Новый текст',x:500,y:255,w:320,h:55,size:22,color:'#263441',font:'sans'};deck.slides[index].objects.push(o);selected=o;store();render();inspector()};document.getElementById('saveDraft').onclick=async function(){try{await saveDraft();msg('Черновик сохранён в браузере')}catch(e){msg('Ошибка сохранения: '+e.message)}};document.getElementById('downloadJson').onclick=function(){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(deck,null,2)],{type:'application/json'}));a.download='world-treasures-deck.json';a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},2000)};
+// A personal access token is strictly ASCII. Unicode text in a header
+// causes the browser to fail before any request is sent to GitHub.
+function validGithubToken(value){
+ var v=String(value||'').replace(/[\u200B-\u200D\u2060\uFEFF]/g,'').trim();
+ if(/^Bearer\s+/i.test(v))v=v.replace(/^Bearer\s+/i,'').trim();
+ if(!v)throw Error('Вставьте токен GitHub в поле слева.');
+ if(/[^\x21-\x7E]/.test(v))throw Error('В поле токена обнаружены кириллица, пробелы или специальные символы. Удалите содержимое и вставьте сам токен с GitHub ещё раз. Он должен начинаться с github_pat_ или ghp_.');
+ if(!/^(?:github_pat_[A-Za-z0-9_]+|ghp_[A-Za-z0-9]+)$/.test(v))throw Error('Неверный формат токена. Вставьте только значение Personal Access Token из GitHub, без кавычек и пояснений. Начало: github_pat_ или ghp_.');
+ return v
+}
 document.getElementById('publish').onclick=async function(){
- var token=document.getElementById('pat').value.trim(),btn=this,status=document.getElementById('saveStatus');
- if(!token){msg('Вставьте токен GitHub слева');return}
+ var btn=this,status=document.getElementById('saveStatus');
+ var token;
+ try{token=validGithubToken(document.getElementById('pat').value)}
+ catch(e){status.textContent=e.message;msg('Проверьте содержимое поля токена');return}
  btn.disabled=true;btn.textContent='Публикация…';
  try{
   var base='https://api.github.com/repos/'+repo;
