@@ -134,3 +134,98 @@ body{background:var(--paper);color:var(--ink);font-family:"Nunito Sans","Nunito 
 
 /* Contrast-style landing does not add a secondary navigation ribbon. */
 .collection-nav{display:none!important}
+
+
+/* Contrast Edition reference: item copy 16px/24px, a 24px editorial rhythm, 64px section padding. */
+.section.model .item.text{font-size:16px!important;line-height:24px;letter-spacing:.01em}
+.section.model .item.text[data-id="el18"],
+.section.model .item.text[data-id="el27"],
+.section.model .item.text[data-id="el36"],
+.section.model .item.text[data-id="el45"]{
+  font-size:19px!important;line-height:27px;font-weight:700;color:inherit;
+}
+.section.model .item.button{
+  color:var(--gold)!important;
+  border:1px solid var(--gold);
+  background:transparent;
+  font-weight:700;
+  letter-spacing:.045em;
+  font-size:13px!important;
+}
+.section.model .item.button:hover,.section.model .item.button:focus-visible{
+  color:#fff!important;background:var(--gold);
+}
+.section#idea .item.button,.section#contact .item.button{
+  background:var(--gold);border:1px solid var(--gold);color:#fff!important;
+}
+.section#idea .item.button:hover,.section#contact .item.button:hover{background:#968758;border-color:#968758}
+
+/* Dedicated source-of-inspiration section under each of the four models. */
+.section.inspiration{border-top:1px solid rgba(168,153,116,.14)}
+.section.inspiration.dark{background:#17171c;color:#f7f7f7}
+.section.inspiration.stone{background:#f7f7f7;color:#393838}
+.section.inspiration .item.title{
+  font-size:clamp(32px,2.7vw,45px)!important;
+  font-weight:700;
+  line-height:1.1;
+}
+.section.inspiration .item.text{
+  font-size:17px!important;
+  line-height:25px;
+  letter-spacing:.01em;
+  max-width:none;
+}
+.section.inspiration .stage::before{
+  content:"";
+  position:absolute;
+  left:6%;
+  top:15%;
+  width:38px;
+  height:1px;
+  background:rgba(168,153,116,.6);
+}
+
+/* Keep design coordinates in actual pixels on desktop; avoid gaps and overlaps caused by
+   fixed font sizes being mixed with a vw-scaled canvas. */
+@media(min-width:1121px){
+  .section:not(.hero) .stage{min-height:unset}
+  .section.model .stage{min-height:730px}
+  .section.inspiration .stage{min-height:335px}
+  .section#idea .stage{min-height:465px}
+  .section#craft .stage{min-height:570px}
+  .section#edition .stage{min-height:455px}
+  .section#packaging .stage{min-height:370px}
+  .section#contact .stage{min-height:480px}
+}
+
+/* Tablet: a natural editorial flow instead of overlapping absolutely positioned copy. */
+@media (min-width:701px) and (max-width:1120px){
+  .section:not(.hero) .stage{
+    height:auto!important;max-height:none!important;min-height:0!important;
+    aspect-ratio:auto!important;
+    padding:60px 7%;
+    display:flex;flex-direction:column;gap:22px;
+  }
+  .section:not(.hero) .item{
+    position:relative!important;top:auto!important;left:auto!important;
+    width:100%!important;height:auto!important;
+    font-size:16px!important;
+    order:var(--order,0);
+  }
+  .section:not(.hero) .item.title{font-size:42px!important}
+  .section:not(.hero) .item.image{width:100%!important;height:510px!important;object-fit:contain}
+  .section:not(.hero) .item.button{width:auto!important;min-width:270px;height:54px!important;align-self:flex-start}
+  .section#contact .item.button{min-width:230px}
+  .section.inspiration .stage::before{display:none}
+}
+@media(max-width:700px){
+  .section:not(.hero) .stage{gap:17px;padding:46px 7%}
+  .section.model .item.image{order:-1;max-height:425px}
+  .section.model .item.title{order:0;font-size:36px!important}
+  .section.model .item.text{font-size:16px!important;line-height:24px}
+  .section.model .item.button{order:10;min-width:230px;margin-top:7px}
+  .section.inspiration .stage::before{display:none}
+  .section.inspiration .item.title{font-size:32px!important;margin-bottom:4px}
+  .section.inspiration .item.text{font-size:16px!important;line-height:24px}
+  .section#idea .item.button,.section#contact .item.button{min-width:230px}
+}
