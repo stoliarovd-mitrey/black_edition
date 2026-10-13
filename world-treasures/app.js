@@ -1,4 +1,4 @@
-(function(){'use strict';var edit=document.body.dataset.mode==='edit',repo='stoliarovd-mitrey/black_edition',path='world-treasures/deck.json',deck=null,index=0,selected=null,frame=document.getElementById('frame'),localKey='caviar-world-treasures-draft-v1';function E(t,c){var e=document.createElement(t);if(c)e.className=c;return e}function msg(t){var e=E('div','toast');e.textContent=t;document.body.appendChild(e);setTimeout(function(){e.remove()},2700)}function txt(e,t){e.textContent=t;return e}function scale(){var availW=frame.parentElement.clientWidth-28,availH=frame.parentElement.clientHeight-105;return Math.min(availW/960,availH/540,1.75)}function slideRender(s,n,printing){var el=E('section','slide '+s.theme+(edit?' edit':''));el.style.setProperty('--leftBg',s.leftBg||'#eee');if(printing)el.classList.add('printslide');el.dataset.slide=n;s.objects.forEach(function(o){var e;if(o.type==='rect'){e=E('div','object rect');e.style.background=o.color}else if(o.type==='image'){e=E('img','object image');e.src=o.src;e.draggable=false;e.alt=o.id;e.style.objectFit=o.fit||'contain'}else{e=txt(E('div','object text '+(o.font||'sans')),o.text);e.style.fontSize=(o.size||16)+'px';e.style.color=o.color||'#26353e';e.style.fontWeight=o.weight||'400';e.style.textAlign=o.align||'left';e.style.letterSpacing=(o.spacing||0)+'px';if(o.lineHeight)e.style.lineHeight=o.lineHeight}e.style.left=o.x+'px';e.style.top=o.y+'px';e.style.width=o.w+'px';e.style.height=o.h+'px';e.dataset.object=o.id;if(edit&&o.type!=='rect'&&!printing){e.addEventListener('pointerdown',function(ev){pick(s,o);startPointer(ev,o,e)});if(selected===o)e.classList.add('selected')}el.appendChild(e);if(edit&&selected===o&&!printing){var h=E('span','handle resize-handle');h.style.left=(o.x+o.w-7)+'px';h.style.top=(o.y+o.h-7)+'px';h.addEventListener('pointerdown',function(ev){ev.stopPropagation();startPointer(ev,o,e,true)});el.appendChild(h)}});return el}function render(){if(!deck)return;frame.innerHTML='';var k=scale(),stage=E('div','stage');stage.style.width=960*k+'px';stage.style.height=540*k+'px';var el=slideRender(deck.slides[index],index,false);el.style.transform='scale('+k+')';stage.appendChild(el);frame.appendChild(stage);document.getElementById('counter').textContent=String(index+1).padStart(2,'0')+' / '+String(deck.slides.length).padStart(2,'0');if(edit)renderList()}function go(i){index=(i+deck.slides.length)%deck.slides.length;selected=null;render();if(edit)inspector()}function renderList(){var l=document.getElementById('slideList');l.innerHTML='';deck.slides.forEach(function(s,i){var b=txt(E('button','slideBtn'+(i===index?' chosen':'')),String(i+1).padStart(2,'0')+'   '+s.name);b.onclick=function(){go(i)};l.appendChild(b)})}function pick(s,o){selected=o;render();inspector()}function startPointer(ev,o,e,forceSize){if(ev.button!==0)return;ev.preventDefault();var ini={x:ev.clientX,y:ev.clientY,ox:o.x,oy:o.y,w:o.w,h:o.h},k=scale(),isSize=forceSize||(ev.offsetX>(o.w*k-19)&&ev.offsetY>(o.h*k-19));function move(v){var dx=(v.clientX-ini.x)/k,dy=(v.clientY-ini.y)/k;if(isSize){o.w=Math.max(20,Math.round(ini.w+dx));o.h=Math.max(12,Math.round(ini.h+dy))}else{o.x=Math.round(ini.ox+dx);o.y=Math.round(ini.oy+dy)}var target=frame.querySelector('[data-object="'+o.id+'"]');if(target){target.style.left=o.x+'px';target.style.top=o.y+'px';target.style.width=o.w+'px';target.style.height=o.h+'px'}var handle=frame.querySelector('.resize-handle');if(handle){handle.style.left=(o.x+o.w-7)+'px';handle.style.top=(o.y+o.h-7)+'px'}syncFields()}function up(){document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up);store()}document.addEventListener('pointermove',move);document.addEventListener('pointerup',up)}function syncFields(){if(!selected)return;['x','y','w','h'].forEach(function(p){var e=document.querySelector('#attr-'+p);if(e)e.value=selected[p]})}
+(function(){'use strict';var edit=document.body.dataset.mode==='edit',repo='stoliarovd-mitrey/black_edition',path='world-treasures/deck.json',deck=null,index=0,selected=null,frame=document.getElementById('frame'),localKey='caviar-world-treasures-draft-v1';function E(t,c){var e=document.createElement(t);if(c)e.className=c;return e}function msg(t){var e=E('div','toast');e.textContent=t;document.body.appendChild(e);setTimeout(function(){e.remove()},2700)}function txt(e,t){e.textContent=t;return e}function resolveImage(src){if(typeof src==='string'&&src.startsWith('embedded:'))return deck&&deck.embeddedImages&&deck.embeddedImages[src.slice(9)]||'';return src||''}function scale(){var availW=frame.parentElement.clientWidth-28,availH=frame.parentElement.clientHeight-105;return Math.min(availW/960,availH/540,1.75)}function slideRender(s,n,printing){var el=E('section','slide '+s.theme+(edit?' edit':''));el.style.setProperty('--leftBg',s.leftBg||'#eee');if(printing)el.classList.add('printslide');el.dataset.slide=n;s.objects.forEach(function(o){var e;if(o.type==='rect'){e=E('div','object rect');e.style.background=o.color}else if(o.type==='image'){e=E('img','object image');e.src=resolveImage(o.src);e.draggable=false;e.alt=o.id;e.style.objectFit=o.fit||'contain'}else{e=txt(E('div','object text '+(o.font||'sans')),o.text);e.style.fontSize=(o.size||16)+'px';e.style.color=o.color||'#26353e';e.style.fontWeight=o.weight||'400';e.style.textAlign=o.align||'left';e.style.letterSpacing=(o.spacing||0)+'px';if(o.lineHeight)e.style.lineHeight=o.lineHeight}e.style.left=o.x+'px';e.style.top=o.y+'px';e.style.width=o.w+'px';e.style.height=o.h+'px';e.dataset.object=o.id;if(edit&&o.type!=='rect'&&!printing){e.addEventListener('pointerdown',function(ev){pick(s,o);startPointer(ev,o,e)});if(selected===o)e.classList.add('selected')}el.appendChild(e);if(edit&&selected===o&&!printing){var h=E('span','handle resize-handle');h.style.left=(o.x+o.w-7)+'px';h.style.top=(o.y+o.h-7)+'px';h.addEventListener('pointerdown',function(ev){ev.stopPropagation();startPointer(ev,o,e,true)});el.appendChild(h)}});return el}function render(){if(!deck)return;frame.innerHTML='';var k=scale(),stage=E('div','stage');stage.style.width=960*k+'px';stage.style.height=540*k+'px';var el=slideRender(deck.slides[index],index,false);el.style.transform='scale('+k+')';stage.appendChild(el);frame.appendChild(stage);document.getElementById('counter').textContent=String(index+1).padStart(2,'0')+' / '+String(deck.slides.length).padStart(2,'0');if(edit)renderList()}function go(i){index=(i+deck.slides.length)%deck.slides.length;selected=null;render();if(edit)inspector()}function renderList(){var l=document.getElementById('slideList');l.innerHTML='';deck.slides.forEach(function(s,i){var b=txt(E('button','slideBtn'+(i===index?' chosen':'')),String(i+1).padStart(2,'0')+'   '+s.name);b.onclick=function(){go(i)};l.appendChild(b)})}function pick(s,o){selected=o;render();inspector()}function startPointer(ev,o,e,forceSize){if(ev.button!==0)return;ev.preventDefault();var ini={x:ev.clientX,y:ev.clientY,ox:o.x,oy:o.y,w:o.w,h:o.h},k=scale(),isSize=forceSize||(ev.offsetX>(o.w*k-19)&&ev.offsetY>(o.h*k-19));function move(v){var dx=(v.clientX-ini.x)/k,dy=(v.clientY-ini.y)/k;if(isSize){o.w=Math.max(20,Math.round(ini.w+dx));o.h=Math.max(12,Math.round(ini.h+dy))}else{o.x=Math.round(ini.ox+dx);o.y=Math.round(ini.oy+dy)}var target=frame.querySelector('[data-object="'+o.id+'"]');if(target){target.style.left=o.x+'px';target.style.top=o.y+'px';target.style.width=o.w+'px';target.style.height=o.h+'px'}var handle=frame.querySelector('.resize-handle');if(handle){handle.style.left=(o.x+o.w-7)+'px';handle.style.top=(o.y+o.h-7)+'px'}syncFields()}function up(){document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up);store()}document.addEventListener('pointermove',move);document.addEventListener('pointerup',up)}function syncFields(){if(!selected)return;['x','y','w','h'].forEach(function(p){var e=document.querySelector('#attr-'+p);if(e)e.value=selected[p]})}
 var databasePromise=null, draftTimer=null;
 function dbOpen(){
   if(!databasePromise)databasePromise=new Promise(function(resolve,reject){
@@ -104,7 +104,7 @@ function inspector(){
   if(s.type==='image'){
     c.appendChild(txt(E('label'),'ИЗОБРАЖЕНИЕ'));
     var wrap=E('div','image-editor'),prev=E('img','image-preview');
-    prev.src=s.src;prev.alt='Предпросмотр изображения';
+    prev.src=resolveImage(s.src);prev.alt='Предпросмотр изображения';
     wrap.appendChild(prev);
     var zone=E('div','image-drop');
     zone.tabIndex=0;zone.setAttribute('role','button');
@@ -123,7 +123,7 @@ function inspector(){
     checkLine.appendChild(txt(E('span'),'Заменить во всех местах ('+total+')'));
     wrap.appendChild(checkLine);
     var note=E('p','image-upload-note');
-    note.textContent='Картинка сразу обновляется в черновике. Для публикации она будет загружена в репозиторий.';
+    note.textContent='Изображение сохраняется внутри файла презентации при публикации. Отдельная загрузка файла в GitHub больше не нужна.';
     wrap.appendChild(note);
     input.addEventListener('change',function(){
       if(input.files&&input.files[0])updateImage(input.files[0],s,check.checked)
@@ -174,52 +174,64 @@ function inspector(){
 function store(){if(!edit)return;clearTimeout(draftTimer);draftTimer=setTimeout(function(){saveDraft().catch(function(e){console.warn('Черновик не сохранён',e)})},350)}document.getElementById('prev').onclick=function(){go(index-1)};document.getElementById('next').onclick=function(){go(index+1)};document.addEventListener('keydown',function(e){if(e.target.matches('input,textarea'))return;if(e.key==='ArrowRight')go(index+1);if(e.key==='ArrowLeft')go(index-1)});window.addEventListener('resize',render);if(edit){document.getElementById('addImage').onclick=function(){document.getElementById('quickImageFile').click()};document.getElementById('quickImageFile').onchange=function(){if(this.files&&this.files[0])appendImage(this.files[0]);this.value=''};document.getElementById('addText').onclick=function(){var o={id:'custom-'+Date.now(),type:'text',text:'Новый текст',x:500,y:255,w:320,h:55,size:22,color:'#263441',font:'sans'};deck.slides[index].objects.push(o);selected=o;store();render();inspector()};document.getElementById('saveDraft').onclick=async function(){try{await saveDraft();msg('Черновик сохранён в браузере')}catch(e){msg('Ошибка сохранения: '+e.message)}};document.getElementById('downloadJson').onclick=function(){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(deck,null,2)],{type:'application/json'}));a.download='world-treasures-deck.json';a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},2000)};
 document.getElementById('publish').onclick=async function(){
   var token=document.getElementById('pat').value.trim();
-  if(!token){msg('Для прямой записи на GitHub требуется авторизация');return}
+  if(!token){msg('Вставьте токен GitHub в поле слева');return}
   var btn=this,status=document.getElementById('saveStatus');
   btn.disabled=true;btn.textContent='Публикация…';
   try{
-    var root='https://api.github.com/repos/'+repo+'/contents/';
-    var h={'Accept':'application/vnd.github+json','Authorization':'Bearer '+token,'X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'};
-    var pics=new Set();
-    deck.slides.forEach(function(slide){
-      slide.objects.forEach(function(o){
-        if(o.type==='image'&&o.src.startsWith('data:image/webp;base64,'))pics.add(o.src)
-      })
-    });
-    var replacements=new Map(),num=0;
-    for(var data of pics){
-      num++;
-      status.textContent='Загрузка изображения '+num+' из '+pics.size;
-      var bytes=data.split(',')[1];
-      var digest=await crypto.subtle.digest('SHA-256',Uint8Array.from(atob(bytes),function(c){return c.charCodeAt(0)}));
-      var hash=Array.from(new Uint8Array(digest)).map(function(c){return c.toString(16).padStart(2,'0')}).join('').slice(0,28);
-      var imagePath='world-treasures/assets/uploads/'+hash+'.webp';
-      var imageApi=root+imagePath;
-      var existing=await fetch(imageApi,{headers:h});
-      if(existing.status===404){
-        var upload=await fetch(imageApi,{method:'PUT',headers:h,body:JSON.stringify({message:'Upload World Treasures image '+hash,content:bytes,branch:'main'})});
-        if(!upload.ok)throw Error('Ошибка загрузки изображения '+num+': '+upload.status)
-      }else if(!existing.ok)throw Error('Ошибка проверки изображения: '+existing.status);
-      replacements.set(data,'assets/uploads/'+hash+'.webp')
-    }
+    status.textContent='Подготовка изменений и изображений…';
+    // All images are kept in a shared image dictionary inside deck.json.
+    // This avoids a separate GitHub asset-upload request and duplicates across slides.
     var copy=JSON.parse(JSON.stringify(deck));
+    if(!copy.embeddedImages||typeof copy.embeddedImages!=='object')copy.embeddedImages={};
+    var pending=new Map();
+    for(var slide of copy.slides)for(var object of slide.objects){
+      if(object.type==='image' && typeof object.src==='string' && object.src.startsWith('data:image/')){
+        var data=object.src;
+        if(!pending.has(data)){
+          var b64=data.split(',')[1]||'';
+          var binary=Uint8Array.from(atob(b64),function(c){return c.charCodeAt(0)});
+          var digest=await crypto.subtle.digest('SHA-256',binary);
+          var hash=Array.from(new Uint8Array(digest)).map(function(c){return c.toString(16).padStart(2,'0')}).join('');
+          pending.set(data,hash);
+          copy.embeddedImages[hash]=data;
+        }
+        object.src='embedded:'+pending.get(data);
+      }
+    }
+    var used=new Set();
     copy.slides.forEach(function(slide){slide.objects.forEach(function(o){
-      if(o.type==='image'&&replacements.has(o.src))o.src=replacements.get(o.src)
+      if(o.type==='image'&&typeof o.src==='string'&&o.src.startsWith('embedded:'))used.add(o.src.slice(9))
     })});
-    status.textContent='Публикация слайдов…';
-    var api=root+path;
-    var r=await fetch(api,{headers:h});
-    if(!r.ok)throw Error('Ошибка чтения версии слайдов: '+r.status);
-    var old=await r.json(),json=JSON.stringify(copy,null,2),array=new TextEncoder().encode(json),bin='';
-    for(var i=0;i<array.length;i++)bin+=String.fromCharCode(array[i]);
-    var put=await fetch(api,{method:'PUT',headers:h,body:JSON.stringify({message:'Update World Treasures presentation and images',content:btoa(bin),sha:old.sha,branch:'main'})});
-    if(!put.ok)throw Error('Не удалось опубликовать презентацию: '+put.status+' '+(await put.text()).slice(0,180));
+    Object.keys(copy.embeddedImages).forEach(function(key){if(!used.has(key))delete copy.embeddedImages[key]});
+    var content=JSON.stringify(copy,null,2);
+    var bytes=new TextEncoder().encode(content);
+    if(bytes.length>18*1024*1024)throw Error('Презентация больше 18 МБ. Сожмите добавленные изображения.');
+    var api='https://api.github.com/repos/'+repo+'/contents/'+path;
+    var h={'Accept':'application/vnd.github+json','Authorization':'Bearer '+token,'X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'};
+    status.textContent='Проверка доступа к презентации…';
+    var current=await fetch(api,{headers:h});
+    if(!current.ok){
+      var g=await current.json().catch(function(){return {}});
+      throw Error('GitHub '+current.status+': '+(g.message||'не удалось открыть файл презентации'));
+    }
+    var old=await current.json(),str='';
+    for(var i=0;i<bytes.length;i++)str+=String.fromCharCode(bytes[i]);
+    status.textContent='Сохранение презентации одним файлом…';
+    var saved=await fetch(api,{method:'PUT',headers:h,body:JSON.stringify({message:'Update World Treasures slides and embedded images',content:btoa(str),sha:old.sha,branch:'main'})});
+    if(!saved.ok){
+      var err=await saved.json().catch(function(){return {}});
+      var detail=String(err.message||'Ошибка GitHub');
+      if(saved.status===403||saved.status===401)throw Error('GitHub отказал в записи ('+saved.status+'). Проверьте, что токен имеет Contents: Read and write и доступ к stoliarovd-mitrey/black_edition. Ответ: '+detail);
+      throw Error('Не удалось сохранить: '+saved.status+'. '+detail);
+    }
     deck=copy;
     await saveDraft();
     render();inspector();
-    status.textContent='Изменения отправлены на GitHub. GitHub Pages обновится через несколько минут.';
-    msg('Опубликовано вместе с изображениями')
-  }catch(e){status.textContent=e.message;msg('Не удалось опубликовать')}
-  finally{btn.disabled=false;btn.textContent='Опубликовать на GitHub'}
+    status.textContent='Опубликовано! Слайды и изображения сохранены. GitHub Pages обновится в течение нескольких минут.';
+    msg('Слайды и изображения опубликованы')
+  }catch(e){
+    status.textContent=e.message||String(e);
+    msg('Не удалось опубликовать — черновик сохранён')
+  }finally{btn.disabled=false;btn.textContent='Опубликовать на GitHub'}
 }
 }else{document.getElementById('full').onclick=function(){document.documentElement.requestFullscreen?.()};document.getElementById('print').onclick=function(){var c=E('div','printwrap');deck.slides.forEach(function(s,i){c.appendChild(slideRender(s,i,true))});document.body.appendChild(c);window.print();setTimeout(function(){c.remove()},1000)}}fetch('deck.json?'+Date.now()).then(function(r){if(!r.ok)throw Error(r.status);return r.json()}).then(async function(data){deck=data;if(edit){var draft=await getDraft();if(draft&&draft.slides)deck=draft}render();if(edit)inspector()}).catch(function(e){frame.textContent='Не удалось загрузить данные презентации: '+e.message})})();
