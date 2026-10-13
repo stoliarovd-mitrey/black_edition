@@ -225,6 +225,7 @@ document.getElementById('publish').onclick=async function(){
       throw Error('Не удалось сохранить: '+saved.status+'. '+detail);
     }
     deck=copy;
+    selected=null;
     await saveDraft();
     render();inspector();
     status.textContent='Опубликовано! Слайды и изображения сохранены. GitHub Pages обновится в течение нескольких минут.';
