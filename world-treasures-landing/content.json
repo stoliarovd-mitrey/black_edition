@@ -219,40 +219,43 @@
       "id": "inspiration-qasr",
       "name": "Вдохновение · Qasr Al Noor",
       "theme": "stone",
-      "height": 335,
+      "height": 505,
       "kind": "inspiration",
       "items": [
+        {
+          "id": "inspiration-qasr-image",
+          "type": "image",
+          "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Arabesque_details_in_Alhambra_-_DSC07703.JPG/1200px-Arabesque_details_in_Alhambra_-_DSC07703.JPG",
+          "alt": "Рельефные арабески дворцовой архитектуры Альгамбры, исторический источник вдохновения",
+          "fit": "cover",
+          "text": "",
+          "x": 80,
+          "y": 35,
+          "w": 730,
+          "h": 435,
+          "size": 0,
+          "order": 0
+        },
         {
           "id": "inspiration-qasr-title",
           "type": "title",
           "text": "Дворцовая\nарабеска",
-          "x": 95,
-          "y": 86,
-          "w": 690,
+          "x": 890,
+          "y": 121,
+          "w": 610,
           "h": null,
-          "size": 44,
-          "order": 0
+          "size": 45,
+          "order": 1
         },
         {
           "id": "inspiration-qasr-lead",
           "type": "text",
-          "text": "Вдохновение для Qasr Al Noor мы нашли в орнаментах дворцовой архитектуры арабского мира. Растительные линии образуют непрерывные переплетения.",
-          "x": 850,
-          "y": 80,
-          "w": 650,
+          "text": "Растительные арабески дворцовой архитектуры арабского мира вдохновили орнамент Qasr Al Noor. Переплетения и симметрия получили новое исполнение в рельефе корпуса.",
+          "x": 890,
+          "y": 274,
+          "w": 600,
           "h": null,
-          "size": 17,
-          "order": 1
-        },
-        {
-          "id": "inspiration-qasr-detail",
-          "type": "text",
-          "text": "В рельефе корпуса этот рисунок сохраняет характерную симметрию. Свет скользит по выступающим линиям, раскрывая глубину узора.",
-          "x": 850,
-          "y": 195,
-          "w": 650,
-          "h": null,
-          "size": 17,
+          "size": 19,
           "order": 2
         }
       ]
@@ -339,40 +342,43 @@
       "id": "inspiration-omkara",
       "name": "Вдохновение · Omkara",
       "theme": "dark",
-      "height": 335,
+      "height": 505,
       "kind": "inspiration",
       "items": [
         {
+          "id": "inspiration-omkara-image",
+          "type": "image",
+          "src": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Om_symbol.svg",
+          "alt": "Священный знак Ом, символический мотив индийского храмового искусства",
+          "fit": "contain",
+          "text": "",
+          "x": 80,
+          "y": 35,
+          "w": 730,
+          "h": 435,
+          "size": 0,
+          "order": 0
+        },
+        {
           "id": "inspiration-omkara-title",
           "type": "title",
-          "text": "Символ Ом\nи лотос",
-          "x": 95,
-          "y": 86,
-          "w": 690,
+          "text": "Знак Ом\nи лотос",
+          "x": 890,
+          "y": 121,
+          "w": 610,
           "h": null,
-          "size": 44,
-          "order": 0
+          "size": 45,
+          "order": 1
         },
         {
           "id": "inspiration-omkara-lead",
           "type": "text",
-          "text": "Образ Omkara восходит к индийскому храмовому искусству. Священный знак Ом занимает центр композиции, а вокруг него раскрываются лепестки лотоса.",
-          "x": 850,
-          "y": 80,
-          "w": 650,
+          "text": "В основе Omkara лежат два мотива индийского искусства: священный знак Ом и лепестки лотоса. Они определили композицию золотого медальона.",
+          "x": 890,
+          "y": 274,
+          "w": 600,
           "h": null,
-          "size": 17,
-          "order": 1
-        },
-        {
-          "id": "inspiration-omkara-detail",
-          "type": "text",
-          "text": "В традиции Индии Ом связан с первозданным звуком, а лотос часто означает духовную чистоту. Эти мотивы определили рисунок модели.",
-          "x": 850,
-          "y": 195,
-          "w": 650,
-          "h": null,
-          "size": 17,
+          "size": 19,
           "order": 2
         }
       ]
@@ -459,40 +465,43 @@
       "id": "inspiration-dali",
       "name": "Вдохновение · Dali",
       "theme": "stone",
-      "height": 335,
+      "height": 505,
       "kind": "inspiration",
       "items": [
         {
+          "id": "inspiration-dali-image",
+          "type": "image",
+          "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Surreal.png/960px-Surreal.png",
+          "alt": "Сюрреалистический рисунок, иллюстрация идеи свободной пластики и необычной формы",
+          "fit": "cover",
+          "text": "",
+          "x": 80,
+          "y": 35,
+          "w": 730,
+          "h": 435,
+          "size": 0,
+          "order": 0
+        },
+        {
           "id": "inspiration-dali-title",
           "type": "title",
-          "text": "Текучая форма\nсюрреализма",
-          "x": 95,
-          "y": 86,
-          "w": 690,
+          "text": "Текучие формы\nсюрреализма",
+          "x": 890,
+          "y": 121,
+          "w": 610,
           "h": null,
-          "size": 44,
-          "order": 0
+          "size": 45,
+          "order": 1
         },
         {
           "id": "inspiration-dali-lead",
           "type": "text",
-          "text": "Отправной точкой Dali стали работы Сальвадора Дали. В его сюрреалистических образах знакомые предметы теряют устойчивую форму и словно подчиняются иному времени.",
-          "x": 850,
-          "y": 80,
-          "w": 650,
+          "text": "Работы Сальвадора Дали вдохновили нас на текучий рельеф. Волны золотого металла словно меняют привычную форму, продолжая движение по поверхности корпуса.",
+          "x": 890,
+          "y": 274,
+          "w": 600,
           "h": null,
-          "size": 17,
-          "order": 1
-        },
-        {
-          "id": "inspiration-dali-detail",
-          "type": "text",
-          "text": "Волнистые линии золотой панели передают эту пластику. Вместо буквального цитирования произведений художника Caviar обращается к самому принципу текучей формы.",
-          "x": 850,
-          "y": 195,
-          "w": 650,
-          "h": null,
-          "size": 17,
+          "size": 19,
           "order": 2
         }
       ]
@@ -579,40 +588,43 @@
       "id": "inspiration-jingtai",
       "name": "Вдохновение · Jingtai Blue",
       "theme": "dark",
-      "height": 335,
+      "height": 505,
       "kind": "inspiration",
       "items": [
+        {
+          "id": "inspiration-jingtai-image",
+          "type": "image",
+          "src": "https://images.metmuseum.org/CRDImages/as/original/DP242372.jpg",
+          "alt": "Китайская ваза XVIII века, перегородчатая эмаль цзинтайлань, собрание Метрополитен-музея",
+          "fit": "cover",
+          "text": "",
+          "x": 80,
+          "y": 35,
+          "w": 730,
+          "h": 435,
+          "size": 0,
+          "order": 0
+        },
         {
           "id": "inspiration-jingtai-title",
           "type": "title",
           "text": "Искусство\nцзинтайлань",
-          "x": 95,
-          "y": 86,
-          "w": 690,
+          "x": 890,
+          "y": 121,
+          "w": 610,
           "h": null,
-          "size": 44,
-          "order": 0
+          "size": 45,
+          "order": 1
         },
         {
           "id": "inspiration-jingtai-lead",
           "type": "text",
-          "text": "Jingtai Blue вдохновлён цзинтайлань, традицией китайской перегородчатой эмали, прославившейся насыщенным синим фоном и тонкой прорисовкой цветочных мотивов.",
-          "x": 850,
-          "y": 80,
-          "w": 650,
+          "text": "Китайская перегородчатая эмаль вдохновила палитру Jingtai Blue. Насыщенный синий цвет и цветочные мотивы подчеркнуты тонкими золотистыми контурами.",
+          "x": 890,
+          "y": 274,
+          "w": 600,
           "h": null,
-          "size": 17,
-          "order": 1
-        },
-        {
-          "id": "inspiration-jingtai-detail",
-          "type": "text",
-          "text": "Золотистые контуры и яркие лепестки отсылают к декоративному языку этого искусства. Дизайн сохраняет узнаваемую палитру, не претендуя на историческую реконструкцию техники.",
-          "x": 850,
-          "y": 195,
-          "w": 650,
-          "h": null,
-          "size": 17,
+          "size": 19,
           "order": 2
         }
       ]
@@ -848,5 +860,5 @@
       "kind": ""
     }
   ],
-  "designRevision": 3
+  "designRevision": 4
 }
