@@ -190,7 +190,7 @@ body{background:var(--paper);color:var(--ink);font-family:"Nunito Sans","Nunito 
 @media(min-width:1121px){
   .section:not(.hero) .stage{min-height:unset}
   .section.model .stage{min-height:680px}
-  .section.inspiration .stage{min-height:335px}
+  .section.inspiration .stage{min-height:505px}
   .section#idea .stage{min-height:465px}
   .section#craft .stage{min-height:570px}
   .section#edition .stage{min-height:455px}
@@ -228,4 +228,74 @@ body{background:var(--paper);color:var(--ink);font-family:"Nunito Sans","Nunito 
   .section.inspiration .item.title{font-size:32px!important;margin-bottom:4px}
   .section.inspiration .item.text{font-size:16px!important;line-height:24px}
   .section#idea .item.button,.section#contact .item.button{min-width:230px}
+}
+
+
+/* Inspiration art: reference photograph / artefact on the left, concise editorial copy on the right. */
+.section.inspiration .item.image{
+  border:0;
+  background:#242324;
+  object-position:center;
+  box-shadow:0 16px 36px rgba(0,0,0,.12);
+  cursor:zoom-in;
+}
+.section.inspiration .item.title{
+  font-size:clamp(35px,2.8vw,45px)!important;
+  letter-spacing:-.025em;
+  line-height:1.13;
+}
+.section.inspiration .item.text{
+  font-size:clamp(16px,1.1vw,18px)!important;
+  line-height:1.55;
+  max-width:610px;
+}
+.section.inspiration .stage::before{display:none}
+/* Authentic Om pictogram in a muted gold on an illuminated graphite panel. */
+.section#inspiration-omkara .stage::after{
+  content:"";
+  position:absolute;
+  left:5%;top:6.93%;
+  width:45.625%;height:86.14%;
+  background:radial-gradient(circle at 50% 46%,#3e3030 0%,#201c21 49%,#141418 100%);
+  pointer-events:none;
+  z-index:0;
+}
+.section#inspiration-omkara .item.image{
+  position:absolute;
+  padding:5.5% 17.5%;
+  background:transparent;
+  filter:invert(74%) sepia(13%) saturate(614%) hue-rotate(353deg) brightness(97%) contrast(87%);
+  box-shadow:none;
+  z-index:1;
+}
+.section#inspiration-omkara .item.title,.section#inspiration-omkara .item.text{z-index:2}
+@media (min-width:701px) and (max-width:1120px){
+  .section.inspiration .item.image{
+    height:390px!important;
+    padding:0;
+    object-fit:cover;
+  }
+  .section#inspiration-omkara .stage::after{
+    left:7%;top:60px;
+    width:86%;height:390px;
+  }
+  .section#inspiration-omkara .item.image{position:relative;padding:70px 32%}
+}
+@media(max-width:700px){
+  .section.inspiration .stage{gap:18px;padding:35px 7% 45px}
+  .section.inspiration .item.image{
+    width:100%!important;
+    height:285px!important;
+    max-height:none;
+    aspect-ratio:auto;
+    object-fit:cover;
+    order:0;
+  }
+  .section.inspiration .item.title{order:1;font-size:30px!important;margin-top:5px}
+  .section.inspiration .item.text{order:2;font-size:16px!important;line-height:24px}
+  .section#inspiration-omkara .stage::after{
+    left:7%;top:35px;
+    width:86%;height:285px;
+  }
+  .section#inspiration-omkara .item.image{position:relative!important;padding:48px 30%!important}
 }
