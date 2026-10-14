@@ -1,1 +1,93 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Редактор World Treasures · Caviar</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,300;6..12,400;6..12,700;6..12,800&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="editor.css"></head><body class="editor-page"><div class="editbar"><strong>WORLD TREASURES <small>Редактор</small></strong><button id="undo">Отменить</button><button id="redo">Повторить</button><button id="preview">Мобильный вид</button><button id="export">Скачать проект</button><label class="filebutton">Открыть проект<input id="import" type="file" accept="application/json"></label><button id="publish" class="primary">Опубликовать</button><a href="./" target="_blank" rel="noopener">Открыть сайт ↗</a></div><aside><h2>Страница</h2><label>Секция<select id="sections"></select></label><div class="row"><button id="up">Секция ↑</button><button id="down">Секция ↓</button></div><label>Высота секции<input id="sectionHeight" type="number" min="300" max="3000"></label><label>Фон<select id="theme"><option value="dark">Графит</option><option value="light">Слоновая кость</option><option value="stone">Тёплый камень</option></select></label><hr><h2>Элемент</h2><label>Выбор элемента<select id="elements"></select></label><p class="hint">Перетаскивайте элемент за рамку. Нижний правый угол меняет размер. Текст редактируется в поле ниже.</p><label id="textLabel">Текст<textarea id="text" rows="6"></textarea></label><label id="imageLabel">Изображение<input id="image" type="file" accept="image/png,image/jpeg,image/webp"></label><label id="hrefLabel">Ссылка<input id="href" type="text"></label><div class="grid"><label>X<input id="x" type="number"></label><label>Y<input id="y" type="number"></label><label>Ширина<input id="w" type="number" min="20"></label><label>Высота<input id="h" type="number" min="0"></label><label>Шрифт<input id="size" type="number" min="8" max="200"></label><label>Порядок на телефоне<input id="order" type="number"></label></div><label>Выравнивание<select id="align"><option value="left">Слева</option><option value="center">По центру</option><option value="right">Справа</option></select></label><div class="row"><button id="addText">+ Текст</button><button id="addImage">+ Изображение</button></div><button id="delete">Удалить элемент</button><hr><button id="reset">Загрузить опубликованную версию</button><p id="status" role="status" aria-live="polite">Загрузка…</p></aside><div class="workspace"><div id="canvas"><main id="page"></main></div></div><dialog id="publishDialog"><form method="dialog"><h2>Публикация в GitHub</h2><p>Изменения появятся на общей странице после сборки GitHub Pages.</p><p>Репозиторий: <b>stoliarovd-mitrey/black_edition</b><br>Ветка: main<br>Файл: world-treasures-landing/content.json</p><label>GitHub Fine-grained token<input id="token" type="password" autocomplete="off" placeholder="github_pat_…"></label><p class="hint">Для этого репозитория нужны права Contents: Read and write. Токен передаётся только api.github.com и не сохраняется. Можно также скачать проект и заменить content.json в GitHub вручную.</p><p id="publishStatus" role="status"></p><div class="row"><button value="cancel">Отмена</button><button type="button" id="confirmPublish" class="primary">Опубликовать изменения</button></div></form></dialog><script>window.EDITOR_MODE=true;</script><script src="app.js"></script><script src="editor.js"></script></body></html>
+<!doctype html>
+<html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Конструктор World Treasures · Caviar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/grapesjs/0.22.6/css/grapes.min.css">
+<link rel="stylesheet" href="builder.css">
+</head><body>
+<header class="b-top">
+<strong>CAVIAR <small>World Treasures · Визуальный конструктор</small></strong>
+<div class="spacer"></div>
+<button class="b-btn" id="undo" title="Отменить последнюю правку">↶ Отмена</button>
+<button class="b-btn" id="redo" title="Повторить правку">↷ Повтор</button>
+<button class="b-btn" id="desktop">Компьютер</button>
+<button class="b-btn" id="tablet">Планшет</button>
+<button class="b-btn" id="mobile">Телефон</button>
+<button class="b-btn" id="preview">Просмотр</button>
+<button class="b-btn" id="export">Скачать</button>
+<button class="b-btn b-primary" id="publish">Опубликовать</button>
+<a class="b-footer-link" target="_blank" rel="noopener" href="./">Открыть сайт ↗</a>
+</header>
+<div class="b-workspace">
+<aside class="b-left">
+  <div class="b-tabbar">
+    <button class="b-tab active" data-tab-group="left" data-pane="blocks-pane">Добавить</button>
+    <button class="b-tab" data-tab-group="left" data-pane="sections-pane">Секции</button>
+  </div>
+  <div id="blocks-pane" class="b-pane active">
+    <p class="b-note">Перетащите готовую секцию или элемент на страницу. Также можно нажать на блок, чтобы добавить его вниз.</p>
+    <div id="blocks"></div>
+  </div>
+  <div id="sections-pane" class="b-pane">
+    <p class="b-note">Выберите секцию и меняйте порядок стрелками. Можно перетаскивать секции прямо на странице.</p>
+    <div class="b-sections" id="sections-list"></div>
+    <div class="b-actions"><button class="b-btn" id="new-section">+ Новая секция</button></div>
+  </div>
+</aside>
+<section class="b-middle"><div id="gjs"></div></section>
+<aside class="b-right">
+  <div class="b-tabbar">
+    <button class="b-tab active" data-tab-group="right" data-pane="properties-pane">Содержимое</button>
+    <button class="b-tab" data-tab-group="right" data-pane="style-pane">Дизайн</button>
+    <button class="b-tab" data-tab-group="right" data-pane="layers-pane">Слои</button>
+  </div>
+  <div id="properties-pane" class="b-pane active">
+    <div id="none-selected" class="b-note">Кликните по тексту, кнопке, изображению или секции на странице.</div>
+    <div id="selected-form" class="b-hidden">
+      <div class="b-heading" id="selected-type">Элемент</div>
+      <div class="b-property">
+       <div id="text-field" class="b-hidden"><label class="b-label" for="element-text">Текст</label><textarea class="b-input" id="element-text" rows="4"></textarea></div>
+       <div id="url-field" class="b-hidden"><label class="b-label" for="element-url">Адрес кнопки / ссылки</label><input class="b-input" id="element-url" placeholder="https:// или #раздел"></div>
+       <div id="image-fields" class="b-hidden">
+        <label class="b-label" for="image-url">Адрес изображения</label><input class="b-input" id="image-url" placeholder="https:// или assets/...">
+        <label class="b-label" for="image-alt">Описание изображения</label><input class="b-input" id="image-alt" placeholder="Для доступности">
+        <label class="b-file">Загрузить своё изображение<input id="image-upload" type="file" accept="image/png,image/jpeg,image/webp"></label>
+       </div>
+      </div>
+      <div class="b-heading">Простые настройки</div>
+      <div class="b-form-row">
+       <label><span class="b-label">Размер шрифта</span><select class="b-input" id="font-size"><option value="">По шаблону</option><option value="14px">14 px</option><option value="16px">16 px</option><option value="18px">18 px</option><option value="24px">24 px</option><option value="32px">32 px</option><option value="48px">48 px</option><option value="64px">64 px</option></select></label>
+       <label><span class="b-label">Выравнивание</span><select class="b-input" id="align"><option value="">По шаблону</option><option value="left">Слева</option><option value="center">Центр</option><option value="right">Справа</option></select></label>
+      </div>
+      <label class="b-label">Цвет текста</label><input class="b-input" id="text-color" type="color" value="#333333">
+      <div class="b-actions">
+       <button class="b-btn" id="duplicate">Дублировать</button>
+       <button class="b-btn" id="remove">Удалить</button>
+      </div>
+      <div class="b-actions">
+       <button class="b-btn" id="move-up">Секция выше ↑</button>
+       <button class="b-btn" id="move-down">Секция ниже ↓</button>
+      </div>
+      <p class="b-note">Текст можно также менять двойным щелчком прямо на странице. Для других настроек откройте вкладку «Дизайн».</p>
+    </div>
+  </div>
+  <div id="style-pane" class="b-pane"><p class="b-note">Выберите элемент и настройте его внешний вид.</p><div id="styles"></div><div id="traits"></div></div>
+  <div id="layers-pane" class="b-pane"><p class="b-note">Здесь можно перетаскивать элементы и управлять их вложенностью.</p><div id="layers"></div></div>
+</aside>
+</div>
+<div class="b-status" role="status" id="status">Загрузка конструктора…</div>
+<dialog class="b-modal" id="publish-dialog">
+ <h2>Публикация на сайт</h2>
+ <p>Публикуется только после вашего подтверждения. Перед этим редактор сохраняет черновик в этом браузере.</p>
+ <p>Репозиторий: <b>stoliarovd-mitrey/black_edition</b><br>Файл публикации: <code>world-treasures-landing/builder-data.json</code></p>
+ <label>GitHub Fine-grained token (права Contents: Read and write)
+ <input type="password" autocomplete="off" class="b-input" id="token" placeholder="github_pat_…"></label>
+ <p id="publish-message"></p>
+ <div class="b-dialog-row"><button class="b-btn" id="cancel-publish">Отмена</button><button class="b-btn gold" id="confirm-publish">Опубликовать</button></div>
+</dialog>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/grapesjs/0.22.6/grapes.min.js"></script>
+<script src="builder.js"></script>
+</body></html>
