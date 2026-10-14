@@ -28,8 +28,11 @@
     <button class="b-tab" data-tab-group="left" data-pane="sections-pane">Секции</button>
   </div>
   <div id="blocks-pane" class="b-pane active">
-    <p class="b-note">Перетащите готовую секцию или элемент на страницу. Также можно нажать на блок, чтобы добавить его вниз.</p>
-    <div id="blocks"></div>
+    <p class="b-note">Перетащите готовую секцию или элемент на страницу. Для быстрого добавления используйте кнопки ниже.</p>
+    <div class="b-heading">Быстро добавить</div>
+    <div class="b-actions"><button class="b-btn" id="quick-section">+ Секция</button><button class="b-btn" id="quick-button">+ Кнопка</button></div>
+    <div class="b-actions"><button class="b-btn" id="quick-text">+ Текст</button><button class="b-btn" id="quick-image">+ Фото</button></div>
+    <div class="b-heading">Готовые макеты</div><div id="blocks"></div>
   </div>
   <div id="sections-pane" class="b-pane">
     <p class="b-note">Выберите секцию и меняйте порядок стрелками. Можно перетаскивать секции прямо на странице.</p>
@@ -69,7 +72,7 @@
       </div>
       <div class="b-actions">
        <button class="b-btn" id="move-up">Секция выше ↑</button>
-       <button class="b-btn" id="move-down">Секция ниже ↓</button>
+       <button class="b-btn" id="move-down">Секция ниже ↓</button></div><div class="b-actions"><button class="b-btn" id="item-up">Элемент выше ↑</button><button class="b-btn" id="item-down">Элемент ниже ↓</button>
       </div>
       <p class="b-note">Текст можно также менять двойным щелчком прямо на странице. Для других настроек откройте вкладку «Дизайн».</p>
     </div>
