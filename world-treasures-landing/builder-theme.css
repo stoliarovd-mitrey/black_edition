@@ -101,3 +101,25 @@ body.builder-published{margin:0;background:var(--wt-white);color:var(--wt-ink);f
 .wt-page #craft .wt-support-gallery img{object-fit:cover}
 .wt-page .wt-contact-media img{height:510px;object-fit:cover}
 @media(max-width:700px){.wt-page .wt-support-gallery{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px}.wt-page .wt-support-gallery img{height:240px}.wt-page .wt-contact-media img{height:360px}}
+
+
+/* A cultural reference and its finished model form one continuous chapter. */
+.wt-page #inspiration-qasr,.wt-page #qasr,
+.wt-page #inspiration-dali,.wt-page #dali{
+ background:#17171c;
+ color:#f9f8f5;
+}
+.wt-page #inspiration-omkara,.wt-page #omkara,
+.wt-page #inspiration-jingtai,.wt-page #jingtai{
+ background:#f9f8f5;
+ color:#393838;
+}
+.wt-page .wt-inspiration{padding:68px 0 24px}
+.wt-page .wt-inspiration + .wt-section{padding-top:24px}
+.wt-page .wt-inspiration .wt-media img{box-shadow:0 18px 34px #0000001d}
+.wt-page #inspiration-omkara .wt-media{background:radial-gradient(circle,#342d34,#17171c 76%)}
+.wt-page #inspiration-omkara .wt-media img{object-fit:contain;max-height:380px}
+@media(max-width:700px){
+ .wt-page .wt-inspiration{padding:44px 0 12px}
+ .wt-page .wt-inspiration + .wt-section{padding-top:12px}
+}
