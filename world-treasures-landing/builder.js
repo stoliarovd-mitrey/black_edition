@@ -153,6 +153,27 @@
    try{const u=new URL(val,location.href);if(['https:','http:'].includes(u.protocol))return val}catch{}
    return null;
  }
+ function moveElement(delta){
+   if(!chosen){notice('Выберите элемент');return}
+   const p=chosen.parent();if(!p)return;
+   const list=p.components(),index=list.indexOf(chosen),next=index+delta;
+   if(next<0||next>=list.length){notice('Других элементов в этом направлении нет');return}
+   chosen.move(p,{at:delta>0?index+2:next});editor.select(chosen);listSections();notice('Порядок элементов изменён');
+ }
+ function quickAdd(type){
+   if(type==='section'){$('new-section').click();return}
+   const section=getSection(editor.getSelected())||editor.getWrapper().find('section').slice(-1)[0];
+   if(!section){notice('Не нашёл секцию для вставки');return}
+   const target=(type==='image'?section.find('.wt-media')[0]:section.find('.wt-copy')[0])||section.find('.wt-container')[0]||section;
+   const snippets={
+     text:'<p>Нажмите дважды, чтобы отредактировать новый текст.</p>',
+     button:'<a class="wt-button" href="#contact">Новая кнопка</a>',
+     image:'<img src="assets/qasr.webp" alt="Изображение" style="width:100%;max-height:500px;object-fit:contain">'
+   };
+   const added=target.append(snippets[type]);
+   if(added?.[0])editor.select(added[0]);
+   notice('Новый элемент добавлен. Настройте его справа.');
+ }
  function wireControls(){
    $('element-text').addEventListener('change',()=>{
      if(!chosen)return;
@@ -195,6 +216,9 @@
    $('remove').onclick=()=>{if(chosen&&confirm('Удалить выбранный элемент?')){chosen.remove();chosen=null;selectProperties();notice('Элемент удалён')}};
    $('move-up').onclick=()=>moveSection(chosen,-1);
    $('move-down').onclick=()=>moveSection(chosen,1);
+   $('item-up').onclick=()=>moveElement(-1);
+   $('item-down').onclick=()=>moveElement(1);
+   for(const type of ['section','button','text','image'])$('quick-'+type).onclick=()=>quickAdd(type);
    $('new-section').onclick=()=>{
      const added=editor.addComponents('<section class="wt-section wt-light" data-section-name="Новая секция"><div class="wt-container"><div class="wt-copy"><h2>НОВАЯ СЕКЦИЯ</h2><p>Измените этот текст</p></div></div></section>');
      editor.select(added[0]);listSections();notice('Секция добавлена внизу страницы');
