@@ -138,6 +138,51 @@
       "kind": ""
     },
     {
+      "id": "inspiration-qasr",
+      "name": "Вдохновение · Qasr Al Noor",
+      "theme": "dark",
+      "height": 505,
+      "kind": "inspiration",
+      "items": [
+        {
+          "id": "inspiration-qasr-image",
+          "type": "image",
+          "src": "assets/alhambra-arabesque.webp",
+          "alt": "Рельефные арабески дворцовой архитектуры Альгамбры, исторический источник вдохновения",
+          "fit": "cover",
+          "text": "",
+          "x": 80,
+          "y": 35,
+          "w": 730,
+          "h": 435,
+          "size": 0,
+          "order": 0
+        },
+        {
+          "id": "inspiration-qasr-title",
+          "type": "title",
+          "text": "Дворцовая\nарабеска",
+          "x": 890,
+          "y": 121,
+          "w": 610,
+          "h": null,
+          "size": 45,
+          "order": 1
+        },
+        {
+          "id": "inspiration-qasr-lead",
+          "type": "text",
+          "text": "Растительные арабески дворцовой архитектуры арабского мира вдохновили орнамент Qasr Al Noor. Переплетения и симметрия получили новое исполнение в рельефе корпуса.",
+          "x": 890,
+          "y": 274,
+          "w": 600,
+          "h": null,
+          "size": 19,
+          "order": 2
+        }
+      ]
+    },
+    {
       "id": "qasr",
       "name": "Qasr Al Noor",
       "theme": "dark",
@@ -216,44 +261,44 @@
       "kind": "model"
     },
     {
-      "id": "inspiration-qasr",
-      "name": "Вдохновение · Qasr Al Noor",
-      "theme": "stone",
+      "id": "inspiration-omkara",
+      "name": "Вдохновение · Omkara",
+      "theme": "light",
       "height": 505,
       "kind": "inspiration",
       "items": [
         {
-          "id": "inspiration-qasr-image",
+          "id": "inspiration-omkara-image",
           "type": "image",
-          "src": "assets/alhambra-arabesque.webp",
-          "alt": "Рельефные арабески дворцовой архитектуры Альгамбры, исторический источник вдохновения",
-          "fit": "cover",
+          "src": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Om_symbol.svg",
+          "alt": "Священный знак Ом, символический мотив индийского храмового искусства",
+          "fit": "contain",
           "text": "",
-          "x": 80,
+          "x": 865,
           "y": 35,
-          "w": 730,
+          "w": 655,
           "h": 435,
           "size": 0,
           "order": 0
         },
         {
-          "id": "inspiration-qasr-title",
+          "id": "inspiration-omkara-title",
           "type": "title",
-          "text": "Дворцовая\nарабеска",
-          "x": 890,
+          "text": "Знак Ом\nи лотос",
+          "x": 95,
           "y": 121,
-          "w": 610,
+          "w": 690,
           "h": null,
           "size": 45,
           "order": 1
         },
         {
-          "id": "inspiration-qasr-lead",
+          "id": "inspiration-omkara-lead",
           "type": "text",
-          "text": "Растительные арабески дворцовой архитектуры арабского мира вдохновили орнамент Qasr Al Noor. Переплетения и симметрия получили новое исполнение в рельефе корпуса.",
-          "x": 890,
+          "text": "В основе Omkara лежат два мотива индийского искусства: священный знак Ом и лепестки лотоса. Они определили композицию золотого медальона.",
+          "x": 95,
           "y": 274,
-          "w": 600,
+          "w": 660,
           "h": null,
           "size": 19,
           "order": 2
@@ -339,18 +384,18 @@
       "kind": "model"
     },
     {
-      "id": "inspiration-omkara",
-      "name": "Вдохновение · Omkara",
+      "id": "inspiration-dali",
+      "name": "Вдохновение · Dali",
       "theme": "dark",
       "height": 505,
       "kind": "inspiration",
       "items": [
         {
-          "id": "inspiration-omkara-image",
+          "id": "inspiration-dali-image",
           "type": "image",
-          "src": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Om_symbol.svg",
-          "alt": "Священный знак Ом, символический мотив индийского храмового искусства",
-          "fit": "contain",
+          "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Surreal.png/960px-Surreal.png",
+          "alt": "Сюрреалистический рисунок, иллюстрация идеи свободной пластики и необычной формы",
+          "fit": "cover",
           "text": "",
           "x": 80,
           "y": 35,
@@ -360,9 +405,9 @@
           "order": 0
         },
         {
-          "id": "inspiration-omkara-title",
+          "id": "inspiration-dali-title",
           "type": "title",
-          "text": "Знак Ом\nи лотос",
+          "text": "Текучие формы\nсюрреализма",
           "x": 890,
           "y": 121,
           "w": 610,
@@ -371,9 +416,9 @@
           "order": 1
         },
         {
-          "id": "inspiration-omkara-lead",
+          "id": "inspiration-dali-lead",
           "type": "text",
-          "text": "В основе Omkara лежат два мотива индийского искусства: священный знак Ом и лепестки лотоса. Они определили композицию золотого медальона.",
+          "text": "Работы Сальвадора Дали вдохновили нас на текучий рельеф. Волны золотого металла словно меняют привычную форму, продолжая движение по поверхности корпуса.",
           "x": 890,
           "y": 274,
           "w": 600,
@@ -462,44 +507,44 @@
       "kind": "model"
     },
     {
-      "id": "inspiration-dali",
-      "name": "Вдохновение · Dali",
-      "theme": "stone",
+      "id": "inspiration-jingtai",
+      "name": "Вдохновение · Jingtai Blue",
+      "theme": "light",
       "height": 505,
       "kind": "inspiration",
       "items": [
         {
-          "id": "inspiration-dali-image",
+          "id": "inspiration-jingtai-image",
           "type": "image",
-          "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Surreal.png/960px-Surreal.png",
-          "alt": "Сюрреалистический рисунок, иллюстрация идеи свободной пластики и необычной формы",
+          "src": "https://images.metmuseum.org/CRDImages/as/original/DP242372.jpg",
+          "alt": "Китайская ваза XVIII века, перегородчатая эмаль цзинтайлань, собрание Метрополитен-музея",
           "fit": "cover",
           "text": "",
-          "x": 80,
+          "x": 865,
           "y": 35,
-          "w": 730,
+          "w": 655,
           "h": 435,
           "size": 0,
           "order": 0
         },
         {
-          "id": "inspiration-dali-title",
+          "id": "inspiration-jingtai-title",
           "type": "title",
-          "text": "Текучие формы\nсюрреализма",
-          "x": 890,
+          "text": "Искусство\nцзинтайлань",
+          "x": 95,
           "y": 121,
-          "w": 610,
+          "w": 690,
           "h": null,
           "size": 45,
           "order": 1
         },
         {
-          "id": "inspiration-dali-lead",
+          "id": "inspiration-jingtai-lead",
           "type": "text",
-          "text": "Работы Сальвадора Дали вдохновили нас на текучий рельеф. Волны золотого металла словно меняют привычную форму, продолжая движение по поверхности корпуса.",
-          "x": 890,
+          "text": "Китайская перегородчатая эмаль вдохновила палитру Jingtai Blue. Насыщенный синий цвет и цветочные мотивы подчеркнуты тонкими золотистыми контурами.",
+          "x": 95,
           "y": 274,
-          "w": 600,
+          "w": 660,
           "h": null,
           "size": 19,
           "order": 2
@@ -583,51 +628,6 @@
         }
       ],
       "kind": "model"
-    },
-    {
-      "id": "inspiration-jingtai",
-      "name": "Вдохновение · Jingtai Blue",
-      "theme": "dark",
-      "height": 505,
-      "kind": "inspiration",
-      "items": [
-        {
-          "id": "inspiration-jingtai-image",
-          "type": "image",
-          "src": "https://images.metmuseum.org/CRDImages/as/original/DP242372.jpg",
-          "alt": "Китайская ваза XVIII века, перегородчатая эмаль цзинтайлань, собрание Метрополитен-музея",
-          "fit": "cover",
-          "text": "",
-          "x": 80,
-          "y": 35,
-          "w": 730,
-          "h": 435,
-          "size": 0,
-          "order": 0
-        },
-        {
-          "id": "inspiration-jingtai-title",
-          "type": "title",
-          "text": "Искусство\nцзинтайлань",
-          "x": 890,
-          "y": 121,
-          "w": 610,
-          "h": null,
-          "size": 45,
-          "order": 1
-        },
-        {
-          "id": "inspiration-jingtai-lead",
-          "type": "text",
-          "text": "Китайская перегородчатая эмаль вдохновила палитру Jingtai Blue. Насыщенный синий цвет и цветочные мотивы подчеркнуты тонкими золотистыми контурами.",
-          "x": 890,
-          "y": 274,
-          "w": 600,
-          "h": null,
-          "size": 19,
-          "order": 2
-        }
-      ]
     },
     {
       "id": "craft",
@@ -972,5 +972,5 @@
       "kind": ""
     }
   ],
-  "designRevision": 4
+  "designRevision": 5
 }
