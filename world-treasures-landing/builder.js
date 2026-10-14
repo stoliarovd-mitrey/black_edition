@@ -249,12 +249,11 @@
      status.textContent='Проверяем версию на GitHub…';
      const headers={Authorization:'Bearer '+token,Accept:'application/vnd.github+json','Content-Type':'application/json'};
      const r=await fetch(endpoint+'?ref=main',{headers,cache:'no-store'});
-     let currentSha=null;
-     if(r.ok){const file=await r.json();currentSha=file.sha}
+     let currentSha=null,remoteFile=null;
+     if(r.ok){remoteFile=await r.json();currentSha=remoteFile.sha}
      else if(r.status!==404)throw Error('GitHub: '+r.status+'. Проверьте токен.');
      if(publishedSha===null&&hasPublished&&currentSha){
-       const fresh=await r.clone().json().catch(()=>null);
-       const encoded=fresh?.content||'';
+       const encoded=remoteFile?.content||'';
        const utf8=encoded?Uint8Array.from(atob(encoded.replace(/\\s/g,'')),c=>c.charCodeAt(0)):null;
        const parsed=utf8?JSON.parse(new TextDecoder().decode(utf8)):null;
        if(!parsed||parsed.updatedAt!==initialStamp)throw Error('Опубликованная версия изменилась с момента открытия конструктора. Обновите страницу.');
