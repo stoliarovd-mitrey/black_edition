@@ -957,14 +957,14 @@
         {
           "id": "contact-jingtai-image",
           "type": "image",
-          "src": "assets/jingtai.webp",
+          "src": "assets/personal-manager.webp",
           "x": 80,
           "y": 45,
           "w": 650,
           "h": 650,
           "size": 0,
           "text": "",
-          "alt": "Jingtai Blue из коллекции World Treasures",
+          "alt": "Иллюстративный образ персонального консультанта",
           "fit": "cover",
           "order": 0
         }
