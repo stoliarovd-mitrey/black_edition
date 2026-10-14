@@ -108,7 +108,9 @@
  function listSections(){
    const root=$('sections-list');root.replaceChildren();
    if(!editor)return;
-   const all=editor.getWrapper().find('section');
+   const wrapper=editor.getWrapper();
+   if(!wrapper)return;
+   const all=wrapper.find('section');
    const current=getSection(editor.getSelected());
    all.forEach((sec,i)=>{
      const row=document.createElement('div');row.className='b-section'+(current===sec?' active':'');
@@ -132,8 +134,8 @@
    const t=(c.get('tagName')||'div').toLowerCase();
    if(t==='section')return 'Секция';if(t==='img')return 'Изображение';if(t==='a')return 'Кнопка / ссылка';if(/^h[1-6]$/.test(t))return 'Заголовок';if(t==='p')return 'Текст';return 'Блок '+t;
  }
- function selectProperties(){
-   const c=editor.getSelected();chosen=c;
+ function selectProperties(component){
+   const c=component&&typeof component.get==='function'?component:editor.getSelected();chosen=c;
    $('none-selected').classList.toggle('b-hidden',!!c);
    $('selected-form').classList.toggle('b-hidden',!c);
    if(!c){listSections();return}
@@ -389,9 +391,13 @@
    });
    reusableBlocks();wireControls();
    editor.on('component:selected',selectProperties);
-   editor.on('component:deselected',selectProperties);
+   editor.on('component:deselected',()=>queueMicrotask(()=>selectProperties()));
+   editor.on('component:toggled',()=>queueMicrotask(()=>selectProperties()));
+   editor.on('load',()=>{listSections();selectProperties()});
    editor.on('component:add',component=>{
-     const wrapper=editor.getWrapper(),root=wrapper.find('.wt-page')[0];
+     const wrapper=editor.getWrapper();
+     if(!wrapper)return;
+     const root=wrapper.find('.wt-page')[0];
      if(root&&component!==root&&component.parent()===wrapper){component.move(root,{at:root.components().length})}
      listSections();
    });
