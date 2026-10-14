@@ -364,3 +364,33 @@ body{background:var(--paper);color:var(--ink);font-family:"Nunito Sans","Nunito 
  .section#edition .editorial-column > .item.number {font-size:72px!important;}
  .section#inspiration-omkara .editorial-column > .item.image {padding:42px 25%!important;}
 }
+
+/* Product photography carries the final four sections, without adding empty spacers. */
+.section#craft .editorial-column {align-self:stretch;}
+.section#craft .editorial-column > .item.image {height:290px!important;object-fit:cover!important;object-position:50% 64%;background:#dfdce1;}
+.section#craft .editorial-column > .item.image[data-id="craft-relief-image"] {background:#232429;object-position:50% 69%;}
+.section#craft .editorial-column > .item.title {min-height:96px;}
+.section#craft .editorial-column > .item.text[data-id="el53"] {min-height:96px;}
+.section#edition .editorial-gallery {
+ grid-column:1/-1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;
+ padding:24px 0 8px;align-items:center;
+}
+.section#edition .editorial-gallery > .item.image {height:340px!important;object-fit:contain!important;}
+.section#packaging .editorial-column > .item.image {height:470px!important;object-fit:contain!important;background:#f0e7d5;}
+.section#contact .editorial-column > .item.image {height:510px!important;object-fit:cover!important;object-position:center;background:#bab3bd;}
+.section#contact .editorial-column > .item.button {min-width:270px;}
+@media(max-width:1120px) and (min-width:701px){
+ .section#craft .editorial-column > .item.image {height:240px!important;}
+ .section#edition .editorial-gallery {gap:16px;}
+ .section#edition .editorial-gallery > .item.image {height:250px!important;}
+ .section#packaging .editorial-column > .item.image {height:390px!important;}
+ .section#contact .editorial-column > .item.image {height:440px!important;}
+}
+@media(max-width:700px){
+ .section#craft .editorial-column > .item.title,.section#craft .editorial-column > .item.text[data-id="el53"] {min-height:0;}
+ .section#craft .editorial-column > .item.image {height:235px!important;}
+ .section#edition .editorial-gallery {grid-template-columns:1fr 1fr;gap:16px;padding:8px 0;}
+ .section#edition .editorial-gallery > .item.image {height:220px!important;}
+ .section#packaging .editorial-column > .item.image {height:400px!important;}
+ .section#contact .editorial-column > .item.image {height:360px!important;}
+}

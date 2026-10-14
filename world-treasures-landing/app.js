@@ -18,11 +18,11 @@ function applyEditorialFlow(stage, section) {
     const o = objects.get(el.dataset.id);
     if (!o) continue;
     let column = o.x < 800 ? 'left' : 'right';
-    if (section.id === 'edition') column = o.w > 1000 ? 'full' : o.x < 1000 ? 'left' : o.x < 1300 ? 'middle' : 'right';
+    if (section.id === 'edition') column = o.type === 'image' ? 'gallery' : o.w > 1000 ? 'full' : o.x < 1000 ? 'left' : o.x < 1300 ? 'middle' : 'right';
     if (!groups.has(column)) groups.set(column, []);
     groups.get(column).push({el,o});
   }
-  for (const key of ['left','middle','right','full']) {
+  for (const key of ['left','middle','right','gallery','full']) {
     if (!groups.has(key)) continue;
     const column = document.createElement('div');
     column.className = 'editorial-column editorial-' + key;
