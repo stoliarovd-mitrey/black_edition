@@ -225,7 +225,7 @@
         {
           "id": "inspiration-qasr-image",
           "type": "image",
-          "src": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Arabesque_details_in_Alhambra_-_DSC07703.JPG/1200px-Arabesque_details_in_Alhambra_-_DSC07703.JPG",
+          "src": "assets/alhambra-arabesque.webp",
           "alt": "Рельефные арабески дворцовой архитектуры Альгамбры, исторический источник вдохновения",
           "fit": "cover",
           "text": "",
