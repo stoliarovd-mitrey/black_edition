@@ -117,7 +117,8 @@
    const s=getSection(component);if(!s){notice('Выберите секцию');return}
    const parent=s.parent(),siblings=parent.components(),current=siblings.indexOf(s),target=current+delta;
    if(target<0||target>=siblings.length){notice('Дальше переместить нельзя');return}
-   s.move(parent,{at:target});editor.select(s);listSections();notice('Порядок секций изменён');
+   // GrapesJS move() adjusts forward insertion indexes and treats at=index+1 as a no-op.
+   s.move(parent,{at:delta>0?current+2:target});editor.select(s);listSections();notice('Порядок секций изменён');
  }
  function getTypeName(c){
    const t=(c.get('tagName')||'div').toLowerCase();
