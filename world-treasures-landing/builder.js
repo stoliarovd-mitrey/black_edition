@@ -49,7 +49,8 @@
      if(s.kind==='inspiration'){
        const im=imgItem(s),content='<div class="wt-copy"><p class="wt-label">Источник вдохновения</p><h2>'+br(t?.text||'Вдохновение')+'</h2>'+textParagraphs(texts)+'</div>';
        const fallback=s.id.replace('inspiration-','');
-       return '<section class="wt-section wt-inspiration '+styleTheme(s)+'" id="'+htmlSafe(s.id)+'"'+sectionLabel(s)+'>'+container('<div class="wt-columns">'+
+       const imageRight=im&&im.x>800;
+       return '<section class="wt-section wt-inspiration '+styleTheme(s)+'" id="'+htmlSafe(s.id)+'"'+sectionLabel(s)+'>'+container('<div class="wt-columns'+(imageRight?' wt-reverse':'')+'">'+
         '<div class="wt-media"><img class="wt-image-card"'+attr('src',im?.src||'')+attr('alt',im?.alt||s.name)+attr('data-fallback','assets/'+fallback+'.webp')+'></div>'+content+'</div>')+'</section>';
      }
      if(s.id==='packaging'&&images.length){
