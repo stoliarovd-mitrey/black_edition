@@ -9,7 +9,7 @@
  const repo='stoliarovd-mitrey/black_edition';
  const endpoint='https://api.github.com/repos/'+repo+'/contents/world-treasures-landing/builder-data.json';
  const localName='caviar-world-treasures-grapes-v1';
- let editor, publishedSha=null, hasPublished=false, initialProject=null, initialStamp=null, draftDb=null, draftTimer=null, busy=false, chosen=null, editorReady=false;
+ let editor, publishedSha=null, hasPublished=false, initialProject=null, initialStamp=null, draftDb=null, draftTimer=null, busy=false, chosen=null, editorReady=false, baseKey=null, legacySnapshot=null;
  const htmlSafe=value=>String(value||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
  const br=value=>htmlSafe(value).replace(/\n/g,'<br>');
  const objText=(section,type)=>section.items.filter(o=>o.type===type);
@@ -18,6 +18,10 @@
  const notice=text=>{$('status').textContent=text};
  const styleTheme=section=>section.theme==='dark'?'wt-dark':section.theme==='stone'?'wt-stone':'wt-light';
  const sectionLabel=section=>attr('data-section-name',section.name||section.id);
+ const imageMarkup=o=>'<img'+attr('src',o.src)+attr('alt',o.alt||'')+'>';
+ const imageGallery=images=>images.length?'<div class="wt-gallery wt-support-gallery" style="grid-template-columns:repeat('+Math.min(images.length,4)+',minmax(0,1fr))">'+images.map(imageMarkup).join('')+'</div>':'';
+ const fingerprint=async value=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify(value))))).map(b=>b.toString(16).padStart(2,'0')).join('');
+ const decodeFile=file=>JSON.parse(new TextDecoder().decode(Uint8Array.from(atob((file.content||'').replace(/\s/g,'')),c=>c.charCodeAt(0))));
  const container=inner=>'<div class="wt-container">'+inner+'</div>';
  function anchor(o,fill){
    if(!o)return '';
@@ -48,6 +52,9 @@
        return '<section class="wt-section wt-inspiration '+styleTheme(s)+'" id="'+htmlSafe(s.id)+'"'+sectionLabel(s)+'>'+container('<div class="wt-columns">'+
         '<div class="wt-media"><img class="wt-image-card"'+attr('src',im?.src||'')+attr('alt',im?.alt||s.name)+attr('data-fallback','assets/'+fallback+'.webp')+'></div>'+content+'</div>')+'</section>';
      }
+     if(s.id==='packaging'&&images.length){
+       return '<section class="wt-section '+styleTheme(s)+'" id="packaging"'+sectionLabel(s)+'>'+container('<div class="wt-columns"><div class="wt-media">'+imageMarkup(images[0])+'</div><div class="wt-copy"><h2>'+br(t?.text||s.name)+'</h2>'+textParagraphs(texts)+objText(s,'button').map(b=>anchor(b,true)).join('')+'</div></div>')+'</section>';
+     }
      if(s.id==='idea'||s.id==='packaging'){
        return '<section class="wt-section '+styleTheme(s)+'" id="'+htmlSafe(s.id)+'"'+sectionLabel(s)+'>'+container('<div class="wt-columns">'+
          '<div class="wt-copy"><h2>'+br(t?.text||s.name)+'</h2></div><div class="wt-copy">'+textParagraphs(texts)+anchor(button,true)+'</div></div>')+'</section>';
@@ -58,16 +65,16 @@
          '<div class="wt-columns"><div class="wt-copy"><h2>'+br(t?.text)+'</h2></div><div class="wt-copy">'+textParagraphs(texts.slice(0,1))+'</div></div>'+
          '<div class="wt-grid" style="margin-top:55px;grid-template-columns:repeat(2,minmax(0,1fr))">'+
           eye.map((e,i)=>'<div class="wt-grid-item"><p class="wt-label">'+br(e.text)+'</p>'+textParagraphs(texts.slice(i+1,i+2))+'</div>').join('')+
-         '</div>')+'</section>';
+         '</div>'+imageGallery(images))+'</section>';
      }
      if(s.id==='edition'){
        const nums=objText(s,'number');
        const stat='<div class="wt-stat-grid">'+nums.map((n,i)=>'<div><div class="wt-stat">'+br(n.text)+'</div><p class="wt-stat-note">'+br(notes[i]?.text||'')+'</p></div>').join('')+'</div>';
-       return '<section class="wt-section '+styleTheme(s)+'" id="edition"'+sectionLabel(s)+'>'+container('<div class="wt-columns"><div class="wt-copy"><h2>'+br(t?.text||s.name)+'</h2>'+textParagraphs(texts)+'</div>'+stat+'</div>')+'</section>';
+       return '<section class="wt-section '+styleTheme(s)+'" id="edition"'+sectionLabel(s)+'>'+container('<div class="wt-columns"><div class="wt-copy"><h2>'+br(t?.text||s.name)+'</h2>'+textParagraphs(texts)+'</div>'+stat+'</div>'+imageGallery(images))+'</section>';
      }
      if(s.id==='contact'){
-       return '<section class="wt-section wt-dark" id="contact"'+sectionLabel(s)+'>'+container('<div class="wt-columns"><div class="wt-copy"><p class="wt-label">CAVIAR · WORLD TREASURES</p><h2>'+br(t?.text||'Связаться')+'</h2></div><div class="wt-copy">'+textParagraphs(texts)+
-        '<div class="wt-button-row">'+objText(s,'button').map(b=>anchor(b,true)).join('')+'</div></div></div>')+'</section>';
+       const copy='<div class="wt-copy"><p class="wt-label">'+br(objText(s,'eyebrow')[0]?.text||'CAVIAR · WORLD TREASURES')+'</p><h2>'+br(t?.text||'Связаться')+'</h2>'+textParagraphs(texts)+'<div class="wt-button-row">'+objText(s,'button').map(b=>anchor(b,true)).join('')+'</div></div>';
+       return '<section class="wt-section '+styleTheme(s)+'" id="contact"'+sectionLabel(s)+'>'+container('<div class="wt-columns">'+(images.length?'<div class="wt-media wt-contact-media">'+imageMarkup(images[0])+'</div>':'')+copy+'</div>')+'</section>';
      }
      return '<section class="wt-section '+styleTheme(s)+'"'+sectionLabel(s)+'>'+container('<h2>'+br(t?.text||s.name)+'</h2>'+textParagraphs(texts))+'</section>';
    });
@@ -192,15 +199,15 @@
    });
    $('image-alt').addEventListener('change',()=>setAttr('alt',$('image-alt').value));
    $('image-upload').addEventListener('change',async()=>{
-     const file=$('image-upload').files[0];if(!file||!chosen)return;
+     const file=$('image-upload').files[0],target=chosen;if(!file||!target)return;
      if(!/^image\/(png|jpeg|webp)$/.test(file.type)||file.size>15*1024*1024){notice('Используйте JPG, PNG или WebP до 15 МБ');return}
      try{
        const bitmap=await createImageBitmap(file);
-       const width=Math.min(bitmap.width,1300),scale=width/bitmap.width;
+       const scale=Math.min(1,1300/Math.max(bitmap.width,bitmap.height)),width=Math.round(bitmap.width*scale);
        const cvs=document.createElement('canvas');cvs.width=width;cvs.height=Math.round(bitmap.height*scale);
        cvs.getContext('2d').drawImage(bitmap,0,0,cvs.width,cvs.height);bitmap.close();
        const url=cvs.toDataURL('image/webp',.72);
-       setAttr('src',url);setAttr('alt',file.name);$('image-url').value=url;notice('Изображение загружено в черновик');
+       target.addAttributes({src:url,alt:file.name});if(chosen===target)$('image-url').value=url;notice('Изображение загружено в черновик');
      }catch(e){notice('Ошибка загрузки: '+e.message)}
      $('image-upload').value='';
    });
@@ -248,10 +255,35 @@
      const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='world-treasures-builder.json';a.click();
      setTimeout(()=>URL.revokeObjectURL(url),2000);notice('Резервная копия скачана');
    };
+   $('import-project').onchange=async()=>{
+     const file=$('import-project').files[0];if(!file)return;
+     try{
+       if(file.size>2500000)throw Error('Файл больше 2,5 МБ');
+       const data=JSON.parse(await file.text());validatePublication(data);
+       if(!confirm('Заменить текущий черновик содержимым файла?'))return;
+       editor.loadProjectData(data.project);saveDraft();listSections();notice('Проект восстановлен из файла. Публикация выполняется отдельно.');
+     }catch(e){notice('Не удалось открыть проект: '+e.message)}
+     finally{$('import-project').value=''}
+   };
+   $('download-publication').onclick=()=>{
+     try{
+       const data=serialize();validatePublication(data);
+       const url=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:'application/json'})),a=document.createElement('a');
+       a.href=url;a.download='builder-data.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);
+       $('publish-message').textContent='Файл скачан. Откройте GitHub по ссылке ниже, загрузите builder-data.json и подтвердите Commit changes. Сайт изменится после сборки Pages.';
+     }catch(e){$('publish-message').textContent=e.message}
+   };
+   window.addEventListener('pagehide',()=>{clearTimeout(draftTimer);saveDraft()});
    $('publish').onclick=()=>{$('publish-message').textContent='';$('publish-dialog').showModal()};
    $('cancel-publish').onclick=()=>$('publish-dialog').close();
    $('publish-dialog').addEventListener('close',()=>{$('token').value=''});
    $('confirm-publish').onclick=publish;
+ }
+ function validatePublication(data){
+   if(data?.version!==1||!data.project||!Array.isArray(data.project.pages)||typeof data.html!=='string'||typeof data.css!=='string')throw Error('Неверный формат проекта');
+   if(data.html.length>2000000||data.css.length>500000)throw Error('Проект превышает допустимый размер страницы. Используйте ссылки на изображения.');
+   const walk=value=>{if(!value||typeof value!=='object')return;for(const [key,item] of Object.entries(value)){if((key==='script'||key==='script-export')&&item)throw Error('Проекты со скриптами не поддерживаются');walk(item)}};
+   walk(data.project);return data;
  }
  function serialize(){
    const html=editor.getHtml(),css=editor.getCss();
@@ -267,7 +299,7 @@
    if(busy)return;
    const token=$('token').value.trim(),status=$('publish-message');
    if(!token){status.textContent='Нужен GitHub-токен с правом записи в репозиторий.';return}
-   const data=serialize(),json=JSON.stringify(data);
+   let data,json;try{data=validatePublication(serialize());json=JSON.stringify(data)}catch(e){status.textContent=e.message;return}
    if(new TextEncoder().encode(json).length>920000){status.textContent='Проект больше 920 КБ. Сожмите изображения или используйте ссылки на файлы вместо загрузки внутрь редактора.';return}
    const btn=$('confirm-publish');busy=true;btn.disabled=true;
    try{
@@ -277,11 +309,13 @@
      let currentSha=null,remoteFile=null;
      if(r.ok){remoteFile=await r.json();currentSha=remoteFile.sha}
      else if(r.status!==404)throw Error('GitHub: '+r.status+'. Проверьте токен.');
+     if(!hasPublished&&legacySnapshot){
+       const source=await fetch(endpoint.replace('builder-data.json','content.json')+'?ref=main',{headers,cache:'no-store'});
+       if(!source.ok||JSON.stringify(decodeFile(await source.json()))!==legacySnapshot)throw Error('Исходная посадочная обновилась. Скачайте черновик и откройте редактор заново, чтобы не потерять новые изменения.');
+     }
      if(publishedSha===null&&hasPublished&&currentSha){
-       const encoded=remoteFile?.content||'';
-       const utf8=encoded?Uint8Array.from(atob(encoded.replace(/\\s/g,'')),c=>c.charCodeAt(0)):null;
-       const parsed=utf8?JSON.parse(new TextDecoder().decode(utf8)):null;
-       if(!parsed||parsed.updatedAt!==initialStamp)throw Error('Опубликованная версия изменилась с момента открытия конструктора. Обновите страницу.');
+       const parsed=remoteFile?.content?decodeFile(remoteFile):null;
+       if(!parsed||await fingerprint(parsed)!==baseKey)throw Error('Опубликованная версия изменилась с момента открытия конструктора. Обновите страницу.');
        publishedSha=currentSha;
      }
      if(currentSha!==publishedSha)throw Error('Кто-то уже изменил опубликованную страницу. Сохраните черновик, обновите конструктор и повторите публикацию.');
@@ -292,7 +326,7 @@
      if(!out.ok){const response=await out.json().catch(()=>({}));throw Error('GitHub '+out.status+': '+(response.message||'Ошибка публикации'))}
      const response=await out.json();
      publishedSha=response.content.sha;hasPublished=true;initialStamp=data.updatedAt;
-     initialProject=structuredClone(editor.getProjectData());
+     initialProject=structuredClone(data.project);baseKey=await fingerprint(data);saveDraft();
      status.textContent='Готово. Опубликовано на GitHub. GitHub Pages обычно обновляется через 1–2 минуты.';
      notice('Страница опубликована. Можно открыть сайт.');
      $('token').value='';
@@ -318,7 +352,9 @@
    if(!draftDb||!editor)return;
    try{
      const tx=draftDb.transaction('items','readwrite');
-     tx.objectStore('items').put({project:editor.getProjectData(),baseSha:publishedSha,createdAt:new Date().toISOString()},'draft');
+     tx.objectStore('items').put({project:editor.getProjectData(),baseKey,baseSha:publishedSha,createdAt:new Date().toISOString()},'draft');
+     tx.onerror=()=>notice('Не удалось сохранить черновик. Скачайте проект.');
+     tx.onabort=tx.onerror;
      tx.oncomplete=()=>notice('Черновик сохранён в браузере. Для публикации нажмите «Опубликовать».');
    }catch(err){notice('Не удалось сохранить черновик. Используйте кнопку «Скачать».')}
  }
@@ -369,18 +405,18 @@
      const r=await fetch('builder-data.json',{cache:'no-store'});
      if(r.ok){remote=await r.json();hasPublished=true}
      else if(r.status!==404)throw Error('Ответ сервера '+r.status);
-   }catch(e){notice('Опубликованная версия недоступна, открываем исходный проект.')}
+   }catch(e){throw Error('Не удалось проверить опубликованную версию. Повторите загрузку: '+e.message)}
    if(remote){
      if(remote.version!==1||!remote.project)throw Error('Опубликованный проект не содержит редактируемых данных');
-     initialStamp=remote.updatedAt;
+     validatePublication(remote);baseKey=await fingerprint(remote);initialStamp=remote.updatedAt;
      try{
        const r=await fetch(endpoint+'?ref=main',{headers:{Accept:'application/vnd.github+json'},cache:'no-store'});
-       if(r.ok)publishedSha=(await r.json()).sha;
-     }catch(e){notice('Не удалось проверить SHA публикации. Публикация будет заблокирована, пока не обновите страницу.')}
+       if(r.ok){const file=await r.json();if(await fingerprint(decodeFile(file))!==baseKey)throw Error('GitHub Pages ещё обновляется. Повторите загрузку через минуту.');publishedSha=file.sha;}
+     }catch(e){throw Error('Не удалось сверить публикацию: '+e.message)}
    }else{
      const r=await fetch('content.json',{cache:'no-store'});
      if(!r.ok)throw Error('Не удалось загрузить текущий лендинг');
-     legacy=await r.json();
+     legacy=await r.json();legacySnapshot=JSON.stringify(legacy);baseKey=await fingerprint(legacy);
    }
    createEditor();
    if(remote)editor.loadProjectData(remote.project);
@@ -389,8 +425,11 @@
    try{
      draftDb=await draftOpen();
      const draft=await readDraft();
-     if(draft?.project && draft.baseSha===publishedSha){
+     if(draft?.project && draft.baseKey===baseKey){
        if(confirm('Есть несохранённый черновик. Продолжить редактирование?'))editor.loadProjectData(draft.project);
+     }else if(draft?.project){
+       draftDb.transaction('items','readwrite').objectStore('items').put(draft,'previous-draft-'+Date.now());
+       alert('Посадочная обновилась. Открыта актуальная версия. Старый черновик сохранён отдельно в этом браузере.');
      }
    }catch(e){notice('Локальное сохранение недоступно. Пользуйтесь кнопкой «Скачать».')}
    editorReady=true;listSections();selectProperties();
@@ -398,3 +437,4 @@
  }
  boot().catch(e=>{notice('Ошибка: '+e.message);console.error(e)});
 })();
+

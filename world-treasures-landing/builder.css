@@ -76,3 +76,10 @@ textarea.b-input{resize:vertical;min-height:92px}
  .b-right{display:none}
  .b-top small{display:none}
 }
+
+
+/* Keep all toolbar actions reachable when the window narrows. */
+body{display:grid;grid-template-rows:auto minmax(0,1fr) 27px}
+.b-top{height:auto;min-height:65px;flex-wrap:wrap;padding-top:10px;padding-bottom:10px}
+.b-workspace{height:auto;min-height:0}
+.b-modal{max-height:90vh;overflow:auto}

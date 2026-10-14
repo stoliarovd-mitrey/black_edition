@@ -94,3 +94,10 @@ body.builder-published{margin:0;background:var(--wt-white);color:var(--wt-ink);f
  .wt-page .wt-gallery img{height:330px}
 }
 @media(prefers-reduced-motion:reduce){.wt-page *{transition:none!important}}
+
+
+.wt-page .wt-support-gallery{margin-top:32px}
+.wt-page .wt-support-gallery img{height:320px;object-fit:contain}
+.wt-page #craft .wt-support-gallery img{object-fit:cover}
+.wt-page .wt-contact-media img{height:510px;object-fit:cover}
+@media(max-width:700px){.wt-page .wt-support-gallery{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px}.wt-page .wt-support-gallery img{height:240px}.wt-page .wt-contact-media img{height:360px}}

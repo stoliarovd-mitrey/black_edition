@@ -40,3 +40,15 @@ The images use original-provider URLs (Wikimedia Commons and The Met), not third
 **Drafts:** Unpublished work is saved in the current browser's IndexedDB. The builder offers to restore it on reopening. “Скачать” exports a portable `world-treasures-builder.json` backup. The published project is stored in `builder-data.json` and can be reopened at any time for structural edits. If the remote file has changed, the publishing workflow stops instead of overwriting it. The combined GitHub publish payload has a 920 KB limit; prefer URLs to existing image files over embedding many large photographs.
 
 **Technical layout:** `builder.js` (editor logic), `builder.css` (editor UI), `builder-theme.css` (responsive site component classes), `builder-runtime.js` (safe public HTML renderer and legacy fallback), `edit.html` (new builder), `edit-legacy.html` (preserved older editor). The visual builder itself depends on the pinned GrapesJS CDN, but the published visitor site does not.
+
+## Editor audit and updates — 2026-10-14
+
+- Legacy conversion retains all 14 sections and every current image, including craft, edition, packaging and the illustrative manager in contact.
+- “Открыть файл” restores an exported builder project. Projects containing component scripts and publications beyond the public runtime size limits are rejected.
+- Publish dialog now offers a token-free manual path: download **builder-data.json**, open the linked GitHub upload folder, upload that exact filename and commit through your signed-in GitHub account. A GitHub login with write access is still required. This replaces the public builder project; check for colleagues' changes before manually uploading. Export alone does not publish.
+- One-click publishing still needs a fine-grained token restricted to this repository with Contents read/write. The token stays in memory and is cleared when the dialog closes or publishing succeeds. No backend/OAuth application has been configured.
+- The editor compares Pages content with the GitHub file before accepting its SHA. The first conversion publication also checks whether content.json changed since opening.
+- Drafts are tied to a SHA-256 fingerprint of their source, including before the first builder publication. A stale draft is archived separately in IndexedDB instead of silently replacing fresh source. Older archived drafts do not yet have a recovery browser UI.
+- Image uploads retain their selected target while decoding asynchronously and limit both image dimensions.
+- Verified with Node regression checks for all section images, project validation, Cyrillic encoding, stale-source rejection, successful mocked publishing, concurrent-change rejection and draft fingerprints. Browser interactions, real user token publishing and manual upload were not end-to-end tested in this environment.
+- Remaining improvements: store uploaded photos as separate assets rather than embedding them in the JSON; provide a visual draft/history recovery panel; configure GitHub App sign-in if one-click publication without manually entering a PAT is required. The editor is intended for desktop; mobile mode is a page preview.

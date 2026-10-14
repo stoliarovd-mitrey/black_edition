@@ -18,6 +18,7 @@
 <button class="b-btn" id="mobile">Телефон</button>
 <button class="b-btn" id="preview">Просмотр</button>
 <button class="b-btn" id="export">Скачать</button>
+<label class="b-btn">Открыть файл<input id="import-project" type="file" accept="application/json,.json" hidden></label>
 <button class="b-btn b-primary" id="publish">Опубликовать</button>
 <a class="b-footer-link" target="_blank" rel="noopener" href="./">Открыть сайт ↗</a>
 </header>
@@ -86,6 +87,11 @@
  <h2>Публикация на сайт</h2>
  <p>Публикуется только после вашего подтверждения. Перед этим редактор сохраняет черновик в этом браузере.</p>
  <p>Репозиторий: <b>stoliarovd-mitrey/black_edition</b><br>Файл публикации: <code>world-treasures-landing/builder-data.json</code></p>
+ <h3>Без токена</h3>
+ <p>Скачайте файл, загрузите его в указанную папку через ваш аккаунт GitHub и подтвердите Commit changes. Это заменит опубликованную версию: перед загрузкой убедитесь, что коллеги не внесли новые изменения.</p>
+ <button class="b-btn" id="download-publication">Скачать builder-data.json</button>
+ <p><a href="https://github.com/stoliarovd-mitrey/black_edition/upload/main/world-treasures-landing" target="_blank" rel="noopener">Открыть папку загрузки на GitHub ↗</a></p>
+ <h3>Публикация из редактора</h3>
  <label>GitHub Fine-grained token (права Contents: Read and write)
  <input type="password" autocomplete="off" class="b-input" id="token" placeholder="github_pat_…"></label>
  <p id="publish-message"></p>
