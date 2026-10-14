@@ -299,3 +299,68 @@ body{background:var(--paper);color:var(--ink);font-family:"Nunito Sans","Nunito 
   }
   .section#inspiration-omkara .item.image{position:relative!important;padding:48px 30%!important}
 }
+
+/* 2026-10: compact editorial layout, based on the live Contrast landing.
+   Text uses intrinsic height instead of absolute y coordinates. */
+.section:not(.hero) .stage.editorial-flow {
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:48px 72px;align-items:center;
+  height:auto!important;min-height:0!important;max-height:none!important;
+  aspect-ratio:auto!important;max-width:1600px;padding:48px 64px;
+}
+.editorial-column {display:flex;flex-direction:column;align-items:flex-start;gap:24px;min-width:0;}
+.section:not(.hero) .editorial-column > .item {
+  position:relative!important;inset:auto!important;width:100%!important;
+  height:auto!important;max-width:none;margin:0!important;order:initial;
+}
+.section:not(.hero) .editorial-column > .item.text {font-size:16px!important;line-height:24px;}
+.section:not(.hero) .editorial-column > .item.title {font-size:44px!important;line-height:1.08;}
+.section.model .editorial-column > .item.title {font-size:48px!important;line-height:1.05;}
+.section.model .editorial-column > .item.text[data-id="el18"],
+.section.model .editorial-column > .item.text[data-id="el27"],
+.section.model .editorial-column > .item.text[data-id="el36"],
+.section.model .editorial-column > .item.text[data-id="el45"] {font-size:19px!important;line-height:27px;}
+.section:not(.hero) .editorial-column > .item.button {
+  width:auto!important;min-width:230px;min-height:52px;height:auto!important;
+  padding:14px 34px;flex:none;
+}
+.section:not(.hero) .editorial-column > .item.image {
+  display:block;max-height:none;aspect-ratio:auto;
+}
+.section.model .editorial-column > .item.image {height:500px!important;object-fit:contain;}
+.section.inspiration .stage.editorial-flow {padding-block:32px;}
+.section.inspiration .editorial-column > .item.image {height:340px!important;}
+.section.inspiration .editorial-column > .item.title {font-size:40px!important;line-height:1.1;}
+.section#inspiration-omkara .stage.editorial-flow::after {display:none;}
+.section#inspiration-omkara .editorial-media {
+  background:radial-gradient(circle at 50% 46%,#3e3030 0%,#201c21 49%,#141418 100%);
+}
+.section#inspiration-omkara .editorial-column > .item.image {
+  padding:55px 25%!important;background:transparent;
+}
+.section#craft .editorial-column > .item.eyebrow:not(:first-child) {margin-top:8px!important;}
+.section#edition .stage.editorial-flow {grid-template-columns:minmax(0,2fr) minmax(0,.6fr) minmax(0,.6fr);gap:32px 48px;}
+.section#edition .editorial-column {gap:16px;}
+.section#edition .editorial-column > .item.number {font-size:90px!important;line-height:1;}
+.section#edition .editorial-full {grid-column:1/-1;}
+@media (max-width:1120px) and (min-width:701px) {
+ .section:not(.hero) .stage.editorial-flow {padding:40px 5%;gap:36px;}
+ .section:not(.hero) .editorial-column > .item.title {font-size:34px!important;}
+ .section.model .editorial-column > .item.image {height:430px!important;}
+ .section.inspiration .editorial-column > .item.image {height:300px!important;}
+ .section#inspiration-omkara .editorial-column > .item.image {padding:48px 23%!important;}
+ .section#edition .stage.editorial-flow {grid-template-columns:minmax(0,1.5fr) minmax(0,.65fr) minmax(0,.65fr);gap:28px;}
+}
+@media (max-width:700px) {
+ .section:not(.hero) .stage.editorial-flow {grid-template-columns:minmax(0,1fr);padding:32px 7%;gap:24px;}
+ .editorial-column {gap:16px;}
+ .section:not(.hero) .editorial-column > .item.title {font-size:32px!important;}
+ .section.model .editorial-media {grid-row:1;}
+ .section.model .editorial-column > .item.image {height:350px!important;}
+ .section.inspiration .editorial-column > .item.image {height:260px!important;}
+ .section.inspiration .editorial-column > .item.title {font-size:30px!important;}
+ .section#edition .stage.editorial-flow {grid-template-columns:1fr 1fr;gap:24px;}
+ .section#edition .editorial-left,.section#edition .editorial-full {grid-column:1/-1;}
+ .section#edition .editorial-column > .item.number {font-size:72px!important;}
+ .section#inspiration-omkara .editorial-column > .item.image {padding:42px 25%!important;}
+}
