@@ -9,7 +9,7 @@
  const repo='stoliarovd-mitrey/black_edition';
  const endpoint='https://api.github.com/repos/'+repo+'/contents/world-treasures-landing/builder-data.json';
  const localName='caviar-world-treasures-grapes-v1';
- let editor, publishedSha=null, hasPublished=false, initialProject=null, draftDb=null, draftTimer=null, busy=false, chosen=null;
+ let editor, publishedSha=null, hasPublished=false, initialProject=null, initialStamp=null, draftDb=null, draftTimer=null, busy=false, chosen=null, editorReady=false;
  const htmlSafe=value=>String(value||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
  const br=value=>htmlSafe(value).replace(/\n/g,'<br>');
  const objText=(section,type)=>section.items.filter(o=>o.type===type);
@@ -252,6 +252,14 @@
      let currentSha=null;
      if(r.ok){const file=await r.json();currentSha=file.sha}
      else if(r.status!==404)throw Error('GitHub: '+r.status+'. Проверьте токен.');
+     if(publishedSha===null&&hasPublished&&currentSha){
+       const fresh=await r.clone().json().catch(()=>null);
+       const encoded=fresh?.content||'';
+       const utf8=encoded?Uint8Array.from(atob(encoded.replace(/\\s/g,'')),c=>c.charCodeAt(0)):null;
+       const parsed=utf8?JSON.parse(new TextDecoder().decode(utf8)):null;
+       if(!parsed||parsed.updatedAt!==initialStamp)throw Error('Опубликованная версия изменилась с момента открытия конструктора. Обновите страницу.');
+       publishedSha=currentSha;
+     }
      if(currentSha!==publishedSha)throw Error('Кто-то уже изменил опубликованную страницу. Сохраните черновик, обновите конструктор и повторите публикацию.');
      status.textContent='Сохраняем новую версию…';
      const body={message:'Publish World Treasures from visual GrapesJS editor',content:bytesBase64(json),branch:'main'};
@@ -259,7 +267,7 @@
      const out=await fetch(endpoint,{method:'PUT',headers,body:JSON.stringify(body)});
      if(!out.ok){const response=await out.json().catch(()=>({}));throw Error('GitHub '+out.status+': '+(response.message||'Ошибка публикации'))}
      const response=await out.json();
-     publishedSha=response.content.sha;hasPublished=true;
+     publishedSha=response.content.sha;hasPublished=true;initialStamp=data.updatedAt;
      initialProject=structuredClone(editor.getProjectData());
      status.textContent='Готово. Опубликовано на GitHub. GitHub Pages обычно обновляется через 1–2 минуты.';
      notice('Страница опубликована. Можно открыть сайт.');
@@ -291,6 +299,7 @@
    }catch(err){notice('Не удалось сохранить черновик. Используйте кнопку «Скачать».')}
  }
  function scheduleDraft(){
+   if(!editorReady)return;
    clearTimeout(draftTimer);draftTimer=setTimeout(saveDraft,1500);
  }
  function createEditor(){
@@ -335,6 +344,7 @@
    }catch(e){notice('Опубликованная версия недоступна, открываем исходный проект.')}
    if(remote){
      if(remote.version!==1||!remote.project)throw Error('Опубликованный проект не содержит редактируемых данных');
+     initialStamp=remote.updatedAt;
      try{
        const r=await fetch(endpoint+'?ref=main',{headers:{Accept:'application/vnd.github+json'},cache:'no-store'});
        if(r.ok)publishedSha=(await r.json()).sha;
@@ -355,7 +365,7 @@
        if(confirm('Есть несохранённый черновик. Продолжить редактирование?'))editor.loadProjectData(draft.project);
      }
    }catch(e){notice('Локальное сохранение недоступно. Пользуйтесь кнопкой «Скачать».')}
-   listSections();selectProperties();
+   editorReady=true;listSections();selectProperties();
    notice('Конструктор готов. Перетаскивайте блоки, редактируйте текст, сохраняйте и публикуйте по кнопке.');
  }
  boot().catch(e=>{notice('Ошибка: '+e.message);console.error(e)});
