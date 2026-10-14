@@ -220,7 +220,8 @@
    $('item-down').onclick=()=>moveElement(1);
    for(const type of ['section','button','text','image'])$('quick-'+type).onclick=()=>quickAdd(type);
    $('new-section').onclick=()=>{
-     const added=editor.addComponents('<section class="wt-section wt-light" data-section-name="Новая секция"><div class="wt-container"><div class="wt-copy"><h2>НОВАЯ СЕКЦИЯ</h2><p>Измените этот текст</p></div></div></section>');
+     const root=editor.getWrapper().find('.wt-page')[0]||editor.getWrapper();
+     const added=root.append('<section class="wt-section wt-light" data-section-name="Новая секция"><div class="wt-container"><div class="wt-copy"><h2>НОВАЯ СЕКЦИЯ</h2><p>Измените этот текст</p></div></div></section>');
      editor.select(added[0]);listSections();notice('Секция добавлена внизу страницы');
    };
    document.querySelectorAll('.b-tab').forEach(button=>button.onclick=()=>{
@@ -352,7 +353,11 @@
    reusableBlocks();wireControls();
    editor.on('component:selected',selectProperties);
    editor.on('component:deselected',selectProperties);
-   editor.on('component:add',listSections);
+   editor.on('component:add',component=>{
+     const wrapper=editor.getWrapper(),root=wrapper.find('.wt-page')[0];
+     if(root&&component!==root&&component.parent()===wrapper){component.move(root,{at:root.components().length})}
+     listSections();
+   });
    editor.on('component:remove',listSections);
    editor.on('component:update',listSections);
    editor.on('update',scheduleDraft);
