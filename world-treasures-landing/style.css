@@ -394,3 +394,25 @@ body{background:var(--paper);color:var(--ink);font-family:"Nunito Sans","Nunito 
  .section#packaging .editorial-column > .item.image {height:400px!important;}
  .section#contact .editorial-column > .item.image {height:360px!important;}
 }
+
+
+/* Cultural stories lead into their corresponding phones: continuous palette per pair. */
+.section#inspiration-qasr,.section#qasr,
+.section#inspiration-dali,.section#dali{
+  background:#17171c;
+  color:#f7f7f7;
+}
+.section#inspiration-omkara,.section#omkara,
+.section#inspiration-jingtai,.section#jingtai{
+  background:#fff;
+  color:#393838;
+}
+.section.inspiration{border-top:0;}
+.section.inspiration + .section.model{border-top:0!important;}
+.section.inspiration.dark + .section.model.dark{border-top:0!important;}
+.section.inspiration .stage.editorial-flow{padding-block:48px 10px;}
+.section.inspiration + .section.model .stage.editorial-flow{padding-block:12px 48px;}
+@media(max-width:700px){
+  .section.inspiration .stage.editorial-flow{padding:36px 7% 10px;}
+  .section.inspiration + .section.model .stage.editorial-flow{padding:12px 7% 42px;}
+}
