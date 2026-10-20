@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Редактор · World Treasures · Caviar Sales</title>
+<style>
+:root{color-scheme:dark;--bg:#121719;--panel:#1c2427;--panel2:#222d30;--line:#344044;--text:#edf0eb;--muted:#9ba8a9;--gold:#ccac75;--gold2:#f3d5a0;--safe:#85c6ad}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+button:disabled{opacity:.45;cursor:default}
+a{color:var(--gold2)}
+button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh;min-height:500px}
+.top{height:68px;flex-shrink:0;background:#182024;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:20px;padding:0 21px;position:relative;z-index:2}
+.brand{font:19px Georgia,serif;letter-spacing:4px;white-space:nowrap}
+.brand small{display:block;font:10px Arial,sans-serif;letter-spacing:1.7px;color:var(--gold);margin-top:6px}
+.top-center{display:flex;gap:10px;align-items:center;margin:auto}
+.top-actions{display:flex;gap:9px;align-items:center}
+.btn{border:1px solid #526065;background:transparent;color:var(--text);border-radius:7px;padding:10px 14px;font-size:13px;white-space:nowrap}
+.btn:hover{background:#344044}
+.btn-primary{background:var(--gold);color:#172024;border-color:var(--gold);font-weight:700}
+.btn-primary:hover{background:var(--gold2)}
+.btn-flat{border-color:transparent}
+.save-status{font-size:11px;color:var(--muted);white-space:nowrap}
+.workspace{display:grid;grid-template-columns:235px minmax(250px,1fr) 322px;min-height:0;flex:1}
+.sidebar,.inspector{background:var(--panel);overflow:auto}
+.sidebar{border-right:1px solid var(--line);padding:23px 12px}
+.inspector{border-left:1px solid var(--line);padding:23px 18px}
+.eyebrow{color:var(--gold);text-transform:uppercase;font-size:10px;letter-spacing:2px;font-weight:700;margin:0 0 12px 8px}
+.slide-item{width:100%;text-align:left;border:1px solid transparent;background:transparent;border-radius:8px;padding:11px 10px;margin:2px 0;color:var(--text);display:flex;gap:12px;align-items:center}
+.slide-item:hover{background:#273237}
+.slide-item.active{border-color:#796b50;background:#35372f}
+.slide-num{font:17px Georgia,serif;color:var(--gold);width:23px;flex-shrink:0}
+.slide-title{font-size:13px;font-weight:600;line-height:1.4}
+.slide-sub{font-size:11px;color:var(--muted);margin-top:3px}
+.sidebar-tip{margin:26px 10px;color:var(--muted);font-size:12px;line-height:1.7;border-top:1px solid var(--line);padding-top:17px}
+.stage{background:#101516;min-width:0;min-height:0;display:flex;flex-direction:column}
+.stage-toolbar{flex-shrink:0;height:53px;display:flex;align-items:center;gap:8px;padding:0 18px;border-bottom:1px solid #273235}
+.view-btn{background:none;color:var(--muted);border:1px solid transparent;border-radius:6px;padding:7px 9px;font-size:12px}
+.view-btn.on{background:#303e41;color:var(--text);border-color:#526065}
+.slide-position{font-size:12px;color:var(--muted);margin-left:auto}
+.viewport{flex:1;min-height:0;min-width:0;display:flex;justify-content:center;align-items:center;overflow:auto;padding:26px 12px}
+.canvas{background:#fff;position:relative;flex-shrink:0;box-shadow:0 14px 65px rgba(0,0,0,.65);border:1px solid #546064;overflow:hidden}
+#preview{display:block;border:0;transform-origin:0 0;background:#f7f5f0}
+.hint{font-size:12px;color:var(--muted);background:#172023;border-top:1px solid #293739;padding:11px 20px;line-height:1.4}
+.inspector h2{font:24px Georgia,serif;margin:0 0 10px}
+.inspector-note{font-size:12px;line-height:1.6;color:var(--muted);margin:0 0 20px}
+.field{margin:19px 0}
+.field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#b1c0bd;margin-bottom:9px}
+.field textarea,.field input:not([type=file]){width:100%;background:#11191b;color:var(--text);border:1px solid #48575b;border-radius:7px;padding:12px;font-size:14px;line-height:1.6;resize:vertical}
+.field input:not([type=file]){font-size:12px}
+.field textarea:focus,.field input:focus{border-color:var(--gold);outline:none}
+.preview-image{display:block;width:100%;max-height:176px;object-fit:contain;background:#101618;border:1px solid var(--line);border-radius:8px;margin-bottom:12px}
+.upload{display:flex;align-items:center;justify-content:center;gap:8px;border:1px dashed #786b54;border-radius:8px;padding:15px;cursor:pointer;color:var(--gold2);font-size:12px;text-align:center}
+.upload:hover{background:#2d3432}
+.upload input{display:none}
+.checkrow{display:flex;align-items:flex-start;gap:8px;font-size:12px;line-height:1.5;color:#c4ceca;margin:14px 0}
+.checkrow input{margin-top:2px;accent-color:var(--gold)}
+.hr{border:0;border-top:1px solid var(--line);margin:20px 0}
+.picklist{display:grid;gap:5px}
+.pick-item{width:100%;text-align:left;background:#202b2e;color:#cbd4d0;border:1px solid #354246;border-radius:6px;padding:9px 10px;font-size:12px;line-height:1.45;overflow-wrap:anywhere}
+.pick-item:hover{border-color:var(--gold)}
+.pick-item .type{display:block;color:var(--gold);font-size:10px;text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px}
+#selected-label{font-size:12px;color:var(--gold2);margin:0 0 14px;line-height:1.5;overflow-wrap:anywhere}
+#empty{padding-top:3px}
+#editor-fields[hidden],#empty[hidden],#text-fields[hidden],#image-fields[hidden]{display:none}
+.toast{position:fixed;z-index:10;bottom:18px;left:50%;transform:translateX(-50%);background:#30403c;border:1px solid var(--gold);color:var(--text);padding:13px 18px;border-radius:8px;font-size:13px;box-shadow:0 7px 25px #0008;max-width:min(92vw,630px);display:none}
+dialog{color:var(--text);background:#1e292b;border:1px solid #857457;border-radius:12px;width:min(480px,calc(100vw - 30px));padding:25px;box-shadow:0 15px 80px #000c}
+dialog::backdrop{background:#000a}
+dialog h2{font:27px Georgia,serif;margin:0 0 14px}
+dialog p{font-size:13px;line-height:1.7;color:#c2ceca}
+dialog input{width:100%;background:#11191b;color:white;padding:13px;border-radius:7px;border:1px solid #657678;margin:5px 0 15px}
+.dialog-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:17px}
+#busy{font-size:12px;color:var(--gold2);min-height:18px}
+@media(max-width:1100px){.workspace{grid-template-columns:185px minmax(250px,1fr) 275px}.sidebar{padding:18px 7px}.inspector{padding:18px 12px}.top{gap:9px;padding:0 10px}.top-center{gap:3px}.top-actions{gap:4px}.btn{padding:9px;font-size:12px}}
+@media(max-width:760px){.top{height:auto;min-height:68px;flex-wrap:wrap;padding:12px}.top-center{margin-left:auto}.top-actions{width:100%;justify-content:flex-end}.workspace{grid-template-columns:1fr;grid-template-rows:auto minmax(320px,1fr) minmax(240px,auto);overflow:auto}.sidebar{display:flex;gap:4px;overflow:auto;white-space:nowrap;border-right:0;border-bottom:1px solid var(--line);padding:9px}.sidebar .eyebrow,.sidebar-tip,.slide-sub{display:none}.slide-item{width:auto;flex-shrink:0;margin:0}.stage{min-height:360px}.inspector{border-left:0;border-top:1px solid var(--line);max-height:65vh}.hint{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+ <div class="brand">CAVIAR<small>WORLD TREASURES · РЕДАКТОР</small></div>
+ <div class="top-center">
+  <button class="btn btn-flat" id="prev" title="Предыдущий слайд">←</button>
+  <span id="counter" style="font-size:12px;white-space:nowrap">1 / 8</span>
+  <button class="btn btn-flat" id="next" title="Следующий слайд">→</button>
+ </div>
+ <div class="top-actions">
+  <span class="save-status" id="save-status">Загрузка…</span>
+  <button class="btn" id="reset">Сбросить</button>
+  <button class="btn" id="save">Сохранить черновик</button>
+  <button class="btn btn-primary" id="publish">Опубликовать</button>
+ </div>
+</header>
+<div class="workspace">
+ <aside class="sidebar">
+  <p class="eyebrow">Слайды</p>
+  <div id="slides-list"></div>
+  <div class="sidebar-tip">Выберите слайд. Нажмите на текст или изображение прямо в предпросмотре, чтобы изменить его.</div>
+ </aside>
+ <section class="stage">
+  <div class="stage-toolbar">
+   <button class="view-btn on" data-view="desktop" title="Экран компьютера">Компьютер</button>
+   <button class="view-btn" data-view="tablet" title="Экран планшета">Планшет</button>
+   <button class="view-btn" data-view="mobile" title="Экран телефона">Телефон</button>
+   <span class="slide-position" id="view-label">Предпросмотр · 1366 × 768</span>
+  </div>
+  <div class="viewport" id="viewport"><div class="canvas" id="canvas"><iframe id="preview" title="Предпросмотр презентации" sandbox="allow-same-origin"></iframe></div></div>
+  <div class="hint">Тексты и изображения можно выбирать прямо на слайде. Черновик хранится только в этом браузере. Публикация меняет оригинальную презентацию.</div>
+ </section>
+ <aside class="inspector">
+  <p class="eyebrow" style="margin-left:0">Настройки элемента</p>
+  <div id="empty">
+   <h2>Выберите элемент</h2>
+   <p class="inspector-note">Нажмите на любой текст или изображение в презентации. Также можно выбрать элемент из списка ниже.</p>
+   <div id="element-list" class="picklist"></div>
+  </div>
+  <div id="editor-fields" hidden>
+   <h2 id="field-title">Редактирование</h2>
+   <p id="selected-label"></p>
+   <div id="text-fields" hidden>
+    <div class="field"><label for="text-content">Текст</label><textarea rows="7" id="text-content" spellcheck="true"></textarea></div>
+    <p class="inspector-note">Изменения сразу появляются на слайде. Для переноса строки используйте Enter.</p>
+   </div>
+   <div id="image-fields" hidden>
+    <img id="image-thumb" class="preview-image" alt="Выбранное изображение">
+    <label class="upload">↑ Загрузить изображение с компьютера<input type="file" id="image-file" accept="image/png,image/jpeg,image/webp"></label>
+    <div class="field"><label for="image-url">Или адрес изображения</label><input id="image-url" type="text" placeholder="https://... или assets/image.webp"></div>
+    <label class="checkrow"><input id="replace-all" type="checkbox" checked>Заменить одинаковое изображение во всех слайдах</label>
+    <div class="field"><label for="image-alt">Подпись изображения (alt)</label><input id="image-alt" type="text"></div>
+    <p class="inspector-note">Загруженные файлы автоматически подготавливаются в WebP и отправляются в GitHub только при публикации.</p>
+   </div>
+   <hr class="hr">
+   <button id="clear-selection" class="btn">К списку элементов</button>
+  </div>
+ </aside>
+</div>
+</div>
+<div id="toast" class="toast" role="status"></div>
+<dialog id="publish-dialog">
+ <h2>Публикация на GitHub</h2>
+ <p>Изменения будут записаны в <b>world-treasures-sales/index.html</b>. Новые изображения загрузятся в папку <b>assets</b>. До публикации оригинальная страница не изменяется.</p>
+ <p>Нужен персональный токен GitHub с доступом <b>Contents: Read and write</b> к репозиторию <b>stoliarovd-mitrey/black_edition</b>. Токен не сохраняется в браузере.</p>
+ <label class="field"><span style="display:block;margin-bottom:7px;font-size:12px">GitHub token</span><input id="token" type="password" autocomplete="off" placeholder="github_pat_..."></label>
+ <div id="busy" role="status"></div>
+ <div class="dialog-actions"><button class="btn" id="cancel-publish">Отмена</button><button class="btn btn-primary" id="confirm-publish">Опубликовать</button></div>
+</dialog>
+<script>
+(function(){
+'use strict';
+const REPO='stoliarovd-mitrey/black_edition';
+const DIR='world-treasures-sales/';
+const API='https://api.github.com/repos/'+REPO+'/contents/'+DIR;
+const DRAFT_KEY='caviar-world-treasures-sales-editor-v1';
+const LABELS=['Обложка','Концепция','Dali','Jingtai Blue','Omkara','Qasr Al Noor','Детали','Цены'];
+const VIEWS={desktop:[1366,768],tablet:[820,960],mobile:[390,780]};
+const $=id=>document.getElementById(id);
+let baseline='',work=null,map=null,previewDoc=null,selection=null,slideIndex=0,view='desktop',dirty=false,saveTimer=0,toastTimer=0,busy=false;
+const frame=$('preview');
+
+function toast(msg,err){
+ const el=$('toast');el.textContent=msg;el.style.display='block';el.style.borderColor=err?'#de887e':'#ccac75';
+ clearTimeout(toastTimer);toastTimer=setTimeout(()=>{el.style.display='none';},5000);
+}
+function setStatus(str){$('save-status').textContent=str;}
+function docFrom(src){return new DOMParser().parseFromString(src,'text/html');}
+function serial(){return '<!doctype html>\n'+work.documentElement.outerHTML;}
+function cleanSrc(src){return /^(?:https?:\/\/|assets\/|\.\/|\.\.\/|data:image\/(?:png|jpeg|webp);base64,)/i.test(src.trim())&&!/[\r\n]/.test(src);}
+function collect(doc){
+ const texts=[],images=[];
+ doc.querySelectorAll('section.slide').forEach((section,index)=>{
+  const walker=doc.createTreeWalker(section,NodeFilter.SHOW_TEXT);
+  let node;
+  while((node=walker.nextNode())){
+   if(node.nodeValue.trim()) texts.push({node:node,slide:index,parent:node.parentElement});
+  }
+  section.querySelectorAll('img').forEach(node=>images.push({node:node,slide:index}));
+ });
+ return {texts: texts,images:images};
+}
+function fromKey(key){
+ if(!key)return null;
+ const idx=Number(key.slice(1));
+ return (key[0]==='t'?map.texts:map.images)[idx]||null;
+}
+function short(str,max){str=(str||'').trim().replace(/\s+/g,' ');return str.length>max?str.slice(0,max-1)+'…':str;}
+function itemLabel(key){
+ const rec=fromKey(key);
+ if(!rec)return 'Элемент';
+ if(key[0]==='i')return 'Изображение · '+(rec.node.getAttribute('alt')||'без подписи');
+ const tag=rec.parent.tagName.toLowerCase();
+ return tag.toUpperCase()+' · '+short(rec.node.nodeValue,85);
+}
+function renderSlideList(){
+ const el=$('slides-list');el.replaceChildren();
+ LABELS.forEach((label,i)=>{
+  const btn=document.createElement('button');btn.className='slide-item'+(slideIndex===i?' active':'');
+  const number=document.createElement('span');number.className='slide-num';number.textContent=String(i+1).padStart(2,'0');
+  const box=document.createElement('div');
+  const title=document.createElement('div');title.className='slide-title';title.textContent=label;
+  const sub=document.createElement('div');sub.className='slide-sub';sub.textContent='Слайд '+(i+1)+' / '+LABELS.length;
+  box.append(title,sub);btn.append(number,box);btn.onclick=()=>go(i);
+  el.appendChild(btn);
+ });
+ $('counter').textContent=(slideIndex+1)+' / '+LABELS.length;
+}
+function renderElements(){
+ const list=$('element-list');list.replaceChildren();
+ let entries=[];
+ map.texts.forEach((rec,i)=>{if(rec.slide===slideIndex)entries.push({key:'t'+i,label:itemLabel('t'+i)});});
+ map.images.forEach((rec,i)=>{if(rec.slide===slideIndex)entries.push({key:'i'+i,label:itemLabel('i'+i)});});
+ entries.forEach(item=>{
+  const b=document.createElement('button');b.className='pick-item';
+  const t=document.createElement('span');t.className='type';t.textContent=item.key[0]==='i'?'Изображение':'Текст';
+  b.appendChild(t);b.appendChild(document.createTextNode(item.label.slice(item.label.indexOf(' · ')+3)));
+  b.onclick=()=>select(item.key);list.appendChild(b);
+ });
+}
+function applyFrameSelection(){
+ if(!previewDoc)return;
+ previewDoc.querySelectorAll('.editor-selected').forEach(e=>e.classList.remove('editor-selected'));
+ if(selection){
+  const target=previewDoc.querySelector('[data-edit-key="'+selection+'"]');
+  if(target){target.classList.add('editor-selected');}
+ }
+}
+function select(key){
+ const rec=fromKey(key);if(!rec)return;
+ selection=key;
+ if(slideIndex!==rec.slide)go(rec.slide,true);
+ $('empty').hidden=true;$('editor-fields').hidden=false;
+ const text=key[0]==='t';
+ $('text-fields').hidden=!text;$('image-fields').hidden=text;
+ $('field-title').textContent=text?'Редактировать текст':'Заменить изображение';
+ $('selected-label').textContent=itemLabel(key);
+ if(text){
+  $('text-content').value=rec.node.nodeValue.trim();
+ }else{
+  $('image-url').value=rec.node.getAttribute('src')||'';
+  $('image-alt').value=rec.node.getAttribute('alt')||'';
+  $('image-thumb').src=rec.node.getAttribute('src')||'';
+  $('replace-all').checked=true;
+ }
+ applyFrameSelection();
+ if(previewDoc){
+  const target=previewDoc.querySelector('[data-edit-key="'+selection+'"]');
+  if(target)target.scrollIntoView({block:'nearest',inline:'nearest'});
+ }
+}
+function clearSelection(){
+ selection=null;$('empty').hidden=false;$('editor-fields').hidden=true;
+ applyFrameSelection();renderElements();
+}
+function preparePreview(){
+ if(!work)return;
+ const clone=docFrom(serial());
+ clone.querySelectorAll('script').forEach(e=>e.remove());
+ const base=clone.createElement('base');
+ base.setAttribute('href',new URL('./',window.location.href).href);
+ clone.head.prepend(base);
+ const cloned=collect(clone);
+ cloned.texts.forEach((rec,i)=>{
+  const span=clone.createElement('span');span.dataset.editKey='t'+i;span.className='editor-text';
+  span.textContent=rec.node.nodeValue;
+  rec.node.parentNode.replaceChild(span,rec.node);
+ });
+ cloned.images.forEach((rec,i)=>{rec.node.dataset.editKey='i'+i;rec.node.classList.add('editor-image');});
+ const css=clone.createElement('style');
+ css.textContent='.editor-text,.editor-image{cursor:pointer!important}.editor-text:hover{background:rgba(215,163,65,.22);box-shadow:0 0 0 3px rgba(215,163,65,.22)}.editor-image:hover{outline:5px solid rgba(215,163,65,.75);outline-offset:-5px}.editor-selected{outline:3px solid #d5a853!important;outline-offset:2px;background:rgba(215,163,65,.17)}a{cursor:pointer}';
+ clone.head.appendChild(css);
+ frame.onload=()=>{
+  previewDoc=frame.contentDocument;
+  if(!previewDoc)return;
+  previewDoc.addEventListener('click',function(event){
+   event.preventDefault();event.stopPropagation();
+   let target=event.target.closest('[data-edit-key]');
+   if(!target){
+    const nearby=event.target.querySelector('[data-edit-key]');
+    if(nearby)target=nearby;
+   }
+   if(target)select(target.dataset.editKey);
+  },true);
+  previewDoc.addEventListener('keydown',function(event){if(event.key==='Enter'&&event.target.tagName==='A')event.preventDefault();},true);
+  previewDoc.addEventListener('dragover',function(e){e.preventDefault();});
+  previewDoc.addEventListener('drop',async function(e){
+   e.preventDefault();
+   const target=e.target.closest('[data-edit-key^="i"]');
+   if(target&&e.dataTransfer.files.length){
+    select(target.dataset.editKey);
+    await handleImageFile(e.dataTransfer.files[0]);
+   }
+  });
+  moveFrameToSlide();applyFrameSelection();
+ };
+ frame.srcdoc='<!doctype html>\n'+clone.documentElement.outerHTML;
+}
+function moveFrameToSlide(){
+ if(!previewDoc)return;
+ const s=previewDoc.getElementById('s'+(slideIndex+1));
+ if(s)s.scrollIntoView({behavior:'instant',block:'start'});
+}
+function go(index,keepSelection){
+ slideIndex=Math.max(0,Math.min(LABELS.length-1,index));
+ if(!keepSelection&&selection&&fromKey(selection).slide!==slideIndex)clearSelection();
+ renderSlideList();renderElements();moveFrameToSlide();
+}
+function fit(){
+ const dims=VIEWS[view];
+ const viewport=$('viewport'),canvas=$('canvas');
+ const scale=Math.min(1,Math.max(.12,(viewport.clientWidth-36)/dims[0]),Math.max(.12,(viewport.clientHeight-40)/dims[1]));
+ canvas.style.width=Math.ceil(dims[0]*scale)+'px';
+ canvas.style.height=Math.ceil(dims[1]*scale)+'px';
+ frame.style.width=dims[0]+'px';frame.style.height=dims[1]+'px';
+ frame.style.transform='scale('+scale+')';
+ $('view-label').textContent='Предпросмотр · '+dims[0]+' × '+dims[1]+' · '+Math.round(scale*100)+'%';
+}
+function setView(v){
+ view=v;
+ document.querySelectorAll('.view-btn').forEach(btn=>btn.classList.toggle('on',btn.dataset.view===v));
+ fit();
+}
+function changed(){
+ dirty=true;setStatus('Черновик изменён');
+ clearTimeout(saveTimer);saveTimer=setTimeout(()=>saveDraft(true),650);
+}
+function saveDraft(silent){
+ if(!work)return;
+ try{
+  localStorage.setItem(DRAFT_KEY,JSON.stringify({baseline:baseline,html:serial(),savedAt:Date.now()}));
+  setStatus('Черновик сохранён');
+  if(!silent)toast('Черновик сохранён в этом браузере.');
+ }catch(e){setStatus('Не удалось сохранить');toast('Место для локального черновика закончилось. Опубликуйте изменения или уменьшите размер изображений.',true);}
+}
+function reset(){
+ if(!confirm('Удалить черновик и восстановить опубликованную презентацию?'))return;
+ localStorage.removeItem(DRAFT_KEY);work=docFrom(baseline);map=collect(work);dirty=false;selection=null;slideIndex=0;
+ renderSlideList();renderElements();clearSelection();preparePreview();setStatus('Оригинал восстановлен');toast('Изменения редактора отменены.');
+}
+function textChanged(value){
+ if(!selection||selection[0]!=='t')return;
+ const rec=fromKey(selection),old=rec.node.nodeValue;
+ const leading=(old.match(/^\s*/)||[''])[0],trailing=(old.match(/\s*$/)||[''])[0];
+ rec.node.nodeValue=leading+value+trailing;
+ const preview=previewDoc&&previewDoc.querySelector('[data-edit-key="'+selection+'"]');
+ if(preview)preview.textContent=rec.node.nodeValue;
+ $('selected-label').textContent=itemLabel(selection);
+ changed();
+}
+function imageChanged(src){
+ src=src.trim();
+ if(!cleanSrc(src)){toast('Нужна ссылка https:// или локальный путь assets/…',true);return;}
+ const rec=fromKey(selection);if(!rec||selection[0]!=='i')return;
+ const original=rec.node.getAttribute('src')||'';
+ const all=$('replace-all').checked;
+ map.images.forEach((item,index)=>{
+  if(item===rec||(all&&item.node.getAttribute('src')===original)){
+   item.node.setAttribute('src',src);
+   const target=previewDoc&&previewDoc.querySelector('[data-edit-key="i'+index+'"]');
+   if(target)target.setAttribute('src',src);
+  }
+ });
+ $('image-url').value=src;$('image-thumb').src=src;changed();
+}
+async function handleImageFile(file){
+ if(!file||!file.type.startsWith('image/')){toast('Выберите PNG, JPG или WebP.',true);return;}
+ if(file.size>20*1024*1024){toast('Файл слишком большой. Максимум 20 МБ.',true);return;}
+ try{
+  const url=URL.createObjectURL(file);
+  const im=new Image();
+  await new Promise((resolve,reject)=>{im.onload=resolve;im.onerror=reject;im.src=url;});
+  const max=2000,ratio=Math.min(1,max/Math.max(im.naturalWidth,im.naturalHeight));
+  const canvas=document.createElement('canvas');
+  canvas.width=Math.max(1,Math.round(im.naturalWidth*ratio));canvas.height=Math.max(1,Math.round(im.naturalHeight*ratio));
+  canvas.getContext('2d').drawImage(im,0,0,canvas.width,canvas.height);
+  const data=canvas.toDataURL('image/webp',.86);
+  URL.revokeObjectURL(url);
+  if(!data.startsWith('data:image/webp;base64,'))throw Error('Не удалось конвертировать изображение.');
+  imageChanged(data);
+  $('image-url').value='Локальное изображение · будет загружено при публикации';
+  toast('Изображение заменено в предпросмотре и сохранится в черновике.');
+ }catch(e){toast('Не удалось прочитать изображение: '+e.message,true);}
+}
+function toBase64Utf8(text){
+ const bytes=new TextEncoder().encode(text);
+ let out='';
+ for(let i=0;i<bytes.length;i+=8192)out+=String.fromCharCode.apply(null,bytes.subarray(i,i+8192));
+ return btoa(out);
+}
+function fromBase64Utf8(text){
+ const bytes=Uint8Array.from(atob(text.replace(/\s/g,'')),c=>c.charCodeAt(0));
+ return new TextDecoder().decode(bytes);
+}
+async function gitRequest(path,method,token,payload){
+ const response=await fetch(API+path,{method:method,headers:{
+  Accept:'application/vnd.github+json',Authorization:'Bearer '+token,
+  'X-GitHub-Api-Version':'2022-11-28',...(payload?{'Content-Type':'application/json'}:{})
+ },body:payload?JSON.stringify(payload):undefined});
+ const result=await response.json().catch(()=>({}));
+ if(!response.ok)throw Error('GitHub '+response.status+': '+(result.message||'Проверьте токен и права репозитория'));
+ return result;
+}
+async function publish(){
+ if(busy)return;
+ const token=$('token').value.trim();
+ if(!token){$('busy').textContent='Введите токен GitHub.';return;}
+ busy=true;$('confirm-publish').disabled=true;$('cancel-publish').disabled=true;
+ try{
+  $('busy').textContent='Проверяю текущую версию…';
+  const remote=await gitRequest('index.html','GET',token);
+  const remoteText=fromBase64Utf8(remote.content);
+  if(remoteText!==baseline){
+   if(!confirm('Презентация на GitHub была изменена после открытия редактора. Перезаписать её вашей версией?'))throw Error('Публикация отменена: на GitHub есть новые изменения.');
+  }
+  const pics=new Map();
+  work.querySelectorAll('section.slide img').forEach(img=>{
+   const src=img.getAttribute('src')||'';
+   if(src.startsWith('data:image/')){if(!/^data:image\/webp;base64,/i.test(src))throw Error('Загружайте изображения через кнопку выбора файла.');if(!pics.has(src))pics.set(src,[]);pics.get(src).push(img);}
+  });
+  let n=0;
+  for(const [data,imgs] of pics){
+   n++;
+   $('busy').textContent='Загружаю изображение '+n+' из '+pics.size+'…';
+   const id=Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,9);
+   const fname='assets/edited-'+id+'.webp';
+   await gitRequest(fname,'PUT',token,{message:'World Treasures Sales: add edited image',content:data.split(',')[1],branch:'main'});
+   imgs.forEach(img=>img.setAttribute('src',fname));
+  }
+  $('busy').textContent='Публикую презентацию…';
+  const newHtml=serial();
+  await gitRequest('index.html','PUT',token,{message:'World Treasures Sales: update presentation content',content:toBase64Utf8(newHtml),sha:remote.sha,branch:'main'});
+  baseline=newHtml;dirty=false;map=collect(work);
+  localStorage.removeItem(DRAFT_KEY);$('busy').textContent='Опубликовано.';
+  $('token').value='';$('publish-dialog').close();setStatus('Опубликовано на GitHub');
+  preparePreview();
+  toast('Изменения опубликованы. Откройте презентацию и обновите страницу после сборки GitHub Pages.');
+ }catch(e){$('busy').textContent=e.message;toast(e.message,true);preparePreview();}
+ finally{busy=false;$('confirm-publish').disabled=false;$('cancel-publish').disabled=false;}
+}
+async function boot(){
+ try{
+  const r=await fetch('index.html?cache='+Date.now(),{cache:'no-store'});
+  if(!r.ok)throw Error('Не удалось получить index.html ('+r.status+').');
+  baseline=await r.text();
+  let content=baseline;
+  const draftRaw=localStorage.getItem(DRAFT_KEY);
+  if(draftRaw){
+   try{
+    const draft=JSON.parse(draftRaw);
+    if(draft.baseline===baseline&&draft.html){content=draft.html;dirty=true;setStatus('Черновик восстановлен');}
+    else{setStatus('Доступен старый черновик');toast('Опубликованная версия изменилась. Старый локальный черновик не загружен, чтобы не перезаписать новые изменения.',true);}
+   }catch(e){localStorage.removeItem(DRAFT_KEY);}
+  }
+  work=docFrom(content);map=collect(work);
+  if(work.querySelectorAll('.slide').length!==8)throw Error('Структура презентации изменилась. Редактор ожидает восемь слайдов.');
+  renderSlideList();renderElements();preparePreview();fit();
+  if(!dirty)setStatus('Готов к редактированию');
+ }catch(e){setStatus('Ошибка');toast(e.message,true);}
+}
+$('prev').onclick=()=>go(slideIndex-1);
+$('next').onclick=()=>go(slideIndex+1);
+document.querySelectorAll('.view-btn').forEach(btn=>btn.onclick=()=>setView(btn.dataset.view));
+$('clear-selection').onclick=clearSelection;
+$('text-content').oninput=e=>textChanged(e.target.value);
+$('image-url').onchange=e=>imageChanged(e.target.value);
+$('image-alt').oninput=e=>{
+ if(!selection||selection[0]!=='i')return;
+ const rec=fromKey(selection);rec.node.setAttribute('alt',e.target.value);
+ const target=previewDoc&&previewDoc.querySelector('[data-edit-key="'+selection+'"]');
+ if(target)target.setAttribute('alt',e.target.value);
+ changed();
+};
+$('image-file').onchange=async e=>{if(e.target.files[0])await handleImageFile(e.target.files[0]);e.target.value='';};
+$('save').onclick=()=>saveDraft(false);
+$('reset').onclick=reset;
+$('publish').onclick=()=>{$('busy').textContent='';$('publish-dialog').showModal();};
+$('cancel-publish').onclick=()=>$('publish-dialog').close();
+$('confirm-publish').onclick=publish;
+$('publish-dialog').addEventListener('close',()=>{$('token').value='';});
+document.addEventListener('keydown',e=>{
+ if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();saveDraft(false);}
+ if(e.key==='Escape'&&selection)clearSelection();
+});
+window.addEventListener('resize',fit);
+if('ResizeObserver' in window)new ResizeObserver(fit).observe($('viewport'));
+window.addEventListener('beforeunload',()=>{if(work&&dirty)saveDraft(true);});
+boot();
+})();
+</script>
+</body>
+</html>
