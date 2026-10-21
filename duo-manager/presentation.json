@@ -1,0 +1,648 @@
+{
+  "version": 2,
+  "width": 1080,
+  "height": 1620,
+  "slides": [
+    {
+      "id": "iPhone Duo",
+      "name": "iPhone Duo",
+      "fields": [
+        {
+          "label": "Заголовок",
+          "text": "IPHONE DUO\nОТ CAVIAR",
+          "rect": [
+            78,
+            90,
+            930,
+            205
+          ],
+          "size": 104,
+          "color": "#ffffff",
+          "weight": 800,
+          "lineHeight": 124.8,
+          "spacing": -2
+        },
+        {
+          "label": "Подзаголовок",
+          "text": "Раскройте новую грань стиля",
+          "rect": [
+            78,
+            340,
+            930,
+            100
+          ],
+          "size": 32,
+          "color": "#a99569",
+          "weight": 700,
+          "lineHeight": 38.4,
+          "spacing": 0
+        },
+        {
+          "label": "Старт продаж",
+          "text": "Старт продаж\nApple:",
+          "rect": [
+            78,
+            1430,
+            310,
+            65
+          ],
+          "size": 26,
+          "color": "#888888",
+          "weight": 700,
+          "lineHeight": 31.2,
+          "spacing": 0
+        },
+        {
+          "label": "Дата продаж",
+          "text": "23 ОКТЯБРЯ",
+          "rect": [
+            78,
+            1500,
+            310,
+            50
+          ],
+          "size": 32,
+          "color": "#ffffff",
+          "weight": 700,
+          "lineHeight": 38.4,
+          "spacing": 0
+        },
+        {
+          "label": "Отправки",
+          "text": "Старт отправок\nCaviar:",
+          "rect": [
+            420,
+            1430,
+            400,
+            65
+          ],
+          "size": 26,
+          "color": "#888888",
+          "weight": 700,
+          "lineHeight": 31.2,
+          "spacing": 0
+        },
+        {
+          "label": "Месяц",
+          "text": "НОЯБРЬ",
+          "rect": [
+            420,
+            1500,
+            400,
+            50
+          ],
+          "size": 32,
+          "color": "#ffffff",
+          "weight": 700,
+          "lineHeight": 38.4,
+          "spacing": 0
+        }
+      ],
+      "image": "assets/page-0.jpg",
+      "artwork": {
+        "rect": [
+          0,
+          390,
+          1080,
+          1230
+        ],
+        "crop": [
+          0,
+          390,
+          1080,
+          1230
+        ]
+      },
+      "background": "#0e1117",
+      "url": ""
+    },
+    {
+      "id": "World Treasures",
+      "name": "World Treasures",
+      "fields": [
+        {
+          "label": "Коллекция",
+          "text": "КОЛЛЕКЦИЯ CAVIAR",
+          "rect": [
+            78,
+            96,
+            930,
+            45
+          ],
+          "size": 28,
+          "color": "#0e1117",
+          "weight": 700,
+          "lineHeight": 33.6,
+          "spacing": 0
+        },
+        {
+          "label": "Заголовок",
+          "text": "WORLD TREASURES",
+          "rect": [
+            78,
+            145,
+            930,
+            110
+          ],
+          "size": 87,
+          "color": "#0e1117",
+          "weight": 800,
+          "lineHeight": 104.39999999999999,
+          "spacing": -2
+        },
+        {
+          "label": "Подзаголовок",
+          "text": "Сокровища Мира",
+          "rect": [
+            78,
+            280,
+            930,
+            60
+          ],
+          "size": 42,
+          "color": "#a99569",
+          "weight": 700,
+          "lineHeight": 50.4,
+          "spacing": 0
+        },
+        {
+          "label": "Материалы",
+          "text": "Золото, платина, бриллианты, эмаль",
+          "rect": [
+            78,
+            350,
+            930,
+            60
+          ],
+          "size": 32,
+          "color": "#a99569",
+          "weight": 700,
+          "lineHeight": 38.4,
+          "spacing": 0
+        }
+      ],
+      "image": "assets/world.jpg",
+      "artwork": {
+        "rect": [
+          0,
+          0,
+          1080,
+          1620
+        ],
+        "crop": null
+      },
+      "background": "#eeeeef",
+      "url": "https://caviar-phones.ru/collections/world-treasures/promo/"
+    },
+    {
+      "id": "Флагман",
+      "name": "Флагман",
+      "fields": [
+        {
+          "label": "Коллекция",
+          "text": "КОЛЛЕКЦИЯ CAVIAR",
+          "rect": [
+            78,
+            96,
+            930,
+            45
+          ],
+          "size": 28,
+          "color": "#0e1117",
+          "weight": 700,
+          "lineHeight": 33.6,
+          "spacing": 0
+        },
+        {
+          "label": "Заголовок",
+          "text": "ФЛАГМАН",
+          "rect": [
+            78,
+            140,
+            930,
+            105
+          ],
+          "size": 104,
+          "color": "#0e1117",
+          "weight": 800,
+          "lineHeight": 124.8,
+          "spacing": -2
+        },
+        {
+          "label": "Описание",
+          "text": "Новый форм-фактор Apple.\nФлагманская коллекция.",
+          "rect": [
+            78,
+            288,
+            930,
+            120
+          ],
+          "size": 32,
+          "color": "#a99569",
+          "weight": 700,
+          "lineHeight": 38.4,
+          "spacing": 0
+        }
+      ],
+      "image": "assets/page-1.jpg",
+      "artwork": {
+        "rect": [
+          0,
+          420,
+          1080,
+          990
+        ],
+        "crop": [
+          0,
+          420,
+          1080,
+          990
+        ]
+      },
+      "background": "#eeeeef",
+      "url": "https://caviar-phones.ru/collections/flagship/"
+    },
+    {
+      "id": "Black Edition",
+      "name": "Black Edition",
+      "fields": [
+        {
+          "label": "Коллекция",
+          "text": "КОЛЛЕКЦИЯ CAVIAR",
+          "rect": [
+            78,
+            96,
+            930,
+            45
+          ],
+          "size": 28,
+          "color": "#0e1117",
+          "weight": 700,
+          "lineHeight": 33.6,
+          "spacing": 0
+        },
+        {
+          "label": "Заголовок",
+          "text": "BLACK EDITION",
+          "rect": [
+            78,
+            140,
+            930,
+            105
+          ],
+          "size": 104,
+          "color": "#0e1117",
+          "weight": 800,
+          "lineHeight": 124.8,
+          "spacing": -2
+        },
+        {
+          "label": "Описание",
+          "text": "Абсолютный чёрный на iPhone Duo.\nТитан и кожа крокодила. Монолитная поверхность\nбез камер.",
+          "rect": [
+            78,
+            288,
+            930,
+            120
+          ],
+          "size": 32,
+          "color": "#a99569",
+          "weight": 700,
+          "lineHeight": 38.4,
+          "spacing": 0
+        }
+      ],
+      "image": "assets/page-2.jpg",
+      "artwork": {
+        "rect": [
+          0,
+          420,
+          1080,
+          990
+        ],
+        "crop": [
+          0,
+          420,
+          1080,
+          990
+        ]
+      },
+      "background": "#eeeeef",
+      "url": "https://caviar-phones.ru/collections/black-edition/"
+    },
+    {
+      "id": "Россия",
+      "name": "Россия",
+      "fields": [
+        {
+          "label": "Коллекция",
+          "text": "КОЛЛЕКЦИЯ CAVIAR",
+          "rect": [
+            78,
+            96,
+            930,
+            45
+          ],
+          "size": 28,
+          "color": "#0e1117",
+          "weight": 700,
+          "lineHeight": 33.6,
+          "spacing": 0
+        },
+        {
+          "label": "Заголовок",
+          "text": "РОССИЯ",
+          "rect": [
+            78,
+            140,
+            930,
+            105
+          ],
+          "size": 104,
+          "color": "#0e1117",
+          "weight": 800,
+          "lineHeight": 124.8,
+          "spacing": -2
+        },
+        {
+          "label": "Описание",
+          "text": "Статусный подарок, которым будут гордиться",
+          "rect": [
+            78,
+            288,
+            930,
+            120
+          ],
+          "size": 32,
+          "color": "#a99569",
+          "weight": 700,
+          "lineHeight": 38.4,
+          "spacing": 0
+        }
+      ],
+      "image": "assets/page-3.jpg",
+      "artwork": {
+        "rect": [
+          0,
+          420,
+          1080,
+          990
+        ],
+        "crop": [
+          0,
+          420,
+          1080,
+          990
+        ]
+      },
+      "background": "#eeeeef",
+      "url": "https://caviar-phones.ru/collections/russia/"
+    },
+    {
+      "id": "Упаковка",
+      "name": "Упаковка",
+      "fields": [
+        {
+          "label": "Надпись",
+          "text": "CAVIAR SUPREME",
+          "rect": [
+            78,
+            96,
+            930,
+            45
+          ],
+          "size": 28,
+          "color": "#0e1117",
+          "weight": 700,
+          "lineHeight": 33.6,
+          "spacing": 0
+        },
+        {
+          "label": "Заголовок",
+          "text": "УПАКОВКА",
+          "rect": [
+            78,
+            145,
+            930,
+            110
+          ],
+          "size": 104,
+          "color": "#0e1117",
+          "weight": 800,
+          "lineHeight": 124.8,
+          "spacing": -2
+        },
+        {
+          "label": "Описание",
+          "text": "Каждый телефон доставляется в премиальной упаковке Caviar Supreme.\n\nПодарочный бокс Blue Wave выполнен из ценных пород дерева и натуральной кожи.",
+          "rect": [
+            78,
+            290,
+            930,
+            260
+          ],
+          "size": 34,
+          "color": "#a99569",
+          "weight": 700,
+          "lineHeight": 40.8,
+          "spacing": 0
+        }
+      ],
+      "image": "assets/box.webp",
+      "artwork": {
+        "rect": [
+          0,
+          580,
+          1080,
+          1080
+        ],
+        "crop": null
+      },
+      "background": "#f1f2f2",
+      "url": ""
+    },
+    {
+      "id": "Контакты",
+      "name": "Контакты",
+      "fields": [
+        {
+          "label": "Заголовок",
+          "text": "КОНТАКТЫ",
+          "rect": [
+            78,
+            95,
+            930,
+            120
+          ],
+          "size": 104,
+          "color": "#ffffff",
+          "weight": 800,
+          "lineHeight": 124.8,
+          "spacing": -2
+        },
+        {
+          "label": "Подзаголовок",
+          "text": "ВЫБЕРИТЕ СВОЙ CAVIAR",
+          "rect": [
+            78,
+            287,
+            930,
+            100
+          ],
+          "size": 32,
+          "color": "#a99569",
+          "weight": 700,
+          "lineHeight": 38.4,
+          "spacing": 0
+        },
+        {
+          "label": "Описание",
+          "text": "Персональный менеджер поможет\nподобрать модель и оформить заказ.",
+          "rect": [
+            78,
+            345,
+            930,
+            110
+          ],
+          "size": 32,
+          "color": "#ffffff",
+          "weight": 700,
+          "lineHeight": 38.4,
+          "spacing": 0
+        },
+        {
+          "label": "Телефон",
+          "text": "Телефон",
+          "rect": [
+            78,
+            1125,
+            930,
+            35
+          ],
+          "size": 25,
+          "color": "#a99569",
+          "weight": 700,
+          "lineHeight": 30.0,
+          "spacing": 0
+        },
+        {
+          "label": "Телефон · значение",
+          "text": "8 800 333 48 34",
+          "rect": [
+            78,
+            1163,
+            930,
+            50
+          ],
+          "size": 34,
+          "color": "#ffffff",
+          "weight": 700,
+          "lineHeight": 40.8,
+          "spacing": 0
+        },
+        {
+          "label": "WhatsApp",
+          "text": "WhatsApp",
+          "rect": [
+            78,
+            1237,
+            930,
+            35
+          ],
+          "size": 25,
+          "color": "#a99569",
+          "weight": 700,
+          "lineHeight": 30.0,
+          "spacing": 0
+        },
+        {
+          "label": "WhatsApp · значение",
+          "text": "+7 910 104 04 90",
+          "rect": [
+            78,
+            1275,
+            930,
+            50
+          ],
+          "size": 34,
+          "color": "#ffffff",
+          "weight": 700,
+          "lineHeight": 40.8,
+          "spacing": 0
+        },
+        {
+          "label": "Telegram",
+          "text": "Telegram",
+          "rect": [
+            78,
+            1347,
+            930,
+            35
+          ],
+          "size": 25,
+          "color": "#a99569",
+          "weight": 700,
+          "lineHeight": 30.0,
+          "spacing": 0
+        },
+        {
+          "label": "Telegram · значение",
+          "text": "@CAVIAR_RUSSIA_OFFICIALL",
+          "rect": [
+            78,
+            1385,
+            930,
+            50
+          ],
+          "size": 34,
+          "color": "#ffffff",
+          "weight": 700,
+          "lineHeight": 40.8,
+          "spacing": 0
+        },
+        {
+          "label": "Сайт",
+          "text": "Сайт",
+          "rect": [
+            78,
+            1458,
+            930,
+            35
+          ],
+          "size": 25,
+          "color": "#a99569",
+          "weight": 700,
+          "lineHeight": 30.0,
+          "spacing": 0
+        },
+        {
+          "label": "Сайт · значение",
+          "text": "CAVIAR-PHONES.RU",
+          "rect": [
+            78,
+            1496,
+            930,
+            50
+          ],
+          "size": 34,
+          "color": "#ffffff",
+          "weight": 700,
+          "lineHeight": 40.8,
+          "spacing": 0
+        }
+      ],
+      "image": null,
+      "artwork": {
+        "rect": [
+          0,
+          420,
+          1080,
+          990
+        ],
+        "crop": null
+      },
+      "background": "#0e1117",
+      "url": ""
+    }
+  ]
+}

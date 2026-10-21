@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>iPhone Duo Caviar · редактор презентации</title>
+<meta name="description" content="Презентация Caviar с редактированием текста и выгрузкой в PDF.">
+<link rel="stylesheet" href="editor.css?v=2">
+</head>
+<body>
+<header><div class="brand">CAVIAR <span>РЕДАКТОР ПРЕЗЕНТАЦИИ</span></div><div class="actions"><button id="undo" title="Отменить последнюю правку">Отменить</button><button id="download-json">Сохранить правки</button><button id="download-html">Скачать HTML</button><button id="export" class="primary" title="Автоматическое сжатие до 3 МБ">Скачать PDF</button></div></header>
+<main>
+<aside class="slides"><div class="rail-title">Слайды <span id="total">7</span></div><nav id="slides" aria-label="Выбор слайда"></nav><div class="rail-bottom"><button id="add">Добавить слайд</button><button id="duplicate">Дублировать</button><button id="delete">Удалить слайд</button><button id="up">Выше</button><button id="down">Ниже</button><label class="file-button">Загрузить правки<input type="file" id="import" accept="application/json,.json"></label><button id="reset">Вернуть исходную версию</button></div></aside>
+<section class="workspace"><div class="stage-toolbar"><span id="slide-name"></span><div><button id="previous" aria-label="Предыдущий слайд">←</button><span id="counter"></span><button id="next" aria-label="Следующий слайд">→</button><button id="present">Показ</button></div></div><div class="canvas-wrap"><canvas id="preview" width="1080" height="1620" aria-label="Предпросмотр слайда"></canvas></div><p class="status" id="status" role="status">Загружаем презентацию…</p></section>
+<aside class="properties"><h1>Элементы слайда</h1><p class="hint">Перетаскивайте элемент мышью. Потяните за маркеры рамки, чтобы изменить размер. Выберите текст или изображение на слайде. Размер и координаты можно задать ниже.</p><label class="file-button">Заменить изображение<input id="replace-image" type="file" accept="image/png,image/jpeg,image/webp"></label><button id="add-text">Добавить текст</button><div id="geometry"></div><div id="fields"></div><details><summary>Как сохранить результат</summary><p>Правки автоматически сохраняются в этом браузере. «Скачать PDF» выгружает текущую версию с автоматическим сжатием до 3 МБ, «Скачать HTML» создаёт автономный редактор.</p><p>«Сохранить правки» скачивает presentation.json. Замените им одноимённый файл в GitHub, чтобы обновить версию для всех.</p><a href="https://github.com/stoliarovd-mitrey/black_edition/tree/main/duo-manager" target="_blank" rel="noopener noreferrer">Открыть папку в GitHub ↗</a></details></aside>
+</main>
+<script src="vendor/pdf-lib.min.js"></script><script src="draw.js"></script><script src="editor.js?v=1"></script>
+</body></html>
