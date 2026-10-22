@@ -336,7 +336,7 @@
       "versionLabel": "Версия",
       "searchAll": "Все",
       "counterSuffix": "сценариев",
-      "loadingError": "Не удалось загрузить содержание. Попробуйте обновить страницу."
+      "brandCaption": "GLOBAL / SALES SYSTEM"
     },
     "scripts": {
       "eyebrow": "ИНСТРУМЕНТ ДЛЯ МЕНЕДЖЕРА",
