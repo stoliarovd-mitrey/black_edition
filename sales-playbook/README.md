@@ -16,7 +16,7 @@ Published paths (when GitHub Pages is configured for `main` root):
 All prices, production times and available models are placeholders until independently confirmed by Caviar sales. Do not publish identifiable client dialog transcripts here.
 ## Response prioritization
 
-There is one manager. This playbook does **not** promise a fixed response time of 10–20 minutes. Handle buying, payment and showroom requests first; then active qualified conversations and ordinary campaign inquiries. Check Direct routinely during the shift and use realistic follow-ups.
+There is one manager. This playbook does **not** promise a fixed response time of 10–20 minutes. Respond to messages as work permits; prioritize the quality of advice over an impossible universal deadline. Check Direct routinely during the shift and use realistic follow-ups.
 
 ## Editing page copy
 
