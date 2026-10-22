@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f8f7f4">
+  <meta name="description" content="Демонстрационный макет страницы оформления заказа Caviar.">
+  <title>Оформление заказа · CAVIAR — дизайн-макет</title>
+  <link rel="icon" type="image/png" href="https://caviar-phones.ru/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f8f7f4;--surface:#fff;--surface-alt:#f3f0ea;--ink:#201f1d;--muted:#77736e;
+      --hair:#e5e0d9;--brand:#981d2e;--brand-dark:#761523;--gold:#a48962;
+      --gold-lite:#ded0ba;--radius:12px;--shadow:0 20px 60px rgba(25,20,15,.055);
+      font-family:"Nunito Sans",Arial,sans-serif;color:var(--ink);font-synthesis:none;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);font-size:15px;line-height:1.55}
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    a{color:inherit;text-decoration:none}
+    a:hover{color:var(--brand)}
+    button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--brand);outline-offset:3px}
+    .container{width:min(1180px,calc(100% - 72px));margin:auto}
+    .micro{font-size:11px;letter-spacing:.16em;font-weight:800;text-transform:uppercase}
+    .eyebrow{color:var(--brand);font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}
+    .topline{background:#211f1d;color:#ddd4c9;text-align:center;font-size:11px;letter-spacing:.105em;padding:9px 14px}
+    .header{background:rgba(248,247,244,.96);border-bottom:1px solid var(--hair)}
+    .header-inner{height:86px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:18px}
+    .header-back{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:700;justify-self:start}
+    .header-back svg{width:17px;height:17px}
+    .logo{font-size:31px;line-height:1;font-weight:900;letter-spacing:.19em;white-space:nowrap;margin-left:.19em}
+    .header-contact{justify-self:end;font-size:13px;font-weight:700;white-space:nowrap}
+    .header-contact small{display:block;text-align:right;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+    .breadcrumb{display:flex;align-items:center;gap:10px;color:#938c81;font-size:12px;padding-top:29px}
+    .breadcrumb b{font-weight:700;color:var(--ink)}
+    .intro{display:flex;align-items:end;justify-content:space-between;gap:30px;padding:30px 0 30px}
+    h1,h2,h3,p{margin-top:0}
+    h1{font-size:clamp(32px,4.2vw,56px);letter-spacing:-.035em;line-height:1.08;font-weight:800;margin:12px 0}
+    .intro-sub{color:var(--muted);font-size:14px;margin:0}
+    .steps{display:flex;align-items:center;gap:12px;padding-bottom:8px}
+    .step{display:flex;align-items:center;gap:9px;color:#918b81;white-space:nowrap;font-weight:800;font-size:12px}
+    .step i{font-size:11px;border:1px solid #ccc4b7;width:29px;height:29px;display:grid;place-items:center;border-radius:50%;font-style:normal}
+    .step.active{color:var(--ink)}
+    .step.active i{background:var(--brand);border-color:var(--brand);color:#fff}
+    .step-divider{width:26px;height:1px;background:#d2c9bc}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr) 415px;align-items:start;gap:26px;padding-bottom:40px}
+    .panel{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .form-panel{padding:36px 39px 38px}
+    .form-heading{display:flex;align-items:start;justify-content:space-between;gap:12px;margin-bottom:26px}
+    .section-number{font-size:12px;color:var(--gold);font-weight:900;letter-spacing:.08em;margin-bottom:6px}
+    h2{font-size:24px;line-height:1.25;letter-spacing:-.025em;font-weight:800;margin-bottom:0}
+    .form-heading .hint{font-size:11px;color:var(--muted);padding-top:7px;white-space:nowrap}
+    .fields{display:grid;grid-template-columns:1fr 1fr;gap:17px}
+    .field{display:flex;flex-direction:column;gap:8px;min-width:0}
+    .field.full{grid-column:1/-1}
+    .field label{font-size:12px;font-weight:800}
+    .field label em{color:var(--brand);font-style:normal}
+    .field input,.field textarea,.field select{min-height:49px;width:100%;border:1px solid #dedbd5;border-radius:7px;background:#fff;outline:0;color:var(--ink);padding:12px 15px;transition:border .18s,box-shadow .18s;appearance:none}
+    .field input::placeholder,.field textarea::placeholder{color:#aca69e}
+    .field textarea{height:90px;min-height:90px;resize:vertical}
+    .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(164,137,98,.12)}
+    .select-wrap{position:relative}
+    .select-wrap::after{content:"";position:absolute;right:17px;top:19px;border-right:1.8px solid #777;border-bottom:1.8px solid #777;transform:rotate(45deg);width:7px;height:7px;pointer-events:none}
+    .field-note{font-size:11px;color:var(--muted);margin-top:1px}
+    .form-divider{height:1px;background:var(--hair);margin:32px 0}
+    .payment-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:23px}
+    .pay-option{display:flex;align-items:center;gap:10px;cursor:pointer;position:relative;min-height:62px;border:1px solid var(--hair);border-radius:7px;padding:13px 14px;transition:background .2s,border .2s}
+    .pay-option:hover{border-color:#c8bba8}
+    .pay-option:has(input:checked){background:#fcf9f5;border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
+    .pay-option input{accent-color:var(--brand);width:16px;height:16px;flex:0 0 auto}
+    .pay-option span{font-size:12px;font-weight:700;line-height:1.45}
+    .pay-option small{display:block;color:var(--muted);font-weight:500;font-size:10px}
+    .place-order{width:100%;min-height:57px;border:0;border-radius:7px;background:var(--brand);color:#fff;font-weight:800;letter-spacing:.045em;margin-top:21px;transition:background .2s,transform .2s}
+    .place-order:hover{background:var(--brand-dark);transform:translateY(-1px)}
+    .place-order:disabled{background:#aaa29a;cursor:not-allowed;transform:none}
+    .agree{display:flex;align-items:start;gap:10px;margin-top:15px;color:var(--muted);font-size:11px;line-height:1.55}
+    .agree input{accent-color:var(--brand);flex:0 0 auto;margin-top:3px}
+    .agree a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
+    .preview-flag{border-left:2px solid var(--gold);padding:8px 12px;color:#82776b;background:#fbf8f3;margin:22px 0 0;font-size:11px}
+    .summary{position:sticky;top:24px;overflow:hidden}
+    .summary-top{padding:29px 28px 23px;border-bottom:1px solid var(--hair);display:flex;align-items:center;justify-content:space-between}
+    .summary-top h2{font-size:21px}
+    .quantity-chip{border-radius:100px;background:#f4f0eb;padding:6px 10px;color:#7d756b;font-size:11px;font-weight:700}
+    .product{padding:25px 28px 18px}
+    .product-top{display:grid;grid-template-columns:118px 1fr;gap:20px}
+    .product-art{min-height:165px;position:relative;border-radius:7px;background:linear-gradient(145deg,#f0ece6,#e7e0d6);display:grid;place-items:center;overflow:hidden}
+    .product-art:before{content:"";position:absolute;width:130px;height:130px;border-radius:50%;border:1px solid rgba(164,137,98,.22);transform:translate(40px,-54px)}
+    .phone{width:77px;height:149px;border-radius:15px;border:3px solid #9e835c;background:linear-gradient(140deg,#191715,#2d2723 60%,#151412);box-shadow:7px 6px 8px rgba(0,0,0,.21),inset 0 0 0 2px #574e42;position:relative;transform:rotate(-8deg);overflow:hidden}
+    .phone-cameras{position:absolute;top:8px;left:7px;width:59px;height:50px;background:#322a23;border:1px solid #a88a5c;border-radius:9px}
+    .phone-cameras i{position:absolute;width:17px;height:17px;border-radius:50%;border:3px solid #897455;background:radial-gradient(circle,#080807 40%,#292c2d 43%,#080807 70%)}
+    .phone-cameras i:nth-child(1){top:4px;left:4px}.phone-cameras i:nth-child(2){top:4px;right:4px}.phone-cameras i:nth-child(3){bottom:5px;left:16px}
+    .phone-sky{position:absolute;left:7px;right:7px;top:64px;bottom:10px;background:radial-gradient(circle at 35% 40%,rgba(167,133,76,.20),transparent 45%),linear-gradient(135deg,#342d27,#171513);border:1px solid #b49a6f;border-radius:3px}
+    .phone-sky:before{content:"✦   ·   ✦";position:absolute;color:#c3a46d;font-size:12px;white-space:pre;top:15px;left:5px}
+    .phone-sky:after{content:"♋";position:absolute;top:31px;left:11px;color:#c8aa73;font-size:29px;font-family:serif}
+    .product-description{min-width:0}
+    .product-category{font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:.1em;font-weight:900}
+    .product-name{font-size:20px;font-weight:800;line-height:1.2;letter-spacing:-.02em;margin:5px 0 7px}
+    .product-price{font-size:16px;font-weight:800}
+    .product-link{display:inline-block;margin-top:12px;font-size:11px;text-decoration:underline;text-underline-offset:3px;color:#777167}
+    .art-note{font-size:10px;line-height:1.3;color:#8d867d;margin-top:11px}
+    .choice-divider{height:1px;background:var(--hair);margin:22px 0}
+    .choice{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .choice .field{gap:6px}
+    .choice .field label{font-size:11px;color:#777167}
+    .choice select{font-size:12px;font-weight:700;min-height:41px;padding:9px 22px 9px 11px}
+    .choice .select-wrap:after{right:12px;top:14px}
+    .qty-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:19px}
+    .qty-row span{color:#777167;font-size:12px;font-weight:700}
+    .qty-control{border:1px solid var(--hair);display:flex;align-items:center;height:38px;border-radius:6px;overflow:hidden}
+    .qty-control button{background:#fff;border:0;width:37px;height:36px;color:var(--ink);font-size:21px;line-height:1}
+    .qty-control button:hover{background:var(--surface-alt)}
+    .qty-control output{font-size:13px;font-weight:800;width:29px;text-align:center}
+    .remove{background:none;border:0;color:#a09a92;text-decoration:underline;text-underline-offset:3px;font-size:11px;padding:0}
+    .remove:hover{color:var(--brand)}
+    .totals{padding:24px 28px 27px;background:#fbfaf8;border-top:1px solid var(--hair)}
+    .total-row{display:flex;justify-content:space-between;gap:16px;font-size:13px;margin-bottom:12px}
+    .total-row span:first-child{color:#6e6861}
+    .free{color:#6e7764;font-weight:800}
+    .grand{display:flex;align-items:center;justify-content:space-between;padding-top:20px;border-top:1px solid #ded8cf;margin-top:20px}
+    .grand b{font-size:13px}
+    .grand output{font-size:25px;font-weight:900;letter-spacing:-.035em}
+    .summary-help{padding:19px 28px 23px;border-top:1px solid var(--hair);font-size:12px;color:#6f6b65}
+    .summary-help a{color:var(--brand);font-weight:800;text-decoration:underline;text-underline-offset:3px}
+    .empty-state{text-align:center;padding:43px 22px;display:none}
+    .empty-state strong{display:block;font-size:15px;margin-bottom:8px}
+    .empty-state p{font-size:12px;color:var(--muted)}
+    .empty-state button{border:1px solid var(--gold);background:#fff;border-radius:5px;padding:9px 14px;font-size:12px;font-weight:800}
+    .assurances{margin:8px 0 90px;padding:35px 38px;background:#efeae2;border:1px solid #e9e1d5;border-radius:var(--radius);display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+    .assurance{display:flex;align-items:flex-start;gap:14px}
+    .assurance-icon{width:42px;height:42px;flex:0 0 auto;border:1px solid #c7b79e;border-radius:50%;display:grid;place-items:center;font-size:20px;color:#8c6f49}
+    .assurance h3{font-size:14px;font-weight:800;margin:1px 0 6px}
+    .assurance p{font-size:12px;color:#736d64;line-height:1.55;margin:0}
+    .footer{background:#211f1d;color:#ddd6cc;padding:35px 0 40px}
+    .footer-inner{display:flex;align-items:center;justify-content:space-between;gap:26px}
+    .footer .logo{font-size:25px;color:#fff}
+    .footer-right{display:flex;gap:24px;font-size:12px}
+    .footer-copy{font-size:11px;color:#8e8880}
+    .modal-backdrop{position:fixed;inset:0;background:rgba(15,12,10,.64);z-index:100;display:none;align-items:center;justify-content:center;padding:18px}
+    .modal-backdrop.visible{display:flex}
+    .modal{position:relative;background:#fff;border-radius:12px;width:min(460px,100%);padding:42px 38px;box-shadow:0 35px 100px rgba(0,0,0,.2)}
+    .modal h2{font-size:26px;margin:10px 0 12px}.modal p{color:var(--muted);font-size:13px}
+    .modal-actions{display:flex;gap:10px;margin-top:22px}
+    .modal-actions a,.modal-actions button{display:flex;justify-content:center;align-items:center;text-align:center;border:1px solid var(--brand);background:var(--brand);color:white;padding:11px 15px;border-radius:6px;font-size:12px;font-weight:800;flex:1}
+    .modal-actions button{background:white;color:var(--ink);border-color:var(--hair)}
+    .close-modal{position:absolute;top:16px;right:17px;background:none;border:0;font-size:26px;color:#777}
+    @media(max-width:980px){
+      .container{width:min(100% - 42px,800px)}
+      .layout{grid-template-columns:minmax(0,1fr) 340px;gap:17px}
+      .form-panel{padding:30px 25px}
+      .product{padding:20px}.summary-top{padding:25px 20px 20px}
+      .product-top{grid-template-columns:94px 1fr;gap:13px}.product-art{min-height:140px}
+      .phone{transform:scale(.88) rotate(-8deg)}
+      .totals{padding:20px}.summary-help{padding:19px 20px}
+      .assurances{padding:27px;gap:14px}
+      .assurance{gap:10px}
+    }
+    @media(max-width:760px){
+      .topline{font-size:10px}
+      .header-inner{height:69px;grid-template-columns:1fr auto}
+      .header-back span{display:none}.header-contact{display:none}
+      .logo{font-size:27px;justify-self:end}
+      .breadcrumb{padding-top:18px}
+      .intro{padding:25px 0 22px;display:block}
+      h1{font-size:37px}
+      .steps{margin-top:24px;padding:0}
+      .layout{display:flex;flex-direction:column;gap:18px}
+      .summary{order:0;position:static;width:100%}
+      .form-panel{order:1;width:100%}
+      .product-top{grid-template-columns:108px 1fr}
+      .product-art{min-height:145px}
+      .phone{transform:rotate(-8deg)}
+      .assurances{grid-template-columns:1fr;gap:25px;margin:4px 0 45px}
+      .footer-inner{flex-direction:column;text-align:center;gap:16px}
+    }
+    @media(max-width:450px){
+      .container{width:calc(100% - 30px)}
+      h1{font-size:34px}
+      .steps{gap:9px}.step{font-size:11px}.step-divider{width:18px}
+      .form-panel{padding:24px 19px}
+      .form-heading{margin-bottom:23px}.form-heading .hint{font-size:10px}
+      .fields{grid-template-columns:1fr;gap:14px}.field.full{grid-column:1}
+      .payment-grid{grid-template-columns:1fr}
+      .product{padding:19px}.summary-top{padding:22px 19px}
+      .product-top{grid-template-columns:92px 1fr;gap:12px}
+      .product-art{min-height:142px}.phone{transform:scale(.87) rotate(-8deg)}
+      .product-name{font-size:18px}.product-price{font-size:15px}
+      .choice{gap:8px}
+      .art-note{font-size:9px}
+      .total-row{font-size:12px}
+      .grand output{font-size:23px}
+      .modal{padding:35px 23px}.modal-actions{flex-direction:column}
+    }
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <div class="topline">CAVIAR · PERSONAL LUXURY ATELIER</div>
+  <header class="header">
+    <div class="container header-inner">
+      <a class="header-back" href="https://caviar-phones.ru/" aria-label="Вернуться в каталог Caviar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 12H4M11 5l-7 7 7 7"/></svg>
+        <span>Вернуться в каталог</span>
+      </a>
+      <a href="https://caviar-phones.ru/" class="logo" aria-label="Caviar — главная">CAVIAR</a>
+      <a href="tel:88003334834" class="header-contact"><small>Персональная консультация</small>8 800 333 48 34</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="breadcrumb" aria-label="Навигация"><a href="https://caviar-phones.ru/">Главная</a><span aria-hidden="true">/</span><b>Оформление заказа</b></nav>
+    <section class="intro">
+      <div><div class="eyebrow">Ваш заказ Caviar</div><h1>Оформление заказа</h1><p class="intro-sub">Остался один шаг до создания вашего Caviar.</p></div>
+      <div class="steps" aria-label="Этапы оформления"><span class="step"><i>✓</i> Корзина</span><span class="step-divider"></span><span class="step active"><i>02</i> Данные покупателя</span></div>
+    </section>
+
+    <div class="layout">
+      <section class="form-panel panel" aria-labelledby="customer-title">
+        <form id="checkout-form">
+          <div class="form-heading"><div><div class="section-number">01 / КОНТАКТЫ</div><h2 id="customer-title">Ваши данные</h2></div><span class="hint">* Обязательные поля</span></div>
+          <div class="fields">
+            <div class="field"><label for="first-name">Имя <em>*</em></label><input id="first-name" name="name" required autocomplete="given-name" placeholder="Ваше имя" maxlength="100"></div>
+            <div class="field"><label for="last-name">Фамилия</label><input id="last-name" name="last_name" autocomplete="family-name" placeholder="Ваша фамилия" maxlength="100"></div>
+            <div class="field"><label for="country">Страна <em>*</em></label><input id="country" name="country" list="countries" value="Россия" required autocomplete="country-name" maxlength="100"><datalist id="countries"><option value="Россия"><option value="Казахстан"><option value="Беларусь"><option value="Объединённые Арабские Эмираты"><option value="Азербайджан"><option value="Армения"><option value="Грузия"><option value="Узбекистан"><option value="Китай"><option value="Турция"><option value="США"><option value="Великобритания"><option value="Германия"><option value="Франция"><option value="Италия"><option value="Швейцария"><option value="Нидерланды"><option value="Индия"></datalist></div>
+            <div class="field"><label for="phone">Телефон <em>*</em></label><input id="phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" placeholder="+7 999 123-45-67" pattern="[+0-9 ()-]{7,24}" title="Укажите телефон в международном формате" maxlength="24"></div>
+            <div class="field full"><label for="address">Адрес доставки</label><input id="address" name="address" autocomplete="street-address" placeholder="Город, улица, дом, квартира" maxlength="300"><span class="field-note">Детали доставки можно уточнить с персональным менеджером.</span></div>
+          </div>
+
+          <div class="form-divider"></div>
+          <div><div class="section-number">02 / ОПЛАТА</div><h2>Способ оплаты</h2></div>
+          <div class="payment-grid" role="radiogroup" aria-label="Способ оплаты">
+            <label class="pay-option"><input type="radio" name="payment" value="card_ru" checked><span>Банковская карта<small>Мир, Visa, Mastercard</small></span></label>
+            <label class="pay-option"><input type="radio" name="payment" value="sbp"><span>СБП<small>Оплата по QR-коду</small></span></label>
+            <label class="pay-option"><input type="radio" name="payment" value="invoice"><span>Банковский перевод<small>На расчётный счёт</small></span></label>
+            <label class="pay-option"><input type="radio" name="payment" value="courier"><span>Наличными<small>Только в Москве</small></span></label>
+          </div>
+
+          <div class="form-divider"></div>
+          <div><div class="section-number">03 / ПОЖЕЛАНИЯ</div><h2>Комментарий к заказу</h2></div>
+          <div class="fields" style="margin-top:20px"><div class="field full"><label for="comment">Дополнительная информация</label><textarea id="comment" name="comment" maxlength="1000" placeholder="Особые пожелания, детали доставки или вопросы менеджеру"></textarea></div></div>
+          <button type="submit" id="submit-order" class="place-order">Оформить заказ →</button>
+          <label class="agree"><input id="agreement" type="checkbox" required checked><span>Нажимая «Оформить заказ», я соглашаюсь с условиями <a target="_blank" rel="noopener noreferrer" href="https://caviar-phones.ru/uploads/offer.ru.pdf">публичной оферты</a>.</span></label>
+          <p class="preview-flag"><strong>Дизайн-макет.</strong> Здесь можно проверить интерфейс и расчёт стоимости. Заказы и персональные данные с этой страницы не отправляются.</p>
+        </form>
+      </section>
+
+      <aside class="summary panel" aria-label="Состав заказа">
+        <div class="summary-top"><h2>Ваш заказ</h2><span class="quantity-chip" id="item-chip">1 изделие</span></div>
+        <div class="product" id="product">
+          <div class="product-top">
+            <div>
+              <div class="product-art" role="img" aria-label="Стилизованная иллюстрация смартфона Caviar, не фотография товара">
+                <div class="phone"><div class="phone-cameras"><i></i><i></i><i></i></div><div class="phone-sky"></div></div>
+              </div>
+              <div class="art-note">Условная иллюстрация</div>
+            </div>
+            <div class="product-description">
+              <div class="product-category">Кастом iPhone · Zodiac</div>
+              <div class="product-name">Рак</div>
+              <div class="product-price" id="unit-price">764 000 ₽</div>
+              <a class="product-link" target="_blank" rel="noopener noreferrer" href="https://caviar-phones.ru/best-sellers/cancer_id28735/">Посмотреть оригинал ↗</a>
+            </div>
+          </div>
+          <div class="choice-divider"></div>
+          <div class="choice">
+            <div class="field"><label for="model">Модель iPhone</label><div class="select-wrap"><select id="model"><option value="pro">18 Pro</option><option value="max">18 Pro Max</option></select></div></div>
+            <div class="field"><label for="storage">Объём памяти</label><div class="select-wrap"><select id="storage"><option value="0">256 ГБ</option><option value="1">512 ГБ</option><option value="2">1 ТБ</option><option value="3">2 ТБ</option></select></div></div>
+          </div>
+          <div class="qty-row"><span>Количество</span><div class="qty-control"><button type="button" id="qty-minus" aria-label="Уменьшить количество">−</button><output id="qty-display" aria-live="polite">1</output><button type="button" id="qty-plus" aria-label="Увеличить количество">+</button></div><button type="button" class="remove" id="remove-item">Удалить</button></div>
+        </div>
+        <div class="empty-state" id="empty-state" aria-live="polite"><strong>Корзина пуста</strong><p>Вы можете вернуть изделие в этот макет.</p><button type="button" id="restore-item">Вернуть модель «Рак»</button></div>
+        <div class="totals">
+          <div class="total-row"><span>Товары (<span id="total-qty">1</span>)</span><strong id="subtotal">764 000 ₽</strong></div>
+          <div class="total-row"><span>Доставка по России</span><span class="free">Бесплатно</span></div>
+          <div class="grand"><b>Итого</b><output id="grand-total" aria-live="polite">764 000 ₽</output></div>
+        </div>
+        <div class="summary-help">Нужна консультация по заказу? <a href="tel:+79101040490">Связаться с менеджером</a></div>
+      </aside>
+    </div>
+
+    <section class="assurances" aria-label="Преимущества Caviar">
+      <div class="assurance"><span class="assurance-icon" aria-hidden="true">✧</span><div><h3>Подлинность изделия</h3><p>Оригинальное устройство и именной сертификат Caviar.</p></div></div>
+      <div class="assurance"><span class="assurance-icon" aria-hidden="true">✓</span><div><h3>Гарантия 1 год</h3><p>Гарантия ателье Caviar на кастомные смартфоны.</p></div></div>
+      <div class="assurance"><span class="assurance-icon" aria-hidden="true">⌁</span><div><h3>Бесплатная доставка</h3><p>Доставка по России, условия согласует менеджер.</p></div></div>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="container footer-inner"><a href="https://caviar-phones.ru/" class="logo">CAVIAR</a><div class="footer-right"><a href="https://caviar-phones.ru/info/payment-shipping/">Доставка и оплата</a><a href="https://caviar-phones.ru/info/warranty/">Гарантия</a><a href="https://caviar-phones.ru/info/contacts/">Контакты</a></div><div class="footer-copy">© Caviar 2026 · Дизайн-макет</div></div></footer>
+
+  <div id="preview-modal" class="modal-backdrop" role="presentation">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="close-modal" type="button" id="modal-close" aria-label="Закрыть окно">×</button>
+      <div class="eyebrow">Интерактивный прототип</div><h2 id="modal-title">Это демонстрация дизайна</h2>
+      <p>Поля и стоимость работают только в вашем браузере. Заявка не отправлена и данные не сохранены.</p>
+      <p>Для реального заказа откройте корзину официального сайта Caviar. Состав корзины определяется вашей сессией на основном сайте.</p>
+      <div class="modal-actions"><a href="https://caviar-phones.ru/basket/">Перейти на сайт Caviar ↗</a><button type="button" id="modal-cancel">Вернуться к макету</button></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      "use strict";
+      var prices = { pro:[764000,789000,839000,939000], max:[799000,824000,874000,974000] };
+      var qty = 1, removed = false;
+      function el(id){return document.getElementById(id);}
+      function money(n){return new Intl.NumberFormat("ru-RU",{maximumFractionDigits:0}).format(n)+" ₽";}
+      function label(n){var d=n%10,t=n%100;return n+" "+((t>10&&t<20)?"изделий":d===1?"изделие":d>=2&&d<=4?"изделия":"изделий");}
+      function update(){
+        var unit=prices[el("model").value][Number(el("storage").value)], effectiveQty=removed?0:qty;
+        el("unit-price").textContent=money(unit);
+        el("subtotal").textContent=money(unit*effectiveQty);
+        el("grand-total").textContent=money(unit*effectiveQty);
+        el("qty-display").textContent=String(qty);
+        el("total-qty").textContent=String(effectiveQty);
+        el("item-chip").textContent=label(effectiveQty);
+        el("product").style.display=removed?"none":"block";
+        el("empty-state").style.display=removed?"block":"none";
+        el("submit-order").disabled=removed;
+        el("qty-minus").disabled=qty<=1;
+        el("qty-plus").disabled=qty>=99;
+      }
+      el("model").addEventListener("change",update);
+      el("storage").addEventListener("change",update);
+      el("qty-minus").addEventListener("click",function(){qty=Math.max(1,qty-1);update();});
+      el("qty-plus").addEventListener("click",function(){qty=Math.min(99,qty+1);update();});
+      el("remove-item").addEventListener("click",function(){removed=true;update();});
+      el("restore-item").addEventListener("click",function(){removed=false;qty=1;update();});
+      function closeModal(){el("preview-modal").classList.remove("visible");el("submit-order").focus();}
+      el("checkout-form").addEventListener("submit",function(event){
+        event.preventDefault();
+        if(removed||!event.currentTarget.reportValidity())return;
+        el("preview-modal").classList.add("visible");
+        el("modal-close").focus();
+      });
+      el("modal-close").addEventListener("click",closeModal);
+      el("modal-cancel").addEventListener("click",closeModal);
+      el("preview-modal").addEventListener("click",function(e){if(e.target===this)closeModal();});
+      document.addEventListener("keydown",function(e){if(e.key==="Escape"&&el("preview-modal").classList.contains("visible"))closeModal();});
+      update();
+    }());
+  </script>
+</body>
+</html>
