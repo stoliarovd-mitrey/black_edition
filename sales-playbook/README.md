@@ -21,3 +21,7 @@ There is one manager. This playbook does **not** promise a fixed response time o
 ## Editing page copy
 
 Open `editor.html`, choose **Тексты страницы**, then select **Воронка**, **Скрипты**, **Стандарты** or **Навигация**. Edit the fields and publish `data.json`. To edit a funnel stage's goal, steps, transitions or displayed time, use **Этапы воронки**. The manager page remains read-only.
+
+## Follow-up rules
+
+The funnel includes an editable Follow-up section with situation-based suggested timings (next business day, about three days, or the date agreed by the customer). These are guidelines, not mandatory automated schedules. One manager handles the inbox; **ideally** first replies arrive within 20 minutes during business hours, but this is explicitly non-binding. All follow-up cards and text labels can be edited through the dedicated editor tab and the Page Texts > Funnel section.
