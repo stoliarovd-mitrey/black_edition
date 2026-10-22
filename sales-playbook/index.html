@@ -12,50 +12,50 @@
   <aside class="sidebar" id="sidebar">
     <a href="./" class="brand" aria-label="Caviar Sales Playbook"><span class="brand-word">CAVIAR<span class="brand-dot">.</span></span><span class="brand-caption">GLOBAL / SALES SYSTEM</span></a>
     <div class="sidebar-line"></div>
-    <div class="aside-label">РАБОЧЕЕ ПРОСТРАНСТВО</div>
+    <div class="aside-label" data-edit="ui.common.workspaceLabel">РАБОЧЕЕ ПРОСТРАНСТВО</div>
     <nav class="mainnav" aria-label="Разделы">
-      <button class="navitem active" data-page="scripts"><span class="nav-icon">▤</span><span>Скрипты переписки</span><span class="nav-trail">›</span></button>
-      <button class="navitem" data-page="funnel"><span class="nav-icon">◇</span><span>Воронка работы</span><span class="nav-trail">›</span></button>
-      <button class="navitem" data-page="rules"><span class="nav-icon">☷</span><span>Стандарты работы</span><span class="nav-trail">›</span></button>
+      <button class="navitem active" data-page="scripts"><span class="nav-icon">▤</span><span data-edit="ui.common.navScripts">Скрипты переписки</span><span class="nav-trail">›</span></button>
+      <button class="navitem" data-page="funnel"><span class="nav-icon">◇</span><span data-edit="ui.common.navFunnel">Воронка работы</span><span class="nav-trail">›</span></button>
+      <button class="navitem" data-page="rules"><span class="nav-icon">☷</span><span data-edit="ui.common.navRules">Стандарты работы</span><span class="nav-trail">›</span></button>
     </nav>
-    <div class="aside-label section-break">ДЛЯ БЫСТРОГО ДОСТУПА</div>
+    <div class="aside-label section-break" data-edit="ui.common.quickLabel">ДЛЯ БЫСТРОГО ДОСТУПА</div>
     <div id="quickLinks" class="quick-links"></div>
-    <div class="sidebar-bottom"><span class="live-dot"></span> Менеджерская версия <div class="small-label" id="updateDate">Обновление данных</div></div>
+    <div class="sidebar-bottom"><span class="live-dot"></span> <span data-edit="ui.common.managerVersion">Менеджерская версия</span> <div class="small-label" id="updateDate">Обновление данных</div></div>
   </aside>
   <div class="workspace">
-    <header class="topbar"><button id="menuButton" class="mobile-menu" aria-label="Открыть меню">☰</button><div class="breadcrumbs"><span>SALES ENABLEMENT</span><span class="crumb-sep">/</span><strong id="crumb">Скрипты переписки</strong></div><div class="topright"><div class="clock"><span class="live-dot"></span><span id="slaTop">Ответ за 10–20 мин</span></div><span class="topbrand">CAVIAR GLOBAL</span></div></header>
+    <header class="topbar"><button id="menuButton" class="mobile-menu" aria-label="Открыть меню">☰</button><div class="breadcrumbs"><span data-edit="ui.common.breadRoot">SALES ENABLEMENT</span><span class="crumb-sep">/</span><strong id="crumb">Скрипты переписки</strong></div><div class="topright"><div class="clock"><span class="live-dot"></span><span id="slaTop">Обращения по приоритету</span></div><span class="topbrand" data-edit="ui.common.topBrand">CAVIAR GLOBAL</span></div></header>
     <main class="content">
       <section id="page-scripts" class="page active" aria-label="Скрипты">
-        <div class="eyebrow"><span class="eyebrow-line"></span> ИНСТРУМЕНТ ДЛЯ МЕНЕДЖЕРА</div>
-        <div class="hero-row"><div><h1>Каждый диалог<br><em>имеет значение.</em></h1><p class="hero-sub" id="heroText">Короткий персональный ответ вместо отправки в каталог.</p></div><div class="hero-monogram" aria-hidden="true">C</div></div>
-        <div class="principle"><span class="principle-index">01 / ГЛАВНОЕ ПРАВИЛО</span><strong id="promise">Ответ → конкретика → один следующий вопрос</strong><span class="principle-icon">↗</span></div>
-        <div class="section-head"><div><div class="section-kicker">СКРИПТЫ</div><h2>Выберите ситуацию клиента</h2></div><span class="counter" id="scriptCounter"></span></div>
+        <div class="eyebrow"><span class="eyebrow-line"></span> <span data-edit="ui.scripts.eyebrow">ИНСТРУМЕНТ ДЛЯ МЕНЕДЖЕРА</span></div>
+        <div class="hero-row"><div><h1><span data-edit="ui.scripts.headingLine1">Каждый диалог</span><br><em data-edit="ui.scripts.headingLine2">имеет значение.</em></h1><p class="hero-sub" id="heroText">Короткий персональный ответ вместо отправки в каталог.</p></div><div class="hero-monogram" aria-hidden="true">C</div></div>
+        <div class="principle"><span class="principle-index" data-edit="ui.scripts.principleLabel">01 / ГЛАВНОЕ ПРАВИЛО</span><strong id="promise">Ответ → конкретика → один следующий вопрос</strong><span class="principle-icon">↗</span></div>
+        <div class="section-head"><div><div class="section-kicker" data-edit="ui.scripts.sectionCaption">СКРИПТЫ</div><h2 data-edit="ui.scripts.sectionTitle">Выберите ситуацию клиента</h2></div><span class="counter" id="scriptCounter"></span></div>
         <div class="searchrow"><label class="searchwrap"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.5"/><path d="m16 16 5 5"/></svg><input type="search" id="search" placeholder="Поиск: цена, шоурум, подарок, follow-up…" autocomplete="off" aria-label="Поиск по скриптам"><button id="clearSearch" class="clear-search" aria-label="Очистить поиск" hidden>×</button></label></div>
         <div id="categoryFilters" class="filters" aria-label="Категории"></div>
         <div id="scriptList" class="script-list" aria-live="polite"></div>
         <div class="footer-note"><span class="label-pin">!</span><span id="globalNotice">Перед отправкой проверьте цену и условия.</span></div>
       </section>
       <section id="page-funnel" class="page" aria-label="Воронка">
-        <div class="eyebrow"><span class="eyebrow-line"></span> ПУТЬ КЛИЕНТА</div>
-        <h1>Воронка<br><em>в семь шагов.</em></h1>
-        <p class="hero-sub">Для каждого этапа указаны цель, действия, условие перехода и контроль со стороны менеджера.</p>
-        <div class="funnel-summary"><div><span>ПЕРВЫЙ ОТВЕТ</span><strong id="slaCard">10–20 минут</strong></div><div><span>ПРИНЦИП</span><strong>Один следующий шаг</strong></div><div><span>ПОДХОД</span><strong>Персональное сопровождение</strong></div></div>
-        <div class="section-head"><div><div class="section-kicker">ЭТАПЫ</div><h2>Выберите текущий статус</h2></div></div>
+        <div class="eyebrow"><span class="eyebrow-line"></span> <span data-edit="ui.funnel.eyebrow">ПУТЬ КЛИЕНТА</span></div>
+        <h1><span data-edit="ui.funnel.headingLine1">Воронка</span><br><em data-edit="ui.funnel.headingLine2">в семь шагов.</em></h1>
+        <p class="hero-sub" data-edit="ui.funnel.description">Для каждого этапа указаны цель, действия и условия перехода.</p>
+        <div class="funnel-summary"><div><span data-edit="ui.funnel.summaryLabel1">ПРИОРИТЕТ</span><strong id="slaCard">Сначала горячие запросы</strong></div><div><span data-edit="ui.funnel.summaryLabel2">ПРИНЦИП</span><strong data-edit="ui.funnel.summaryValue2">Один следующий шаг</strong></div><div><span data-edit="ui.funnel.summaryLabel3">ПОДХОД</span><strong data-edit="ui.funnel.summaryValue3">Персональное сопровождение</strong></div></div>
+        <div class="section-head"><div><div class="section-kicker" data-edit="ui.funnel.sectionCaption">ЭТАПЫ</div><h2 data-edit="ui.funnel.sectionTitle">Выберите текущий статус</h2></div></div>
         <div id="stageRail" class="stage-rail"></div>
         <div id="stagePanel" class="stage-panel"></div>
-        <div class="funnel-note">Отложенный интерес и отказ — самостоятельные исходы, а не обязательные этапы перед покупкой. Этапы 1–5 описывают типовой путь к заказу.</div>
+        <div class="funnel-note" data-edit="ui.funnel.note">Отложенный интерес и отказ — самостоятельные исходы, а не обязательные этапы перед покупкой. Этапы 1–5 описывают типовой путь к заказу.</div>
       </section>
       <section id="page-rules" class="page" aria-label="Стандарты">
-        <div class="eyebrow"><span class="eyebrow-line"></span> СТАНДАРТ КОММУНИКАЦИИ</div>
-        <h1>Уважение<br><em>к времени клиента.</em></h1><p class="hero-sub">Рекомендации для премиальной консультации и контроль качества переписки.</p>
-        <div class="rules-intro"><span>ОСНОВНОЙ ПРИНЦИП</span><strong id="rulesPromise">Ответ → конкретика → один следующий вопрос</strong></div>
+        <div class="eyebrow"><span class="eyebrow-line"></span> <span data-edit="ui.rules.eyebrow">СТАНДАРТ КОММУНИКАЦИИ</span></div>
+        <h1><span data-edit="ui.rules.headingLine1">Уважение</span><br><em data-edit="ui.rules.headingLine2">к времени клиента.</em></h1><p class="hero-sub" data-edit="ui.rules.description">Рекомендации для персональной консультации и контроля качества переписки.</p>
+        <div class="rules-intro"><span data-edit="ui.rules.principleLabel">ОСНОВНОЙ ПРИНЦИП</span><strong id="rulesPromise">Ответ → конкретика → один следующий вопрос</strong></div>
         <div id="rulesList" class="rules-grid"></div>
-        <div class="section-head" style="margin-top:44px"><div><div class="section-kicker">ПЕРЕД ОТПРАВКОЙ</div><h2>Контрольный список</h2></div></div>
-        <div class="checklist" id="checklist"><label><input type="checkbox"> Ответил на вопрос клиента, а не на шаблон рекламы</label><label><input type="checkbox"> Цена, материалы и сроки подтверждены</label><label><input type="checkbox"> В сообщении только один логичный следующий вопрос</label><label><input type="checkbox"> У перспективного клиента есть следующий шаг и дата</label></div>
-        <button id="resetChecklist" class="small-action">Сбросить отметки ↺</button>
+        <div class="section-head" style="margin-top:44px"><div><div class="section-kicker" data-edit="ui.rules.sectionCaption">ПЕРЕД ОТПРАВКОЙ</div><h2 data-edit="ui.rules.sectionTitle">Контрольный список</h2></div></div>
+        <div class="checklist" id="checklist"></div>
+        <button id="resetChecklist" class="small-action" data-edit="ui.rules.resetLabel">Сбросить отметки ↺</button>
       </section>
     </main>
-    <footer class="footer"><span>CAVIAR  /  PRIVATE SALES PLAYBOOK</span><span id="footerVersion">GLOBAL · 2026</span></footer>
+    <footer class="footer"><span data-edit="ui.common.footerLeft">CAVIAR / PRIVATE SALES PLAYBOOK</span><span id="footerVersion">GLOBAL · 2026</span></footer>
   </div>
 </div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
