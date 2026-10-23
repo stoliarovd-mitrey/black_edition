@@ -136,8 +136,8 @@
       "customer": "Is this real gold? Can I see more details?",
       "intent": "Клиент хочет убедиться в ценности конкретного изделия.",
       "response": "I'd be happy to show you the details. The [Model Name] features [exact, verified materials and finish].\n\nI can send close-up photos of the actual design here. Would you like to see the [specific detail]?",
-      "next": "Отправьте 2–3 релевантных фото/видео и точное описание материалов по этой версии.",
-      "warning": "Не смешивайте массивное золото, покрытие золотом и ювелирный сплав.",
+      "next": "Отправьте 2–3 релевантных фото/рендеры (при наличии)  и точное описание материалов по этой версии.",
+      "warning": "",
       "priority": "normal"
     },
     {
