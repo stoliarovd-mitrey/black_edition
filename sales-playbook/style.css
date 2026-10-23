@@ -36,3 +36,13 @@
 .rename-stage-action:hover{background:#eee3d0}
 .rename-hint{border-left:2px solid #b4a07a;margin:14px 0 0;padding-left:12px;font-size:12px;color:#81796c;line-height:1.65}
 @media(max-width:760px){.editor-item-heading{align-items:flex-start;flex-direction:column}.editor-heading-actions{width:100%;justify-content:space-between}.stage-edit-row{flex:0 0 235px}}
+
+/* Inline item renaming across scripts, funnel, follow-ups and rules */
+.editor-list .item-edit-row{display:flex;align-items:stretch;gap:5px;width:100%;min-width:0}
+.editor-list .item-edit-row .item-select{flex:1;min-width:0;text-align:left;overflow-wrap:anywhere}
+.editor-list .item-edit-row .item-rename{flex:0 0 42px;padding:0;display:grid;place-items:center;border:1px solid #ddd5c8;color:#917950;background:#fff;font-size:18px;line-height:1;transition:background .15s,border-color .15s}
+.editor-list .item-edit-row .item-rename:hover{background:#f0e9dc;border-color:#b9a27c;color:#51402b}
+.editor-list .item-edit-row .item-select[hidden],.editor-list .item-edit-row .item-rename[hidden]{display:none}
+.editor-list .item-edit-row .item-rename-input{flex:1;min-width:0;width:100%;padding:9px 10px;background:#fff;border:2px solid #b6a17a;border-radius:4px;color:#292922;font-size:12px}
+.editor-list .item-edit-row .item-rename-input:focus{outline:0;border-color:#8e764c}
+@media(max-width:760px){.editor-list .item-edit-row{flex:0 0 245px}}
