@@ -103,8 +103,8 @@
       "customer": "Is this just a cover? Can I buy the back panel?",
       "intent": "Разведите покупку телефона и поиск аксессуара.",
       "response": "This is a complete customized iPhone, not a removable case. The design is integrated into the phone itself.\n\nWe also have a selection of accessories.\n\nAre you looking for a complete Caviar phone or something for your current iPhone?",
-      "next": "Если нужен аксессуар, предложите существующие чехлы. Не обещайте съёмную панель, если её нет в каталоге.",
-      "warning": "Не оставляйте неверное представление о товаре без уточнения.",
+      "next": "Если клиенту нужен аксессуар, уточните модель его iPhone и предложите подходящие товары из ассортимента. Если он заинтересован в полноценном телефоне Caviar, переходите к выбору модели и комплектации.",
+      "warning": "Не обещайте, что декоративную панель показанной модели можно купить отдельно или установить на уже имеющийся iPhone, если такая возможность не подтверждена производством.",
       "priority": "normal"
     },
     {
