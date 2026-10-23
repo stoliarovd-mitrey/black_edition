@@ -54,7 +54,7 @@
     },
     {
       "id": "price",
-      "category": "Первый контакт",
+      "category": "Запрос информации и цены",
       "title": "Клиент спрашивает цену",
       "customer": "How much? / What's the price?",
       "intent": "Человек ожидает цифру, а не рассказ об истории бренда.",
@@ -65,8 +65,8 @@
     },
     {
       "id": "showroom",
-      "category": "Встреча и заказ",
-      "title": "Запись в шоурум Dubai",
+      "category": "Коммерческий интерес",
+      "title": "Клиент интересуется шоурумом Dubai",
       "customer": "Can I book a showroom visit?",
       "intent": "Клиент предлагает конкретное действие и уже находится ближе к покупке.",
       "response": "Of course. We can arrange a private visit to our Dubai showroom and prepare the models you're interested in.\n\nWould [confirmed available slot 1] or [confirmed available slot 2] suit you better?",
@@ -76,8 +76,8 @@
     },
     {
       "id": "ready",
-      "category": "Встреча и заказ",
-      "title": "Клиент готов купить",
+      "category": "Коммерческий интерес",
+      "title": "Клиент интересуется покупкой купить",
       "customer": "I want to buy this. / I'll take it.",
       "intent": "Не возвращайте человека к рекламной презентации. Начните оформление.",
       "response": "Wonderful. I can help you arrange your order right here.\n\nLet me confirm your preferred model and configuration. I'll then provide the final price, production timeline and payment details.\n\nShall I prepare your order?",
