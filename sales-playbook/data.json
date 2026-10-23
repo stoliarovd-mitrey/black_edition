@@ -77,7 +77,7 @@
     {
       "id": "ready",
       "category": "Коммерческий интерес",
-      "title": "Клиент интересуется покупкой купить",
+      "title": "Клиент интересуется покупкой",
       "customer": "I want to buy this. / I'll take it.",
       "intent": "Не возвращайте человека к рекламной презентации. Начните оформление.",
       "response": "Wonderful. I can help you arrange your order right here.\n\nLet me confirm your preferred model and configuration. I'll then provide the final price, production timeline and payment details.\n\nShall I prepare your order?",
