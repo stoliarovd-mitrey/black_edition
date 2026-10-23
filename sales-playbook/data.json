@@ -115,7 +115,7 @@
       "intent": "Вопрос требует проверки технической возможности услуги.",
       "response": "We may be able to customize a phone you already own, depending on its model and the design you're interested in.\n\nWhich iPhone model do you currently have? I'll check the available options for you.",
       "next": "Передайте конкретную модель и запрос в производство; подтвердите возможности, срок и стоимость до обещаний клиенту.",
-      "warning": "Не гарантируйте моддинг существующего телефона без проверки.",
+      "warning": "",
       "priority": "normal"
     },
     {
