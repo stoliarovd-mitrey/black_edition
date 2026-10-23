@@ -1,5 +1,5 @@
 {
-  "revision": "2026-10-22",
+  "revision": "2026-10-23",
   "title": "Instagram Direct",
   "subtitle": "Персональные продажи Caviar Global",
   "hero": "Помогайте клиенту разобраться в интересующей модели. Сначала отвечайте на конкретный вопрос и предлагайте следующий понятный шаг.",
@@ -59,7 +59,7 @@
       "customer": "How much? / What's the price?",
       "intent": "Человек ожидает цифру, а не рассказ об истории бренда.",
       "response": "The [Model Name] starts at [verified price] for [configuration].\n\nThe price includes the device itself, Caviar customization and our signature gift packaging.\n\nWhich configuration are you considering?",
-      "next": "Если точная комплектация неизвестна, назовите подтверждённую стартовую цену и поясните, что влияет на стоимость.",
+      "next": "Дождитесь ответа клиента о предпочтительной комплектации. Если он заинтересован, уточните окончательную стоимость, предложите фотографии выбранной модели и переходите к обсуждению покупки.",
       "warning": "Не пишите 'It depends' без конкретной цены. Не отправляйте искать цену на сайте.",
       "priority": "high"
     },
@@ -104,7 +104,7 @@
       "intent": "Разведите покупку телефона и поиск аксессуара.",
       "response": "This is a complete customized iPhone, not a removable case. The design is integrated into the phone itself.\n\nWe also have a selection of accessories.\n\nAre you looking for a complete Caviar phone or something for your current iPhone?",
       "next": "Если клиенту нужен аксессуар, уточните модель его iPhone и предложите подходящие товары из ассортимента. Если он заинтересован в полноценном телефоне Caviar, переходите к выбору модели и комплектации.",
-      "warning": "Не обещайте, что декоративную панель показанной модели можно купить отдельно или установить на уже имеющийся iPhone, если такая возможность не подтверждена производством.",
+      "warning": "",
       "priority": "normal"
     },
     {
