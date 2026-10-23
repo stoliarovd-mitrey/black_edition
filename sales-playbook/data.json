@@ -164,7 +164,7 @@
     },
     {
       "id": "not-interested",
-      "category": "Сопровождение",
+      "category": "Напоминание от менеджера (follow-up)",
       "title": "Отказ или нецелевое обращение",
       "customer": "Not interested. / I need a normal case only.",
       "intent": "Уважительно завершите контакт.",
