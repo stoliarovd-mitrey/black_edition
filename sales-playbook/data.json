@@ -169,7 +169,7 @@
       "customer": "Not interested. / I need a normal case only.",
       "intent": "Уважительно завершите контакт.",
       "response": "Of course, thank you for your time. If you ever wish to explore Caviar designs in the future, I'll be happy to assist.",
-      "next": "Зафиксируйте причину, переведите в статус «неактуально» и прекратите активные касания.",
+      "next": "Прекратите активные касания.",
       "warning": "Не продолжайте уговаривать после явного отказа.",
       "priority": "normal"
     }
