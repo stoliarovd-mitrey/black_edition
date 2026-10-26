@@ -31,11 +31,11 @@ function selectDevice(key,save=true){
  if(key==='fold')catalog.innerHTML=samsungMarkup;
  else catalog.innerHTML=window.CAVIAR_COLLECTIONS.filter(c=>c.device===key).map(c=>`<section class="collection" id="${key}-${c.id}" aria-labelledby="title-${key}-${c.id}"><div class="section-heading"><h2 id="title-${key}-${c.id}">${escapeHTML(c.title)}</h2></div><div class="grid">${c.items.map(m=>`<button class="card" data-id="${m.id}" data-full="${m.full}" data-title="${escapeHTML(c.title+' · '+m.name)}" aria-label="Открыть концепт: ${escapeHTML(m.name)}"><span class="card-visual"><img src="${m.thumb}" alt="${escapeHTML(m.name)}" width="597" height="800" loading="lazy" decoding="async"><span class="card-details" aria-hidden="true">Подробнее</span></span></button>`).join('')}</div></section>`).join('');
  updateCollectionLinks();
- if(save)history.replaceState(null,'','#device='+key);
+ if(save){history.replaceState(null,'','#device='+key);$('.catalog-navigation').scrollIntoView({block:'start',behavior:'instant'});}
 }
 document.querySelectorAll('[role=tab]').forEach(t=>{
  t.onclick=()=>selectDevice(t.dataset.device);
  t.onkeydown=e=>{const tabs=[...document.querySelectorAll('[role=tab]')],i=tabs.indexOf(t);let next;if(e.key==='ArrowRight')next=(i+1)%tabs.length;if(e.key==='ArrowLeft')next=(i+tabs.length-1)%tabs.length;if(e.key==='Home')next=0;if(e.key==='End')next=tabs.length-1;if(next!==undefined){e.preventDefault();tabs[next].focus();selectDevice(tabs[next].dataset.device);}};
 });
-function openHash(){const params=new URLSearchParams(location.hash.slice(1)),key=params.get('device'),id=params.get('project');if(key&&devices[key]&&key!==device)selectDevice(key,false);if(id){const card=[...catalog.querySelectorAll('.card')].find(c=>(c.dataset.id||c.querySelector('img').getAttribute('src').split('/').pop().replace('.webp',''))===id);if(card&&!dialog.open)openProject(card);}}
+function openHash(){const hash=location.hash.slice(1),params=new URLSearchParams(hash),key=params.get('device')||(hash.startsWith('duo-')?'duo':hash.startsWith('ip18-')?'ip18':null),id=params.get('project');if(key&&devices[key]&&key!==device)selectDevice(key,false);if(id){const card=[...catalog.querySelectorAll('.card')].find(c=>(c.dataset.id||c.querySelector('img').getAttribute('src').split('/').pop().replace('.webp',''))===id);if(card&&!dialog.open)openProject(card);}else if(key&&document.getElementById(hash)){document.getElementById(hash).scrollIntoView({block:'start'});}}
 window.addEventListener('hashchange',openHash);updateCollectionLinks();openHash();
