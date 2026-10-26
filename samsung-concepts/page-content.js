@@ -440,22 +440,10 @@ window.CAVIAR_PAGE_DATA = {
       "title": "Сокровищница",
       "items": [
         {
-          "id": "ZOL-01",
-          "name": "Изумрудный михраб",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/gold/01-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/gold/01.webp"
-        },
-        {
           "id": "ZOL-02",
           "name": "Четыре лепестка",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/gold/02-t.webp",
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/gold/02.webp"
-        },
-        {
-          "id": "ZOL-03",
-          "name": "Шеврон",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/gold/03-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/gold/03.webp"
         },
         {
           "id": "ZOL-04",
@@ -468,12 +456,6 @@ window.CAVIAR_PAGE_DATA = {
           "name": "Медовые соты",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/gold/05-t.webp",
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/gold/05.webp"
-        },
-        {
-          "id": "ZOL-06",
-          "name": "Жемчужный медальон",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/gold/06-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/gold/06.webp"
         },
         {
           "id": "ZOL-07",
@@ -536,28 +518,10 @@ window.CAVIAR_PAGE_DATA = {
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/gold/16.webp"
         },
         {
-          "id": "ZOL-17",
-          "name": "Платиновый цветок",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/gold/17-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/gold/17.webp"
-        },
-        {
           "id": "ZOL-18",
           "name": "Барокко",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/gold/18-t.webp",
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/gold/18.webp"
-        },
-        {
-          "id": "ZOL-19",
-          "name": "Розовое барокко",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/gold/19-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/gold/19.webp"
-        },
-        {
-          "id": "ZOL-20",
-          "name": "Жемчужная рама",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/gold/20-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/gold/20.webp"
         },
         {
           "id": "ZOL-21",
@@ -566,22 +530,10 @@ window.CAVIAR_PAGE_DATA = {
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/gold/21.webp"
         },
         {
-          "id": "ZOL-22",
-          "name": "Узорный щит",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/gold/22-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/gold/22.webp"
-        },
-        {
           "id": "ZOL-23",
           "name": "Серебряная гравюра",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/gold/23-t.webp",
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/gold/23.webp"
-        },
-        {
-          "id": "ZOL-24",
-          "name": "Тиснёный орнамент",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/gold/24-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/gold/24.webp"
         }
       ]
     },
@@ -615,12 +567,6 @@ window.CAVIAR_PAGE_DATA = {
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/gerb-black/04.webp"
         },
         {
-          "id": "GRB-05",
-          "name": "Печать",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/gerb-black/05-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/gerb-black/05.webp"
-        },
-        {
           "id": "GRB-06",
           "name": "Вертикаль",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/gerb-black/06-t.webp",
@@ -631,18 +577,6 @@ window.CAVIAR_PAGE_DATA = {
           "name": "Шеврон",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/gerb-black/07-t.webp",
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/gerb-black/07.webp"
-        },
-        {
-          "id": "GRB-08",
-          "name": "Доспех",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/gerb-black/08-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/gerb-black/08.webp"
-        },
-        {
-          "id": "GRB-09",
-          "name": "Генштаб",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/gerb-black/09-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/gerb-black/09.webp"
         }
       ]
     },
@@ -656,18 +590,6 @@ window.CAVIAR_PAGE_DATA = {
           "name": "Изумрудная звезда",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/orient/01-t.webp",
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/orient/01.webp"
-        },
-        {
-          "id": "ORI-02",
-          "name": "Изумрудная звезда II",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/orient/02-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/orient/02.webp"
-        },
-        {
-          "id": "ORI-03",
-          "name": "Серебряная арабеска",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/orient/03-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/orient/03.webp"
         },
         {
           "id": "ORI-04",
@@ -706,22 +628,10 @@ window.CAVIAR_PAGE_DATA = {
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/orient/09.webp"
         },
         {
-          "id": "ORI-10",
-          "name": "Мечеть в дюнах",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/orient/10-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/orient/10.webp"
-        },
-        {
           "id": "ORI-11",
           "name": "Пустынный мираж",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/orient/11-t.webp",
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/orient/11.webp"
-        },
-        {
-          "id": "ORI-12",
-          "name": "Перламутровая мечеть",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/orient/12-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/orient/12.webp"
         },
         {
           "id": "ORI-13",
@@ -748,12 +658,6 @@ window.CAVIAR_PAGE_DATA = {
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/orient/16.webp"
         },
         {
-          "id": "ORI-17",
-          "name": "Доу",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/orient/17-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/orient/17.webp"
-        },
-        {
           "id": "ORI-18",
           "name": "Сокол",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/orient/18-t.webp",
@@ -776,6 +680,12 @@ window.CAVIAR_PAGE_DATA = {
           "name": "Гранатовая розетка",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/orient/21-t.webp",
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/orient/21.webp"
+        },
+        {
+          "id": "ZOL-01",
+          "name": "Изумрудный михраб",
+          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/gold/01-t.webp",
+          "full": "https://teatromisterio.github.io/caviar-catalog/assets/gold/01.webp"
         }
       ]
     },
@@ -882,12 +792,6 @@ window.CAVIAR_PAGE_DATA = {
       "title": "Ар-деко",
       "items": [
         {
-          "id": "DEC-01",
-          "name": "Перламутровый веер",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/art-deco/01-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/art-deco/01.webp"
-        },
-        {
           "id": "DEC-02",
           "name": "Чёрный гинкго",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/art-deco/02-t.webp",
@@ -916,18 +820,6 @@ window.CAVIAR_PAGE_DATA = {
           "name": "Розовая чешуя",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/art-deco/06-t.webp",
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/art-deco/06.webp"
-        },
-        {
-          "id": "DEC-07",
-          "name": "Рубиновый павлин",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/art-deco/07-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/art-deco/07.webp"
-        },
-        {
-          "id": "DEC-08",
-          "name": "Кардинал",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/art-deco/08-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/art-deco/08.webp"
         },
         {
           "id": "DEC-09",
@@ -960,28 +852,10 @@ window.CAVIAR_PAGE_DATA = {
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/art-deco/13.webp"
         },
         {
-          "id": "DEC-14",
-          "name": "Белый рассвет",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/art-deco/14-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/art-deco/14.webp"
-        },
-        {
-          "id": "DEC-15",
-          "name": "Чёрная жемчужина",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/art-deco/15-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/art-deco/15.webp"
-        },
-        {
           "id": "DEC-16",
           "name": "Бродвей",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/art-deco/16-t.webp",
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/art-deco/16.webp"
-        },
-        {
-          "id": "DEC-17",
-          "name": "Розовая арка",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/art-deco/17-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/art-deco/17.webp"
         },
         {
           "id": "DEC-18",
@@ -1012,12 +886,6 @@ window.CAVIAR_PAGE_DATA = {
           "name": "Сапфировая чешуя",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/art-deco/22-t.webp",
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/art-deco/22.webp"
-        },
-        {
-          "id": "DEC-23",
-          "name": "Золотая чешуя",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/art-deco/23-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/art-deco/23.webp"
         },
         {
           "id": "DEC-24",
@@ -1101,106 +969,15 @@ window.CAVIAR_PAGE_DATA = {
       ]
     },
     {
-      "id": "tropics",
-      "device": "duo",
-      "title": "Тропики",
-      "items": [
-        {
-          "id": "TRO-01",
-          "name": "Фламинго в ночи",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/01-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/01.webp"
-        },
-        {
-          "id": "TRO-02",
-          "name": "Пара фламинго",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/02-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/02.webp"
-        },
-        {
-          "id": "TRO-03",
-          "name": "Мозаика с фламинго",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/03-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/03.webp"
-        },
-        {
-          "id": "TRO-04",
-          "name": "Перламутровые листья",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/04-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/04.webp"
-        },
-        {
-          "id": "TRO-05",
-          "name": "Зелёный лист",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/05-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/05.webp"
-        },
-        {
-          "id": "TRO-06",
-          "name": "Золотые листья",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/06-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/06.webp"
-        },
-        {
-          "id": "TRO-07",
-          "name": "Бирюзовые джунгли",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/07-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/07.webp"
-        },
-        {
-          "id": "TRO-08",
-          "name": "Перо с самоцветами",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/08-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/08.webp"
-        },
-        {
-          "id": "TRO-09",
-          "name": "Перо на ониксе",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/09-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/09.webp"
-        },
-        {
-          "id": "TRO-10",
-          "name": "Листья на чёрном",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/10-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/10.webp"
-        },
-        {
-          "id": "TRO-11",
-          "name": "Мозаичный сад",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/11-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/11.webp"
-        },
-        {
-          "id": "TRO-12",
-          "name": "Фламинго в перламутре",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/12-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/12.webp"
-        }
-      ]
-    },
-    {
       "id": "geometry",
       "device": "duo",
       "title": "Геометрия",
       "items": [
         {
-          "id": "GEO-01",
-          "name": "Белые звёзды",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/geometry/01-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/geometry/01.webp"
-        },
-        {
           "id": "GEO-02",
           "name": "Звёзды на ониксе",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/geometry/02-t.webp",
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/geometry/02.webp"
-        },
-        {
-          "id": "GEO-03",
-          "name": "Каррарский мрамор",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/geometry/03-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/geometry/03.webp"
         },
         {
           "id": "GEO-04",
@@ -1233,22 +1010,10 @@ window.CAVIAR_PAGE_DATA = {
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/geometry/08.webp"
         },
         {
-          "id": "GEO-09",
-          "name": "Лазуритовая мозаика",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/geometry/09-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/geometry/09.webp"
-        },
-        {
           "id": "GEO-10",
           "name": "Малахитовый клевер",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/geometry/10-t.webp",
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/geometry/10.webp"
-        },
-        {
-          "id": "GEO-11",
-          "name": "Мрамор и малахит",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/geometry/11-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/geometry/11.webp"
         },
         {
           "id": "GEO-12",
@@ -1324,12 +1089,6 @@ window.CAVIAR_PAGE_DATA = {
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/woman/03.webp"
         },
         {
-          "id": "SAD-04",
-          "name": "Изумрудная капля",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/woman/04-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/woman/04.webp"
-        },
-        {
           "id": "SAD-05",
           "name": "Мандала",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/woman/05-t.webp",
@@ -1394,6 +1153,12 @@ window.CAVIAR_PAGE_DATA = {
           "name": "Белая лилия",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/woman/15-t.webp",
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/woman/15.webp"
+        },
+        {
+          "id": "TRO-12",
+          "name": "Фламинго в перламутре",
+          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/12-t.webp",
+          "full": "https://teatromisterio.github.io/caviar-catalog/assets/tropics/12.webp"
         }
       ]
     },
@@ -1455,6 +1220,24 @@ window.CAVIAR_PAGE_DATA = {
           "name": "Ночной крокодил",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/gran-turismo/09-t.webp",
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/gran-turismo/09.webp"
+        },
+        {
+          "id": "SOL-06",
+          "name": "Механика",
+          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/other/06-t.webp",
+          "full": "https://teatromisterio.github.io/caviar-catalog/assets/other/06.webp"
+        },
+        {
+          "id": "SOL-07",
+          "name": "Безель",
+          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/other/07-t.webp",
+          "full": "https://teatromisterio.github.io/caviar-catalog/assets/other/07.webp"
+        },
+        {
+          "id": "SOL-08",
+          "name": "Кованый карбон",
+          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/other/08-t.webp",
+          "full": "https://teatromisterio.github.io/caviar-catalog/assets/other/08.webp"
         }
       ]
     },
@@ -1538,401 +1321,6 @@ window.CAVIAR_PAGE_DATA = {
       ]
     },
     {
-      "id": "cameo",
-      "device": "duo",
-      "title": "Камеи зодиака",
-      "items": [
-        {
-          "id": "KAM-01",
-          "name": "Камея Льва",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/01-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/01.webp"
-        },
-        {
-          "id": "KAM-02",
-          "name": "Камея Девы",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/02-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/02.webp"
-        },
-        {
-          "id": "KAM-03",
-          "name": "Камея Овна",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/03-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/03.webp"
-        },
-        {
-          "id": "KAM-04",
-          "name": "Камея Близнецов",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/04-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/04.webp"
-        },
-        {
-          "id": "KAM-05",
-          "name": "Камея Рака",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/05-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/05.webp"
-        },
-        {
-          "id": "KAM-06",
-          "name": "Камея Водолея",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/06-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/06.webp"
-        },
-        {
-          "id": "KAM-07",
-          "name": "Камея Весов",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/07-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/07.webp"
-        },
-        {
-          "id": "KAM-08",
-          "name": "Камея Козерога",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/08-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/08.webp"
-        },
-        {
-          "id": "KAM-09",
-          "name": "Камея Скорпиона",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/09-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/09.webp"
-        },
-        {
-          "id": "KAM-10",
-          "name": "Камея Стрельца",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/10-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/10.webp"
-        },
-        {
-          "id": "KAM-11",
-          "name": "Камея Рыб",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/11-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/11.webp"
-        },
-        {
-          "id": "KAM-12",
-          "name": "Камея Тельца",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/12-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-2/12.webp"
-        }
-      ]
-    },
-    {
-      "id": "stars",
-      "device": "duo",
-      "title": "Звёздная решётка",
-      "items": [
-        {
-          "id": "RES-01",
-          "name": "Овен. Созвездие",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/01-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/01.webp"
-        },
-        {
-          "id": "RES-02",
-          "name": "Овен",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/02-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/02.webp"
-        },
-        {
-          "id": "RES-03",
-          "name": "Козерог",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/03-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/03.webp"
-        },
-        {
-          "id": "RES-04",
-          "name": "Рак",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/04-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/04.webp"
-        },
-        {
-          "id": "RES-05",
-          "name": "Рыбы",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/05-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/05.webp"
-        },
-        {
-          "id": "RES-06",
-          "name": "Весы",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/06-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/06.webp"
-        },
-        {
-          "id": "RES-07",
-          "name": "Дева",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/07-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/07.webp"
-        },
-        {
-          "id": "RES-08",
-          "name": "Близнецы",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/08-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/08.webp"
-        },
-        {
-          "id": "RES-09",
-          "name": "Телец",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/09-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/09.webp"
-        },
-        {
-          "id": "RES-10",
-          "name": "Скорпион",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/10-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/10.webp"
-        },
-        {
-          "id": "RES-11",
-          "name": "Стрелец",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/11-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/11.webp"
-        },
-        {
-          "id": "RES-12",
-          "name": "Лев",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/12-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/12.webp"
-        },
-        {
-          "id": "RES-13",
-          "name": "Водолей",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/13-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-3/13.webp"
-        }
-      ]
-    },
-    {
-      "id": "meteorite",
-      "device": "duo",
-      "title": "Чёрный метеорит",
-      "items": [
-        {
-          "id": "MET-01",
-          "name": "Альдебаран",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/01-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/01.webp"
-        },
-        {
-          "id": "MET-02",
-          "name": "Регул",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/02-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/02.webp"
-        },
-        {
-          "id": "MET-03",
-          "name": "Антарес",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/03-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/03.webp"
-        },
-        {
-          "id": "MET-04",
-          "name": "Вега",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/04-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/04.webp"
-        },
-        {
-          "id": "MET-05",
-          "name": "Сириус",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/05-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/05.webp"
-        },
-        {
-          "id": "MET-06",
-          "name": "Бетельгейзе",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/06-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/06.webp"
-        },
-        {
-          "id": "MET-07",
-          "name": "Арктур",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/07-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/07.webp"
-        },
-        {
-          "id": "MET-08",
-          "name": "Капелла",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/08-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/08.webp"
-        },
-        {
-          "id": "MET-09",
-          "name": "Спика",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/09-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/09.webp"
-        },
-        {
-          "id": "MET-10",
-          "name": "Поллукс",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/10-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/10.webp"
-        },
-        {
-          "id": "MET-11",
-          "name": "Денеб",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/11-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/11.webp"
-        },
-        {
-          "id": "MET-12",
-          "name": "Альтаир",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/12-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/12.webp"
-        },
-        {
-          "id": "MET-13",
-          "name": "Ригель",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/13-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/13.webp"
-        },
-        {
-          "id": "MET-14",
-          "name": "Фомальгаут",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/14-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-black/14.webp"
-        }
-      ]
-    },
-    {
-      "id": "dial",
-      "device": "duo",
-      "title": "Небесный циферблат",
-      "items": [
-        {
-          "id": "CIF-01",
-          "name": "Рубин",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/01-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/01.webp"
-        },
-        {
-          "id": "CIF-02",
-          "name": "Янтарь",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/02-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/02.webp"
-        },
-        {
-          "id": "CIF-03",
-          "name": "Сапфир",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/03-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/03.webp"
-        },
-        {
-          "id": "CIF-04",
-          "name": "Платина",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/04-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/04.webp"
-        },
-        {
-          "id": "CIF-05",
-          "name": "Бирюза",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/05-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/05.webp"
-        },
-        {
-          "id": "CIF-06",
-          "name": "Малахит",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/06-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/06.webp"
-        },
-        {
-          "id": "CIF-07",
-          "name": "Индиго",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/07-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/07.webp"
-        },
-        {
-          "id": "CIF-08",
-          "name": "Аметист",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/08-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/08.webp"
-        },
-        {
-          "id": "CIF-09",
-          "name": "Графит",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/09-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/09.webp"
-        },
-        {
-          "id": "CIF-10",
-          "name": "Гранат",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/10-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/10.webp"
-        },
-        {
-          "id": "CIF-11",
-          "name": "Оливин",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/11-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/11.webp"
-        },
-        {
-          "id": "CIF-12",
-          "name": "Цитрин",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/12-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/zodiac-man/12.webp"
-        }
-      ]
-    },
-    {
-      "id": "solo",
-      "device": "duo",
-      "title": "Вне серий",
-      "items": [
-        {
-          "id": "SOL-01",
-          "name": "Скорпион. Бордо",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/other/01-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/other/01.webp"
-        },
-        {
-          "id": "SOL-02",
-          "name": "Роза Скорпиона",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/other/02-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/other/02.webp"
-        },
-        {
-          "id": "SOL-03",
-          "name": "Телец в крокодиле",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/other/03-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/other/03.webp"
-        },
-        {
-          "id": "SOL-04",
-          "name": "Изумрудный Телец",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/other/04-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/other/04.webp"
-        },
-        {
-          "id": "SOL-05",
-          "name": "Рыбы и жемчуг",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/other/05-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/other/05.webp"
-        },
-        {
-          "id": "SOL-06",
-          "name": "Механика",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/other/06-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/other/06.webp"
-        },
-        {
-          "id": "SOL-07",
-          "name": "Безель",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/other/07-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/other/07.webp"
-        },
-        {
-          "id": "SOL-08",
-          "name": "Кованый карбон",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/other/08-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/other/08.webp"
-        },
-        {
-          "id": "SOL-09",
-          "name": "Лев в белом крокодиле",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/other/09-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/other/09.webp"
-        }
-      ]
-    },
-    {
       "id": "p18-classic",
       "device": "ip18",
       "title": "Мужская классика",
@@ -1978,12 +1366,6 @@ window.CAVIAR_PAGE_DATA = {
           "name": "Султан",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/classic/07-t.webp",
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/classic/07.webp"
-        },
-        {
-          "id": "P18-KLS-08",
-          "name": "Карбон. Бордовый шеврон",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/classic/08-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/classic/08.webp"
         },
         {
           "id": "P18-KLS-09",
@@ -2081,6 +1463,18 @@ window.CAVIAR_PAGE_DATA = {
           "name": "Лава",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/black/10-t.webp",
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/black/10.webp"
+        },
+        {
+          "id": "P18-GRB-03",
+          "name": "Обсидиан",
+          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gerb-black/03-t.webp",
+          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gerb-black/03.webp"
+        },
+        {
+          "id": "P18-GRB-04",
+          "name": "Шеврон нуар",
+          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gerb-black/04-t.webp",
+          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gerb-black/04.webp"
         }
       ]
     },
@@ -2100,18 +1494,6 @@ window.CAVIAR_PAGE_DATA = {
           "name": "Герб. Карбон",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gerb-black/02-t.webp",
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gerb-black/02.webp"
-        },
-        {
-          "id": "P18-GRB-03",
-          "name": "Обсидиан",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gerb-black/03-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gerb-black/03.webp"
-        },
-        {
-          "id": "P18-GRB-04",
-          "name": "Шеврон нуар",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gerb-black/04-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gerb-black/04.webp"
         }
       ]
     },
@@ -2561,61 +1943,6 @@ window.CAVIAR_PAGE_DATA = {
       ]
     },
     {
-      "id": "p18-treasury",
-      "device": "ip18",
-      "title": "Камень и золото",
-      "items": [
-        {
-          "id": "P18-ZOL-01",
-          "name": "Императорский малахит",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/treasury/01-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/treasury/01.webp"
-        },
-        {
-          "id": "P18-ZOL-02",
-          "name": "Малахит и каррара",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/treasury/02-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/treasury/02.webp"
-        },
-        {
-          "id": "P18-ZOL-03",
-          "name": "Изумрудный малахит",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/treasury/03-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/treasury/03.webp"
-        },
-        {
-          "id": "P18-ZOL-04",
-          "name": "Эрмитаж",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/treasury/04-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/treasury/04.webp"
-        },
-        {
-          "id": "P18-ZOL-05",
-          "name": "Императорская шкатулка",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/treasury/05-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/treasury/05.webp"
-        },
-        {
-          "id": "P18-ZOL-06",
-          "name": "Золотая чешуя",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/treasury/06-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/treasury/06.webp"
-        },
-        {
-          "id": "P18-ZOL-07",
-          "name": "Изумрудная огранка",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/treasury/07-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/treasury/07.webp"
-        },
-        {
-          "id": "P18-ZOL-08",
-          "name": "Тигровый глаз",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/treasury/08-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/treasury/08.webp"
-        }
-      ]
-    },
-    {
       "id": "p18-gran-turismo",
       "device": "ip18",
       "title": "Гран-туризмо",
@@ -2651,28 +1978,10 @@ window.CAVIAR_PAGE_DATA = {
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gran-turismo/05.webp"
         },
         {
-          "id": "P18-GTR-06",
-          "name": "Монокок",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gran-turismo/06-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gran-turismo/06.webp"
-        },
-        {
-          "id": "P18-GTR-07",
-          "name": "Карбон-керамика",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gran-turismo/07-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gran-turismo/07.webp"
-        },
-        {
           "id": "P18-GTR-08",
           "name": "Протектор",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gran-turismo/08-t.webp",
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gran-turismo/08.webp"
-        },
-        {
-          "id": "P18-GTR-09",
-          "name": "Финишный флаг",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gran-turismo/09-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gran-turismo/09.webp"
         },
         {
           "id": "P18-GTR-10",
@@ -2687,12 +1996,6 @@ window.CAVIAR_PAGE_DATA = {
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gran-turismo/11.webp"
         },
         {
-          "id": "P18-GTR-12",
-          "name": "Коленвал",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gran-turismo/12-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gran-turismo/12.webp"
-        },
-        {
           "id": "P18-GTR-13",
           "name": "Баркетта",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gran-turismo/13-t.webp",
@@ -2703,182 +2006,6 @@ window.CAVIAR_PAGE_DATA = {
           "name": "Крышка бака",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gran-turismo/14-t.webp",
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/gran-turismo/14.webp"
-        }
-      ]
-    },
-    {
-      "id": "p18-bestiary",
-      "device": "ip18",
-      "title": "Бестиарий",
-      "items": [
-        {
-          "id": "P18-BST-01",
-          "name": "Лев-солнце",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/01-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/01.webp"
-        },
-        {
-          "id": "P18-BST-02",
-          "name": "Улей",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/02-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/02.webp"
-        },
-        {
-          "id": "P18-BST-03",
-          "name": "Северный волк",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/03-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/03.webp"
-        },
-        {
-          "id": "P18-BST-04",
-          "name": "Тигр",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/04-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/04.webp"
-        },
-        {
-          "id": "P18-BST-05",
-          "name": "Скорпион",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/05-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/05.webp"
-        },
-        {
-          "id": "P18-BST-06",
-          "name": "Ягуар",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/06-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/06.webp"
-        },
-        {
-          "id": "P18-BST-07",
-          "name": "Жар-птица",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/07-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/07.webp"
-        },
-        {
-          "id": "P18-BST-08",
-          "name": "Снежный барс",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/08-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/08.webp"
-        },
-        {
-          "id": "P18-BST-09",
-          "name": "Скакун",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/09-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/09.webp"
-        },
-        {
-          "id": "P18-BST-10",
-          "name": "Кракен",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/10-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/10.webp"
-        },
-        {
-          "id": "P18-BST-11",
-          "name": "Урнес",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/11-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/11.webp"
-        },
-        {
-          "id": "P18-BST-12",
-          "name": "Зебра",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/12-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/12.webp"
-        },
-        {
-          "id": "P18-BST-13",
-          "name": "Грифон",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/13-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/13.webp"
-        },
-        {
-          "id": "P18-BST-14",
-          "name": "Гризли",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/14-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/14.webp"
-        },
-        {
-          "id": "P18-BST-15",
-          "name": "Носорог",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/15-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/15.webp"
-        },
-        {
-          "id": "P18-BST-16",
-          "name": "Большая белая",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/16-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/16.webp"
-        },
-        {
-          "id": "P18-BST-17",
-          "name": "Пикирующий орёл",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/17-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/17.webp"
-        },
-        {
-          "id": "P18-BST-18",
-          "name": "Торо",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/18-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/18.webp"
-        },
-        {
-          "id": "P18-BST-19",
-          "name": "Королевская кобра",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/19-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/19.webp"
-        },
-        {
-          "id": "P18-BST-20",
-          "name": "Медуза",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/20-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/20.webp"
-        },
-        {
-          "id": "P18-BST-21",
-          "name": "Единорог",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/21-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/bestiary/21.webp"
-        }
-      ]
-    },
-    {
-      "id": "p18-sky",
-      "device": "ip18",
-      "title": "Небо и навигация",
-      "items": [
-        {
-          "id": "P18-NEB-01",
-          "name": "Компас",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/sky/01-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/sky/01.webp"
-        },
-        {
-          "id": "P18-NEB-02",
-          "name": "Орбиты",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/sky/02-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/sky/02.webp"
-        },
-        {
-          "id": "P18-NEB-03",
-          "name": "Звёздная карта",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/sky/03-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/sky/03.webp"
-        },
-        {
-          "id": "P18-NEB-04",
-          "name": "Фазы Луны",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/sky/04-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/sky/04.webp"
-        },
-        {
-          "id": "P18-NEB-05",
-          "name": "Гроза",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/sky/05-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/sky/05.webp"
-        },
-        {
-          "id": "P18-NEB-06",
-          "name": "Регата",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/sky/06-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/sky/06.webp"
         }
       ]
     },
@@ -2922,61 +2049,6 @@ window.CAVIAR_PAGE_DATA = {
           "name": "Винтовая лестница",
           "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/geometry/06-t.webp",
           "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/geometry/06.webp"
-        }
-      ]
-    },
-    {
-      "id": "p18-solo",
-      "device": "ip18",
-      "title": "Вне серий",
-      "items": [
-        {
-          "id": "P18-SOL-01",
-          "name": "Постоянство",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/solo/01-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/solo/01.webp"
-        },
-        {
-          "id": "P18-SOL-02",
-          "name": "Крылатый череп",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/solo/02-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/solo/02.webp"
-        },
-        {
-          "id": "P18-SOL-03",
-          "name": "Громовая роза",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/solo/03-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/solo/03.webp"
-        },
-        {
-          "id": "P18-SOL-04",
-          "name": "Кельтский узел",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/solo/04-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/solo/04.webp"
-        },
-        {
-          "id": "P18-SOL-05",
-          "name": "Рокайль",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/solo/05-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/solo/05.webp"
-        },
-        {
-          "id": "P18-SOL-06",
-          "name": "Абанико",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/solo/06-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/solo/06.webp"
-        },
-        {
-          "id": "P18-SOL-07",
-          "name": "Дельфтский изразец",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/solo/07-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/solo/07.webp"
-        },
-        {
-          "id": "P18-SOL-08",
-          "name": "Четыре масти",
-          "thumb": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/solo/08-t.webp",
-          "full": "https://teatromisterio.github.io/caviar-catalog/assets/ip18/solo/08.webp"
         }
       ]
     }
