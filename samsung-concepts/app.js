@@ -1,9 +1,16 @@
-const dialog=document.querySelector('dialog');
-const menu=document.querySelector('#menu');
-const toggle=document.querySelector('.menu-toggle');
-toggle.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')!=='true';toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Закрыть меню':'Открыть меню');menu.hidden=!open;});
+const $=s=>document.querySelector(s), dialog=$('#project-dialog'), success=$('#success-dialog'), form=$('#request-form'), config=window.CAVIAR_CONFIG;
+let activeCard;
+const menu=$('#menu'),toggle=$('.menu-toggle');
+toggle.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')!=='true';toggle.setAttribute('aria-expanded',String(open));menu.hidden=!open;});
 menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{menu.hidden=true;toggle.setAttribute('aria-expanded','false');}));
-document.querySelectorAll('.card').forEach(card=>card.addEventListener('click',()=>{const src=card.querySelector('img');document.querySelector('#concept-image').src=src.src;document.querySelector('#concept-image').alt=src.alt;document.querySelector('#concept-title').textContent=card.dataset.title;document.querySelector('.reference').textContent='При обращении укажите: '+card.dataset.title;dialog.showModal();dialog.scrollTop=0;document.body.classList.add('locked');}));
-document.querySelector('.close').addEventListener('click',()=>dialog.close());
-dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
-dialog.addEventListener('close',()=>document.body.classList.remove('locked'));
+function step(isForm){$('#project-step').hidden=isForm;$('#form-step').hidden=!isForm;dialog.classList.toggle('form-open',isForm);dialog.setAttribute('aria-labelledby',isForm?'form-title':'concept-title');dialog.scrollTop=0;if(dialog.open)$(isForm?'#form-title':'#concept-title').focus({preventScroll:true});}
+function openProject(card){activeCard=card;const img=card.querySelector('img'),title=card.dataset.title.replace(' · ',' — ');$('#concept-image').src=img.src;$('#concept-image').alt=title;$('.project-name').textContent=title;form.reset();form.elements.project.value=title;$('#form-error').textContent='';const message='Здравствуйте! Меня интересует дизайн-концепция Caviar «'+title+'» (Samsung Z Fold 8 Ultra). '+location.href.split('#')[0]+'#project='+img.src.split('/').pop().replace('.webp','');$('#whatsapp').href=config.whatsapp+'?text='+encodeURIComponent(message);$('#telegram').href=config.telegram+'?text='+encodeURIComponent(message);$('#max').href=config.max;step(false);dialog.showModal();document.body.classList.add('locked');}
+document.querySelectorAll('.card').forEach(card=>card.addEventListener('click',()=>openProject(card)));
+$('#discuss').onclick=()=>step(true);$('.back').onclick=()=>step(false);
+[dialog,success].forEach(d=>{d.querySelector('.close').onclick=()=>d.close();d.addEventListener('click',e=>{if(e.target===d){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();}});d.addEventListener('close',()=>{if(!dialog.open&&!success.open){document.body.classList.remove('locked');activeCard?.focus({preventScroll:true});}});});
+$('#return').onclick=()=>success.close();
+form.elements.phone.addEventListener('input',()=>form.elements.phone.setCustomValidity(''));
+form.addEventListener('submit',async e=>{e.preventDefault();const phone=form.elements.phone;phone.setCustomValidity(phone.value.replace(/\D/g,'').length>=7?'':'Укажите корректный номер телефона');if(!form.reportValidity())return;const button=form.querySelector('[type=submit]');button.disabled=true;$('#form-error').textContent='';try{if(config.endpoint){const response=await fetch(config.endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.fromEntries(new FormData(form))),signal:AbortSignal.timeout(15000)});if(!response.ok||(await response.json()).success!==true)throw new Error('send');}dialog.close();success.showModal();document.body.classList.add('locked');}catch{ $('#form-error').textContent='Не удалось отправить запрос. Попробуйте ещё раз или напишите менеджеру.';}finally{button.disabled=false;}});
+if(config.endpoint)document.querySelectorAll('.demo-note').forEach(el=>el.hidden=true);
+function openHash(){const id=new URLSearchParams(location.hash.slice(1)).get('project');if(id){const card=[...document.querySelectorAll('.card')].find(c=>c.querySelector('img').getAttribute('src')==='assets/'+id+'.webp');if(card&&!dialog.open)openProject(card);}}
+window.addEventListener('hashchange',openHash);openHash();
