@@ -3,7 +3,7 @@ import './checkout.css';
 
 const site = 'https://caviar-phones.ru';
 
-export default function Checkout() {
+export default function Checkout({items, asset, money}) {
   const [previewSubmitted, setPreviewSubmitted] = useState(false);
   const [country, setCountry] = useState('');
 
@@ -15,6 +15,27 @@ export default function Checkout() {
   return (
     <main className="checkout-page" id="checkout">
       <h1>ОФОРМЛЕНИЕ ЗАКАЗА</h1>
+      <div className="checkout-layout">
+      <aside className="checkout-summary" aria-label="Ваш заказ">
+        <div className="checkout-summary-heading"><h2>Ваш заказ</h2><a href="#cart">Изменить</a></div>
+        {items.length ? <>
+          <div className="checkout-order-items">
+            {items.map(item => <article className="checkout-order-item" key={item.id}>
+              <div className="checkout-order-image"><img src={asset(item.image)} alt={item.name} /></div>
+              <div className="checkout-order-details">
+                <p className="checkout-order-category">{item.category}</p>
+                <h3>{item.name}</h3>
+                <p>{item.model}</p>
+                <p>{item.color}{item.storage ? ` · ${item.storage}` : ''}{item.size ? ` · ${item.size}` : ''}</p>
+                <p>Количество: {item.qty}</p>
+                <strong>{money(item.price * item.qty)}</strong>
+              </div>
+            </article>)}
+          </div>
+          <div className="checkout-order-total"><span>Итого</span><strong>{money(items.reduce((sum, item) => sum + item.price * item.qty, 0))}</strong></div>
+          <p className="checkout-shipping-note">Стоимость доставки уточняется при оформлении заказа</p>
+        </> : <p className="checkout-empty">Ваша корзина пуста. <a href="#cart">Вернуться в корзину</a></p>}
+      </aside>
       <form className="checkout-form" onSubmit={handleSubmit}>
         <section className="checkout-section">
           <h2>Контактная информация</h2>
@@ -82,7 +103,7 @@ export default function Checkout() {
               Нажимая КУПИТЬ, я соглашаюсь с Политикой конфиденциальности и Офертой
             </label>
           </div>
-          <button className="checkout-buy" type="submit">КУПИТЬ</button>
+          <button className="checkout-buy" type="submit" disabled={!items.length}>КУПИТЬ</button>
           {previewSubmitted && (
             <p className="checkout-demo-message" role="status">
               Это демонстрационная страница. Заказ и платёж не отправлены. Для покупки свяжитесь с менеджером Caviar.
@@ -90,6 +111,7 @@ export default function Checkout() {
           )}
         </div>
       </form>
+      </div>
     </main>
   );
 }

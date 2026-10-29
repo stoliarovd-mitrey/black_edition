@@ -1,5 +1,5 @@
 /* Checkout page uses the existing header, footer, and Nunito Sans weights. */
-.checkout-page{max-width:620px;width:calc(100% - 40px);margin:0 auto;color:#f5f5f5}
+.checkout-page{max-width:1120px;width:calc(100% - 40px);margin:0 auto;color:#f5f5f5}
 .checkout-page h1{font-size:30px;font-weight:700;text-align:center;margin:36px 0 64px;letter-spacing:.5px}
 .checkout-form{width:100%}
 .checkout-section{margin-bottom:36px}
@@ -32,3 +32,21 @@ select.checkout-control{cursor:pointer;background-image:url("data:image/svg+xml,
 @media(max-width:380px){.checkout-two-col{grid-template-columns:1fr}.checkout-section h2{font-size:20px}}
 
 @media(max-width:520px){.delivery-row{grid-template-columns:1fr;gap:16px}.delivery-fields{gap:16px}}
+
+.checkout-layout{display:grid;grid-template-columns:minmax(0,620px) minmax(300px,390px);gap:clamp(36px,6vw,100px);align-items:start}
+.checkout-form{grid-column:1;grid-row:1;min-width:0}
+.checkout-summary{grid-column:2;grid-row:1;border-top:1px solid #a99a77;padding:20px 0 0;position:sticky;top:24px}
+.checkout-summary-heading{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.checkout-summary-heading h2{font-size:23px;font-weight:500;margin:0}
+.checkout-summary-heading a,.checkout-empty a{color:#c1ae84;font-size:14px;text-decoration:underline;text-underline-offset:4px}
+.checkout-order-item{display:grid;grid-template-columns:84px minmax(0,1fr);gap:18px;padding:22px 0;border-bottom:1px solid #3e3b35}
+.checkout-order-image{background:#181818;height:112px;display:flex;align-items:center;justify-content:center}
+.checkout-order-image img{width:100%;height:100%;object-fit:contain}
+.checkout-order-details{min-width:0;font-size:13px;color:#aaa69c;line-height:1.5}
+.checkout-order-details p{margin:0 0 3px}.checkout-order-details h3{font-size:17px;color:#f5f5f5;font-weight:500;margin:2px 0 7px}
+.checkout-order-details .checkout-order-category{font-size:11px;letter-spacing:.03em;color:#a99a77}
+.checkout-order-details strong{display:block;color:#f5f5f5;font-size:15px;font-weight:700;margin-top:8px}
+.checkout-order-total{display:flex;justify-content:space-between;gap:12px;padding:20px 0 4px;font-size:17px}
+.checkout-shipping-note,.checkout-empty{font-size:12px;line-height:1.5;color:#a8a49a;margin:4px 0 0}
+.checkout-buy:disabled{opacity:.4;cursor:not-allowed}
+@media(max-width:800px){.checkout-page{max-width:620px}.checkout-layout{display:flex;flex-direction:column;gap:34px}.checkout-summary{position:static;width:100%;order:0}.checkout-form{order:1}.checkout-page h1{margin-bottom:38px}}
