@@ -43,6 +43,7 @@ export default function Checkout() {
             <option value="dubai">Дубай</option>
             <option value="other">Другой город</option>
           </select>
+          <input className="checkout-control checkout-address" name="address" placeholder="Адрес доставки: улица, дом, квартира" aria-label="Адрес доставки" autoComplete="street-address" required />
         </section>
 
         <section className="checkout-section">

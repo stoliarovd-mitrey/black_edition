@@ -10,6 +10,7 @@ select.checkout-control{cursor:pointer;background-image:url("data:image/svg+xml,
 .checkout-control:focus{border-color:#a99a77;outline:none}
 .checkout-two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
 .checkout-two-col .checkout-control{min-width:0}
+.checkout-address{margin-top:8px}
 .checkout-comment{height:104px;resize:vertical;line-height:1.4}
 .checkout-actions{margin-top:54px;display:flex;flex-direction:column;align-items:center}
 .checkout-consent{display:flex;align-items:flex-start;gap:8px;width:100%;font-size:12px;font-weight:200;color:#b5b5b5}
