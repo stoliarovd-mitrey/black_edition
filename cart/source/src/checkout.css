@@ -47,6 +47,9 @@ select.checkout-control{cursor:pointer;background-image:url("data:image/svg+xml,
 .checkout-order-details .checkout-order-category{font-size:11px;letter-spacing:.03em;color:#a99a77}
 .checkout-order-details strong{display:block;color:#f5f5f5;font-size:15px;font-weight:700;margin-top:8px}
 .checkout-order-total{display:flex;justify-content:space-between;gap:12px;padding:20px 0 4px;font-size:17px}
-.checkout-shipping-note,.checkout-empty{font-size:12px;line-height:1.5;color:#a8a49a;margin:4px 0 0}
+.checkout-empty{font-size:12px;line-height:1.5;color:#a8a49a;margin:4px 0 0}
 .checkout-buy:disabled{opacity:.4;cursor:not-allowed}
 @media(max-width:800px){.checkout-page{max-width:620px}.checkout-layout{display:flex;flex-direction:column;gap:34px}.checkout-summary{position:static;width:100%;order:0}.checkout-form{order:1}.checkout-page h1{margin-bottom:38px}}
+
+.checkout-remove{display:inline-block;background:none;border:0;padding:6px 0 2px;color:#c1ae84;font-size:13px;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+.checkout-remove:hover{color:#f5f5f5}.checkout-remove:focus-visible{outline:1px solid #c1ae84;outline-offset:4px}

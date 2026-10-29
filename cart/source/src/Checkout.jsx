@@ -3,7 +3,7 @@ import './checkout.css';
 
 const site = 'https://caviar-phones.ru';
 
-export default function Checkout({items, asset, money}) {
+export default function Checkout({items, asset, money, onRemove}) {
   const [previewSubmitted, setPreviewSubmitted] = useState(false);
   const [country, setCountry] = useState('');
 
@@ -17,7 +17,7 @@ export default function Checkout({items, asset, money}) {
       <h1>ОФОРМЛЕНИЕ ЗАКАЗА</h1>
       <div className="checkout-layout">
       <aside className="checkout-summary" aria-label="Ваш заказ">
-        <div className="checkout-summary-heading"><h2>Ваш заказ</h2><a href="#cart">Изменить</a></div>
+        <div className="checkout-summary-heading"><h2>Ваш заказ</h2></div>
         {items.length ? <>
           <div className="checkout-order-items">
             {items.map(item => <article className="checkout-order-item" key={item.id}>
@@ -29,11 +29,11 @@ export default function Checkout({items, asset, money}) {
                 <p>{item.color}{item.storage ? ` · ${item.storage}` : ''}{item.size ? ` · ${item.size}` : ''}</p>
                 <p>Количество: {item.qty}</p>
                 <strong>{money(item.price * item.qty)}</strong>
+                <button type="button" className="checkout-remove" aria-label={`Удалить ${item.name}`} onClick={() => onRemove(item)}>Удалить</button>
               </div>
             </article>)}
           </div>
           <div className="checkout-order-total"><span>Итого</span><strong>{money(items.reduce((sum, item) => sum + item.price * item.qty, 0))}</strong></div>
-          <p className="checkout-shipping-note">Стоимость доставки уточняется при оформлении заказа</p>
         </> : <p className="checkout-empty">Ваша корзина пуста. <a href="#cart">Вернуться в корзину</a></p>}
       </aside>
       <form className="checkout-form" onSubmit={handleSubmit}>
