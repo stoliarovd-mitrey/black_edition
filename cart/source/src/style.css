@@ -130,3 +130,45 @@
 
 /* Balance the order summary against the product column on desktop. */
 @media(min-width:961px){.cart-layout{grid-template-columns:minmax(0,1fr) clamp(360px,32vw,460px);gap:16px}}
+
+/* A reversible light presentation of the cart and checkout. */
+.theme-toggle{border:1px solid #8e8268;color:#e7e2d8;font-size:10px;font-weight:700;letter-spacing:.4px;white-space:nowrap;padding:8px 10px;min-height:36px}
+.theme-toggle:hover{border-color:#d2c19b;color:#fff}
+html[data-theme="light"]{color:#1c1b19;background:#fff;--gold:#a29270;--line:#dedbd5;--muted:#766c5b}
+html[data-theme="light"] body{background:#fff;color:#1c1b19}
+html[data-theme="light"] .header{color:#f5f5f5}
+html[data-theme="light"] .product,html[data-theme="light"] .product:last-of-type{border-color:#e5e2dc}
+html[data-theme="light"] .product .category,html[data-theme="light"] .choices,html[data-theme="light"] .summary-item{color:#504c47}
+html[data-theme="light"] .remove{color:#655f54}
+html[data-theme="light"] .remove:hover{color:#1c1b19}
+html[data-theme="light"] .choice select{color:#38332d}
+html[data-theme="light"] .choice option{color:#24221e;background:#fff}
+html[data-theme="light"] .quantity button:hover:not(:disabled){background:#f0ede7}
+html[data-theme="light"] .summary-price span{background:#dedbd5}
+html[data-theme="light"] .order-benefits{border-color:#e4e0d9}
+html[data-theme="light"] .order-benefit h3{color:#24211d}
+html[data-theme="light"] .order-benefit p{color:#615b53}
+html[data-theme="light"] .order-benefit svg{color:#948057}
+html[data-theme="light"] .checkout-page{color:#1c1b19}
+html[data-theme="light"] .checkout-control{background-color:#fff;color:#282520;border-color:#bcb4a5}
+html[data-theme="light"] .checkout-control::placeholder{color:#77716a}
+html[data-theme="light"] .checkout-control:focus{border-color:#8d7955}
+html[data-theme="light"] .delivery-field{color:#282520}
+html[data-theme="light"] .delivery-field .checkout-control{color:#282520}
+html[data-theme="light"] .delivery-field small{color:#756f65}
+html[data-theme="light"] .checkout-summary,html[data-theme="light"] .checkout-order-item{border-color:#ddd8cf}
+html[data-theme="light"] .checkout-order-image{background:#f5f3ef}
+html[data-theme="light"] .checkout-order-details{color:#615c55}
+html[data-theme="light"] .checkout-order-details h3,html[data-theme="light"] .checkout-order-details strong{color:#1c1b19}
+html[data-theme="light"] .checkout-remove,html[data-theme="light"] .checkout-empty a{color:#725f3c}
+html[data-theme="light"] .checkout-remove:hover{color:#1c1b19}
+html[data-theme="light"] .checkout-consent{color:#615c55}
+html[data-theme="light"] .checkout-demo-message,html[data-theme="light"] .undo{color:#625643}
+html[data-theme="light"] .contacts{border-color:#e3e0d9}
+html[data-theme="light"] .regions a{border-color:#c8c2b6}
+html[data-theme="light"] .press img{filter:brightness(0) opacity(.65)}
+html[data-theme="light"] .footer-logo img{filter:brightness(0) opacity(.8)}
+html[data-theme="light"] .dialog{background:#fff;color:#1c1b19;border-color:#bcb4a5}
+html[data-theme="light"] .dialog input,html[data-theme="light"] .dialog textarea{color:#1c1b19;border-color:#bcb4a5}
+@media(max-width:1200px){.theme-toggle{font-size:9px;padding:7px 8px}.header{gap:12px}}
+@media(max-width:700px){.theme-toggle{font-size:0;width:38px;height:44px;min-width:38px;padding:0;border:0}.theme-toggle::before{content:'☼';font-size:23px;line-height:1}html[data-theme="light"] .theme-toggle::before{content:'☾'}}
