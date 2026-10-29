@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import './checkout.css';
+import OrderBenefits from './OrderBenefits.jsx';
 
 const site = 'https://caviar-phones.ru';
 
@@ -35,6 +36,7 @@ export default function Checkout({items, asset, money, onRemove}) {
           </div>
           <div className="checkout-order-total"><span>Итого</span><strong>{money(items.reduce((sum, item) => sum + item.price * item.qty, 0))}</strong></div>
         </> : <p className="checkout-empty">Ваша корзина пуста. <a href="#cart">Вернуться в корзину</a></p>}
+        <OrderBenefits/>
       </aside>
       <form className="checkout-form" onSubmit={handleSubmit}>
         <section className="checkout-section">
