@@ -127,3 +127,6 @@
   .product-bottom strong{font-size:21px}
 }
 @media(max-width:359px){.product-details h2,.product-bottom strong{font-size:20px}}
+
+/* Balance the order summary against the product column on desktop. */
+@media(min-width:961px){.cart-layout{grid-template-columns:minmax(0,1fr) clamp(360px,32vw,460px);gap:16px}}
