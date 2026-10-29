@@ -48,8 +48,10 @@ export default function Checkout() {
         <section className="checkout-section">
           <h2>Оплата</h2>
           <select className="checkout-control" name="payment" aria-label="Способ оплаты" defaultValue="card">
-            <option value="card">Мир/Visa/Mastercard</option>
-            <option value="manager">Согласовать с менеджером</option>
+            <option value="card">Оплата Мир/Visa/Mastercard</option>
+            <option value="cash">Наличными (только в Москве)</option>
+            <option value="sbp">СБП (qrcode)</option>
+            <option value="bank">Оплата на расчетный счет</option>
           </select>
         </section>
 
