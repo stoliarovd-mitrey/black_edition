@@ -54,8 +54,8 @@ select.checkout-control{cursor:pointer;background-image:url("data:image/svg+xml,
 .checkout-remove{display:inline-block;background:none;border:0;padding:6px 0 2px;color:#c1ae84;font-size:13px;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
 .checkout-remove:hover{color:#f5f5f5}.checkout-remove:focus-visible{outline:1px solid #c1ae84;outline-offset:4px}
 
-.order-benefits{font-family:'Nunito Sans',-apple-system,Arial,sans-serif;border-top:1px solid #494438;margin-top:28px;padding-top:23px;display:grid;gap:21px}
-.order-benefit{display:grid;grid-template-columns:24px minmax(0,1fr);gap:15px;align-items:start}
-.order-benefit svg{width:23px;height:23px;color:#b5a37c}
-.order-benefit h3{font-size:12px;font-weight:700;letter-spacing:1.2px;line-height:1.4;color:#f2f0ea;margin:0 0 5px}
-.order-benefit p{font-size:13px;font-weight:500;letter-spacing:.2px;line-height:1.5;color:#b8b5ae;margin:0}
+.order-benefits{font-family:'Nunito Sans',-apple-system,Arial,sans-serif;border-top:1px solid #494438;margin-top:28px;padding-top:23px;display:grid;gap:20px}
+.order-benefit{display:grid;grid-template-columns:28px minmax(0,1fr);gap:16px;align-items:start}
+.order-benefit svg{width:28px;height:28px;color:#b5a37c}
+.order-benefit h3{font-size:12px;font-weight:700;letter-spacing:1.2px;line-height:16px;color:#f2f0ea;margin:0 0 8px}
+.order-benefit p{font-size:12px;font-weight:500;letter-spacing:.2px;line-height:1.2;color:#b8b5ae;margin:0}
