@@ -5,6 +5,7 @@ const site = 'https://caviar-phones.ru';
 
 export default function Checkout() {
   const [previewSubmitted, setPreviewSubmitted] = useState(false);
+  const [country, setCountry] = useState('');
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -17,13 +18,14 @@ export default function Checkout() {
       <form className="checkout-form" onSubmit={handleSubmit}>
         <section className="checkout-section">
           <h2>Контактная информация</h2>
-          <select className="checkout-control" name="country" defaultValue="" aria-label="Страна" required>
+          <select className="checkout-control" name="country" value={country} onChange={event => setCountry(event.target.value)} aria-label="Страна" required>
             <option value="" disabled>Страна</option>
             <option value="ru">Россия</option>
             <option value="ae">Объединённые Арабские Эмираты</option>
             <option value="gb">Великобритания</option>
             <option value="other">Другая страна</option>
           </select>
+          {country === 'other' && <input className="checkout-control checkout-country-other" name="countryOther" placeholder="Укажите страну" aria-label="Укажите страну" autoComplete="country-name" required />}
           <div className="checkout-two-col">
             <input className="checkout-control" name="firstName" placeholder="Имя" aria-label="Имя" autoComplete="given-name" required />
             <input className="checkout-control" name="lastName" placeholder="Фамилия" aria-label="Фамилия" autoComplete="family-name" required />
@@ -35,15 +37,27 @@ export default function Checkout() {
         </section>
 
         <section className="checkout-section">
-          <h2>Доставка</h2>
-          <select className="checkout-control" name="city" defaultValue="" aria-label="Город" required>
-            <option value="" disabled>Город</option>
-            <option value="moscow">Москва</option>
-            <option value="spb">Санкт-Петербург</option>
-            <option value="dubai">Дубай</option>
-            <option value="other">Другой город</option>
-          </select>
-          <input className="checkout-control checkout-address" name="address" placeholder="Адрес доставки: улица, дом, квартира" aria-label="Адрес доставки" autoComplete="street-address" required />
+          <h2>Адрес доставки</h2>
+          <div className="delivery-fields">
+            <label className="delivery-field">
+              <span>Город</span>
+              <input className="checkout-control" name="city" autoComplete="shipping address-level2" placeholder="Например, Москва" required />
+            </label>
+            <label className="delivery-field">
+              <span>Улица и номер дома</span>
+              <input className="checkout-control" name="address" autoComplete="shipping address-line1" placeholder="Улица, дом, корпус" required />
+            </label>
+            <div className="delivery-row">
+              <label className="delivery-field">
+                <span>Квартира или офис <small>необязательно</small></span>
+                <input className="checkout-control" name="addressDetails" autoComplete="shipping address-line2" placeholder="Квартира, офис, этаж" />
+              </label>
+              <label className="delivery-field">
+                <span>Почтовый индекс <small>необязательно</small></span>
+                <input className="checkout-control" name="postalCode" autoComplete="shipping postal-code" placeholder="Индекс" />
+              </label>
+            </div>
+          </div>
         </section>
 
         <section className="checkout-section">
