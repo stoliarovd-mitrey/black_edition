@@ -1,0 +1,35 @@
+/* KPI period comparison; no confidential values. */
+.comparison-panel{padding:23px 24px}
+.comparison-controls{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:18px}
+.comparison-controls label,.comparison-dates label{display:grid;gap:7px;color:#627796;font-size:11px;font-weight:650}
+.comparison-controls select,.comparison-dates input{height:39px;border:1px solid var(--border);border-radius:8px;background:white;color:var(--fg);padding:0 10px;font-size:12px;min-width:150px}
+.comparison-ranges{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.comparison-ranges fieldset{border:1px solid var(--border);border-radius:12px;padding:13px 16px 16px;min-width:0}
+.comparison-ranges legend{font-weight:750;font-size:12px;color:#344d70;padding:0 6px}
+.comparison-ranges legend i,.comparison-legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:8px;vertical-align:-1px}
+.comparison-key-a{background:#a7bbd9}.comparison-key-b{background:#245ddd}
+.comparison-dates{display:flex;gap:14px;flex-wrap:wrap}.comparison-dates label{flex:1;min-width:140px}
+.comparison-dates input{min-width:0;width:100%}
+.comparison-warning{font-size:12px;color:#aa7138;line-height:1.5;margin:0 0 12px}
+.comparison-warning:empty{display:none}
+.comparison-scroller{overflow-x:auto;border-top:1px solid var(--border);padding:25px 0 7px}
+.comparison-graph{display:flex;align-items:stretch;min-height:256px}
+.comparison-cluster{flex:1;min-width:142px;text-align:center;border-right:1px solid #eef2f8;padding:0 10px}
+.comparison-cluster:last-child{border-right:0}
+.comparison-bars{height:188px;display:flex;justify-content:center;align-items:flex-end;gap:12px;border-bottom:1px solid var(--border)}
+.comparison-slot{width:48px;height:175px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+.comparison-bar{width:32px;min-height:2px;max-height:150px;border-radius:5px 5px 0 0;flex-shrink:0}
+.comparison-a{background:#a7bbd9}.comparison-b{background:#245ddd}
+.comparison-partial{opacity:.53;background-image:repeating-linear-gradient(135deg,transparent 0,transparent 7px,rgba(255,255,255,.25) 7px,rgba(255,255,255,.25) 10px)}
+.comparison-number{font-size:11px;font-weight:760;line-height:1;white-space:nowrap;color:#375172;margin-bottom:7px}
+.comparison-caption{font-size:12px;font-weight:750;margin-top:11px}
+.comparison-range-label{font-size:10px;color:#7787a1;white-space:nowrap;margin-top:5px}
+.comparison-change{font-size:11px;font-weight:700;color:#406baa;margin-top:7px;min-height:15px}
+.comparison-legend{display:flex;gap:19px;flex-wrap:wrap;padding:12px 0 18px;font-size:11px;color:#71809c}
+.comparison-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
+.comparison-stat{border:1px solid #eaf0f8;border-radius:11px;background:#f6f8fc;padding:12px 14px;display:grid;gap:5px;min-width:0}
+.comparison-stat span{font-size:11px;color:#71809a}.comparison-stat strong{font-size:17px;overflow-wrap:anywhere}.comparison-stat small{font-size:10px;color:#8896aa}
+.comparison-positive{color:#147450}.comparison-negative-text{color:#b45347}
+.comparison-note{font-size:11px;color:#8494ac;line-height:1.55;margin:15px 0 0}
+.comparison-empty{padding:50px 10px;text-align:center;flex:1;color:#8997a9}
+@media(max-width:760px){.comparison-ranges{grid-template-columns:1fr}.comparison-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.comparison-panel{padding:17px}}
