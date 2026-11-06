@@ -2,7 +2,7 @@
 (()=>{
 'use strict';
 if(document.getElementById('comparisonPeriods'))return;
-const html=String.raw\`
+const html=String.raw`
 <section class="comparison-section" id="comparisonPeriods">
   <div class="sectionbar"><h2>Сравнение периодов</h2><span>Месяцы, недели и общий итог</span></div>
   <div class="panel comparison-panel">
@@ -20,7 +20,7 @@ const html=String.raw\`
     <div class="comparison-summary" id="comparisonSummary" aria-live="polite"></div>
     <p class="comparison-note">Недели считаются с субботы по пятницу. Столбцы сопоставляются по порядку месяцев или недель. Штриховка обозначает неполный период. Конверсии рассчитываются из сумм за выбранные дни.</p>
   </div>
-</section>\`;
+</section>`;
 const anchor=document.querySelector('.tablebox');
 if(!anchor)return;
 anchor.insertAdjacentHTML('afterend',html);
