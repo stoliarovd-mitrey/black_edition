@@ -28,8 +28,11 @@ const bytes=(s)=>Uint8Array.from(atob(s),ch=>ch.charCodeAt(0));
     const enc=bytes(payload);
     const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:enc.slice(0,12),additionalData:new TextEncoder().encode('caviar-kpi-2026-report-v1')},cryptoKey,enc.slice(12));
     const report=new TextDecoder().decode(plain);
+    // Load the locally hosted, public comparison UI into the decrypted iframe. No KPI data is published.
+    const reportWithCompare=report.replace('</head>','<link rel="stylesheet" href="./compare.css"></head>')
+      .replace('</body>','<scr'+'ipt src="./compare.js"></scr'+'ipt></body>');
     const frame=document.getElementById('viewer');
-    frame.srcdoc=report;
+    frame.srcdoc=reportWithCompare;
     document.getElementById('lock').style.display='none';
     frame.style.display='block';
   }catch(e){status.textContent='Неверная ссылка или ключ доступа. Запросите оригинальную ссылку на отчёт.';}
