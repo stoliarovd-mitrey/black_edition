@@ -24,7 +24,7 @@ START_DATE = os.getenv("BITRIX_START_DATE", "2023-01-01")
 REFRESH_DAYS = int(os.getenv("BITRIX_REFRESH_DAYS", "60"))
 MAX_ROWS = int(os.getenv("BITRIX_MAX_ROWS", "50000"))
 HEADER = {
-    "CRM_Deals": ["dealId","createdAt","modifiedAt","closedDateField","categoryId","stageId","stageSemanticId","closed","sourceId","sourceDescription","utmSource","utmMedium","utmCampaign","utmContent","utmTerm","opportunity","currency","assignedById","clientKey","leadId","originId","dealType","buyerType","buyerTypeRaw"],
+    "CRM_Deals": ["dealId","createdAt","modifiedAt","closedDateField","categoryId","stageId","stageSemanticId","closed","sourceId","sourceDescription","utmSource","utmMedium","utmCampaign","utmContent","utmTerm","opportunity","currency","assignedById","clientKey","leadId","originId","dealType","buyerType","buyerTypeRaw","store","ga4Site","storeRaw","paidClientField"],
     "CRM_Leads": ["leadId","createdAt","modifiedAt","statusId","statusSemanticId","sourceId","sourceDescription","utmSource","utmMedium","utmCampaign","utmContent","utmTerm","assignedById","clientKey","isReturnCustomer","opportunity","currency"],
     "CRM_Stages": ["entityId","statusId","name","semantics","sort","categoryId"],
     "CRM_Fields": ["object","field","label","type","isRequired"],
@@ -34,7 +34,7 @@ WHITELISTS = {
     "deal": ["ID","DATE_CREATE","DATE_MODIFY","CLOSEDATE","CATEGORY_ID","STAGE_ID","STAGE_SEMANTIC_ID",
              "CLOSED","SOURCE_ID","SOURCE_DESCRIPTION","UTM_SOURCE","UTM_MEDIUM","UTM_CAMPAIGN",
              "UTM_CONTENT","UTM_TERM","OPPORTUNITY","CURRENCY_ID","ASSIGNED_BY_ID","CONTACT_ID",
-             "COMPANY_ID","LEAD_ID","ORIGIN_ID","TYPE_ID","UF_CRM_1661441015959"],
+             "COMPANY_ID","LEAD_ID","ORIGIN_ID","TYPE_ID","UF_CRM_1661441015959","UF_CRM_606035AA978EA","UF_CRM_1614947278479"],
     "lead": ["ID","DATE_CREATE","DATE_MODIFY","STATUS_ID","STATUS_SEMANTIC_ID","SOURCE_ID",
              "SOURCE_DESCRIPTION","UTM_SOURCE","UTM_MEDIUM","UTM_CAMPAIGN","UTM_CONTENT","UTM_TERM",
              "ASSIGNED_BY_ID","CONTACT_ID","COMPANY_ID","IS_RETURN_CUSTOMER","OPPORTUNITY","CURRENCY_ID"]
@@ -146,11 +146,22 @@ def buyer_type(d):
         return "Не определено", ""
     return BUYER_TYPES.get(raw, "Неизвестный код"), raw
 
+# Store is explicitly assigned to each deal; never infer it from customer geography.
+STORE_FIELD = "UF_CRM_606035AA978EA"
+STORE_TYPES = {"202": ("cvr", "ru"), "204": ("glb", "global"), "698": ("cn", "")}
+
+def store_type(d):
+    raw = val(d, STORE_FIELD)
+    if not raw:
+        return ("Не определено", "", "")
+    site, ga4 = STORE_TYPES.get(raw, ("Неизвестный код", ""))
+    return (site, ga4, raw)
+
 def normalized_deal(d):
     return [val(d,x) for x in ["ID","DATE_CREATE","DATE_MODIFY","CLOSEDATE","CATEGORY_ID","STAGE_ID","STAGE_SEMANTIC_ID",
             "CLOSED","SOURCE_ID","SOURCE_DESCRIPTION","UTM_SOURCE","UTM_MEDIUM","UTM_CAMPAIGN","UTM_CONTENT",
             "UTM_TERM","OPPORTUNITY","CURRENCY_ID","ASSIGNED_BY_ID"]] + [
-            client_key(d),val(d,"LEAD_ID"),val(d,"ORIGIN_ID"),val(d,"TYPE_ID"),*buyer_type(d)]
+            client_key(d),val(d,"LEAD_ID"),val(d,"ORIGIN_ID"),val(d,"TYPE_ID"),*buyer_type(d),*store_type(d),val(d,"UF_CRM_1614947278479")]
 
 def normalized_lead(d):
     return [val(d,x) for x in ["ID","DATE_CREATE","DATE_MODIFY","STATUS_ID","STATUS_SEMANTIC_ID","SOURCE_ID",
@@ -164,7 +175,7 @@ def main():
     now = datetime.now(timezone.utc)
     latest = now - timedelta(days=REFRESH_DAYS)
     initial = not existing["CRM_Deals"] or not existing["CRM_Leads"]
-    # Backfill every deal once when new buyer-type columns are first introduced.
+    # Backfill all deals once whenever new classification/store/amount columns are introduced.
     buyer_type_backfill = not existing["CRM_Deals"] or any(
         len(row) < len(HEADER["CRM_Deals"]) for row in existing["CRM_Deals"]
     )
