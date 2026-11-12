@@ -112,7 +112,14 @@ def main():
     start = min(end - timedelta(days=refresh_days - 1), bootstrap) if os.getenv("GA4_FULL_BACKFILL", "") == "1" else end - timedelta(days=refresh_days - 1)
     # Automatically backfill to bootstrap if the workbook has no historical rows.
     existing = {tab: read_existing(session, tab) for tab in TABS}
-    if not existing["Daily"] or min(str(r[0]) for r in existing["Daily"] if r) > bootstrap.isoformat():
+    # A partially failed first run may fill Daily but leave other tabs incomplete.
+    # Require every report tab to cover the bootstrap and most recent requested date.
+    if any(
+        not existing[t]
+        or min(str(r[0]) for r in existing[t] if r) > bootstrap.isoformat()
+        or max(str(r[0]) for r in existing[t] if r) < end.isoformat()
+        for t in TABS
+    ):
         start = bootstrap
     if end < start:
         print("No completed dates to sync")
