@@ -107,7 +107,7 @@ def main():
     start = min(end - timedelta(days=refresh_days - 1), bootstrap) if os.getenv("GA4_FULL_BACKFILL", "") == "1" else end - timedelta(days=refresh_days - 1)
     # Automatically backfill to bootstrap if the workbook has no historical rows.
     existing = {tab: read_existing(session, tab) for tab in TABS}
-    if not existing["Daily"]:
+    if not existing["Daily"] or min(str(r[0]) for r in existing["Daily"] if r) > bootstrap.isoformat():
         start = bootstrap
     if end < start:
         print("No completed dates to sync")
@@ -132,10 +132,35 @@ def main():
         all_rows = old + fetched[tab]
         all_rows.sort(key=lambda x: (str(x[0]), str(x[1]), str(x[2]) if len(x) > 2 else ""))
         payload.append({"range": f"'{tab}'!A1", "values": [header] + all_rows})
-    # Atomic values update for the six tabs. Clear stale trailing cells first.
+    # Expand tab grids to fit backfill before changing any data.
+    meta = api_json(session, "GET", f"https://sheets.googleapis.com/v4/spreadsheets/{SPREADSHEET_ID}",
+                    params={"fields": "sheets(properties(sheetId,title,gridProperties(rowCount,columnCount)))"})
+    layouts = {s["properties"]["title"]: s["properties"] for s in meta.get("sheets", [])}
+    grid_updates = []
+    for item in payload:
+        tab = item["range"].split("'")[1]
+        prop = layouts[tab]
+        required = len(item["values"])
+        current = int(prop["gridProperties"]["rowCount"])
+        if required > current:
+            grid_updates.append({"updateSheetProperties": {
+                "properties": {"sheetId": prop["sheetId"], "gridProperties": {"rowCount": required + 200}},
+                "fields": "gridProperties.rowCount"
+            }})
+    if grid_updates:
+        api_json(session, "POST", f"https://sheets.googleapis.com/v4/spreadsheets/{SPREADSHEET_ID}:batchUpdate",
+                 json={"requests": grid_updates})
+    # Clear stale rows and write in bounded batches (avoid oversized Sheets API payloads).
     api_json(session, "POST", sheets_url("values:batchClear"), json={"ranges": [spreadsheet_range(t) for t in TABS]})
-    api_json(session, "POST", sheets_url("values:batchUpdate"),
-             json={"valueInputOption": "RAW", "data": payload})
+    for item in payload:
+        tab = item["range"].split("'")[1]
+        rows = item["values"]
+        for offset in range(0, len(rows), 1500):
+            block = rows[offset:offset + 1500]
+            api_json(session, "POST", sheets_url("values:batchUpdate"),
+                     json={"valueInputOption": "RAW",
+                           "data": [{"range": f"'{tab}'!A{offset + 1}", "values": block}]})
+        print(f"Sheet {tab}: {len(rows) - 1} data rows stored")
     print(f"Synced {start}..{end}; private Google Sheet {SPREADSHEET_ID}")
 
 if __name__ == "__main__":
