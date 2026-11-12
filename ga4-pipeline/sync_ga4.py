@@ -3,6 +3,7 @@
 import json
 import os
 import sys
+import time
 from datetime import date, datetime, timedelta, timezone
 from google.oauth2 import service_account
 from google.auth.transport.requests import AuthorizedSession
@@ -37,10 +38,14 @@ def iso_date(s):
     return f"{s[:4]}-{s[4:6]}-{s[6:8]}"
 
 def api_json(session, method, url, **kwargs):
-    response = session.request(method, url, timeout=100, **kwargs)
-    if not response.ok:
+    for attempt in range(6):
+        response = session.request(method, url, timeout=100, **kwargs)
+        if response.ok:
+            return response.json() if response.content else {}
+        if response.status_code in (429, 500, 502, 503, 504) and attempt < 5:
+            time.sleep(min(2 ** (attempt + 1), 32))
+            continue
         raise RuntimeError(f"{method} {url}: HTTP {response.status_code}: {response.text[:700]}")
-    return response.json() if response.content else {}
 
 def run_report(session, property_id, dims, metrics, start, end):
     rows = []
