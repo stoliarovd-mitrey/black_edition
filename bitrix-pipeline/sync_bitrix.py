@@ -24,7 +24,7 @@ START_DATE = os.getenv("BITRIX_START_DATE", "2023-01-01")
 REFRESH_DAYS = int(os.getenv("BITRIX_REFRESH_DAYS", "60"))
 MAX_ROWS = int(os.getenv("BITRIX_MAX_ROWS", "50000"))
 HEADER = {
-    "CRM_Deals": ["dealId","createdAt","modifiedAt","closedDateField","categoryId","stageId","stageSemanticId","closed","sourceId","sourceDescription","utmSource","utmMedium","utmCampaign","utmContent","utmTerm","opportunity","currency","assignedById","clientKey","leadId","originId","dealType"],
+    "CRM_Deals": ["dealId","createdAt","modifiedAt","closedDateField","categoryId","stageId","stageSemanticId","closed","sourceId","sourceDescription","utmSource","utmMedium","utmCampaign","utmContent","utmTerm","opportunity","currency","assignedById","clientKey","leadId","originId","dealType","buyerType","buyerTypeRaw"],
     "CRM_Leads": ["leadId","createdAt","modifiedAt","statusId","statusSemanticId","sourceId","sourceDescription","utmSource","utmMedium","utmCampaign","utmContent","utmTerm","assignedById","clientKey","isReturnCustomer","opportunity","currency"],
     "CRM_Stages": ["entityId","statusId","name","semantics","sort","categoryId"],
     "CRM_Fields": ["object","field","label","type","isRequired"],
@@ -34,7 +34,7 @@ WHITELISTS = {
     "deal": ["ID","DATE_CREATE","DATE_MODIFY","CLOSEDATE","CATEGORY_ID","STAGE_ID","STAGE_SEMANTIC_ID",
              "CLOSED","SOURCE_ID","SOURCE_DESCRIPTION","UTM_SOURCE","UTM_MEDIUM","UTM_CAMPAIGN",
              "UTM_CONTENT","UTM_TERM","OPPORTUNITY","CURRENCY_ID","ASSIGNED_BY_ID","CONTACT_ID",
-             "COMPANY_ID","LEAD_ID","ORIGIN_ID","TYPE_ID"],
+             "COMPANY_ID","LEAD_ID","ORIGIN_ID","TYPE_ID","UF_CRM_1661441015959"],
     "lead": ["ID","DATE_CREATE","DATE_MODIFY","STATUS_ID","STATUS_SEMANTIC_ID","SOURCE_ID",
              "SOURCE_DESCRIPTION","UTM_SOURCE","UTM_MEDIUM","UTM_CAMPAIGN","UTM_CONTENT","UTM_TERM",
              "ASSIGNED_BY_ID","CONTACT_ID","COMPANY_ID","IS_RETURN_CUSTOMER","OPPORTUNITY","CURRENCY_ID"]
@@ -135,11 +135,22 @@ def client_key(record):
         return ""
     return hmac.new(WEBHOOK.encode(), raw.encode(), hashlib.sha256).hexdigest()[:24]
 
+# Actual Caviar deal-level classification, confirmed from the Bitrix enum options.
+# Do not infer missing values from contact history or lead attributes.
+BUYER_TYPE_FIELD = "UF_CRM_1661441015959"
+BUYER_TYPES = {"1094": "Новый", "1096": "Старый", "1098": "Дилер"}
+
+def buyer_type(d):
+    raw = val(d, BUYER_TYPE_FIELD)
+    if not raw:
+        return "Не определено", ""
+    return BUYER_TYPES.get(raw, "Неизвестный код"), raw
+
 def normalized_deal(d):
     return [val(d,x) for x in ["ID","DATE_CREATE","DATE_MODIFY","CLOSEDATE","CATEGORY_ID","STAGE_ID","STAGE_SEMANTIC_ID",
             "CLOSED","SOURCE_ID","SOURCE_DESCRIPTION","UTM_SOURCE","UTM_MEDIUM","UTM_CAMPAIGN","UTM_CONTENT",
             "UTM_TERM","OPPORTUNITY","CURRENCY_ID","ASSIGNED_BY_ID"]] + [
-            client_key(d),val(d,"LEAD_ID"),val(d,"ORIGIN_ID"),val(d,"TYPE_ID")]
+            client_key(d),val(d,"LEAD_ID"),val(d,"ORIGIN_ID"),val(d,"TYPE_ID"),*buyer_type(d)]
 
 def normalized_lead(d):
     return [val(d,x) for x in ["ID","DATE_CREATE","DATE_MODIFY","STATUS_ID","STATUS_SEMANTIC_ID","SOURCE_ID",
@@ -153,6 +164,10 @@ def main():
     now = datetime.now(timezone.utc)
     latest = now - timedelta(days=REFRESH_DAYS)
     initial = not existing["CRM_Deals"] or not existing["CRM_Leads"]
+    # Backfill every deal once when new buyer-type columns are first introduced.
+    buyer_type_backfill = not existing["CRM_Deals"] or any(
+        len(row) < len(HEADER["CRM_Deals"]) for row in existing["CRM_Deals"]
+    )
     mode = "historical" if initial else "modified_60d"
     status_rows = paged("crm.status.list", {})
     fields_deal = bitrix("crm.deal.fields").get("result", {})
@@ -164,8 +179,13 @@ def main():
         chosen = [k for k in WHITELISTS[kind] if k in f]
         if "ID" not in chosen or "DATE_CREATE" not in chosen:
             raise RuntimeError(f"Bitrix {kind} lacks mandatory fields")
-        selection = {"select": chosen, "order": {"ID": "ASC"},
-                     "filter": {">=DATE_CREATE": START_DATE} if initial else {">=DATE_MODIFY": latest.strftime("%Y-%m-%d")}}
+        if kind == "deal" and buyer_type_backfill:
+            query_filter = {">=DATE_CREATE": "2020-01-01"}
+        elif initial:
+            query_filter = {">=DATE_CREATE": START_DATE}
+        else:
+            query_filter = {">=DATE_MODIFY": latest.strftime("%Y-%m-%d")}
+        selection = {"select": chosen, "order": {"ID": "ASC"}, "filter": query_filter}
         records = paged(f"crm.{kind}.list", selection)
         current[kind] = records
         print(f"{kind}: fetched {len(records)} ({mode})")  # no CRM values in public logs
