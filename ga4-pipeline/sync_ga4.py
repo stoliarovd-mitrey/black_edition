@@ -97,14 +97,11 @@ def read_existing(session, tab):
         raise RuntimeError(f"Unexpected header in tab {tab}. Refusing to overwrite.")
     return rows[1:] if rows else []
 
-def key_of(row):
-    return tuple(str(x) for x in row[:2]) + tuple(str(x) for x in row[2:4] if isinstance(x, str)) if len(row) > 2 else tuple(row)
-
 def main():
     raw = os.environ["GOOGLE_SERVICE_ACCOUNT_JSON"]
     credentials = service_account.Credentials.from_service_account_info(json.loads(raw), scopes=SCOPES)
     session = AuthorizedSession(credentials)
-    end = date.today() - timedelta(days=2)  # GA4 reports may be delayed; re-fetch recent days daily
+    end = date.today() - timedelta(days=1)  # yesterday may be incomplete for GA4 Global (US-Pacific timezone)
     bootstrap = date.fromisoformat(os.getenv("GA4_BOOTSTRAP_START", "2026-06-24"))
     refresh_days = int(os.getenv("GA4_REFRESH_DAYS", "35"))
     start = min(end - timedelta(days=refresh_days - 1), bootstrap) if os.getenv("GA4_FULL_BACKFILL", "") == "1" else end - timedelta(days=refresh_days - 1)
@@ -128,7 +125,7 @@ def main():
         for day_index in range((end - start).days + 1):
             day = (start + timedelta(days=day_index)).isoformat()
             observed = any(row[0] == day for row in site_rows["Daily"])
-            fetched["Checks"].append([day, site, now, "OK" if observed else "NO_DATA", "GA4 daily report present" if observed else "No GA4 daily row; investigate tag or processing delay"])
+            fetched["Checks"].append([day, site, now, ("PRELIMINARY" if day == end.isoformat() else "OK") if observed else "NO_DATA", ("Latest day: GA4 may still be processing or in a different timezone" if day == end.isoformat() else "GA4 daily report present") if observed else "No GA4 daily row; investigate tag or processing delay"])
     payload = []
     for tab, header in TABS.items():
         old = [r for r in existing[tab] if r and str(r[0]) < start.isoformat()]
