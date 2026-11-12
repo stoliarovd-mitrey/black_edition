@@ -3,6 +3,9 @@ on:
   schedule:
     - cron: "15 4 * * *" # 07:15 Moscow (UTC+3), every day
   workflow_dispatch:
+  push:
+    paths:
+      - 'ga4-pipeline/.run'
 permissions:
   contents: read
 jobs:
