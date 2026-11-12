@@ -1,1 +1,1 @@
-Refresh CRM store and values after expanding Sheet range to include all fields.
+Refetch all CRM leads using PHONE only in memory. New/old leads classification disabled, derive ru/global/unknown phone market, 2026-11-12.
