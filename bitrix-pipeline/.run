@@ -1,1 +1,1 @@
-CRM setup validation run #2; safe no credentials or private data.
+Backfill deal buyerType from actual Bitrix enum (new/old/dealer); keep blank historical values unknown.
