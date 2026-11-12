@@ -6,12 +6,15 @@ on:
   push:
     paths:
       - 'ga4-pipeline/.run'
+concurrency:
+  group: caviar-ga4-sheet-sync
+  cancel-in-progress: false
 permissions:
   contents: read
 jobs:
   export-ga4:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
