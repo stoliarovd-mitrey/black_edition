@@ -1,1 +1,1 @@
-First-run trigger for authorized GA4 collector. Contains no credentials or analytics data.
+Second validation run after adding rate-limit retries and large historical backfill support.
