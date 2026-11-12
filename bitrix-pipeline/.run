@@ -1,1 +1,1 @@
-Backfill deal buyerType from actual Bitrix enum (new/old/dealer); keep blank historical values unknown.
+Refresh Russian/global/Chinese store field, deal amount and classification, 2026-11-12.
