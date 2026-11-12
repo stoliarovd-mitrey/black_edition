@@ -493,7 +493,7 @@ ul{list-style:none}
   .model__media:hover{transform:none}
 }
 
-/* English edition and standalone download */
+/* English edition */
 .hero__col{max-width:750px}
 .hero__t{font-size:clamp(44px,6vw,84px)}
 .hdr__nav{gap:22px}
@@ -504,16 +504,15 @@ ul{list-style:none}
 .model__media{flex:0 0 min(37vw,450px);width:min(37vw,450px)}
 .hero__actions{margin-top:32px}
 .hero__actions .btn{padding-inline:32px}
-.download-note{margin-top:12px;font-size:13px;opacity:.75;max-width:430px}
 .source-note{margin-top:32px;font-size:13px;line-height:1.6;max-width:750px}
 .source-note a{text-underline-offset:3px}
 .check input{flex-shrink:0}
 .spec__k{line-height:20px}
 .chip__l{line-height:16px}
 @media(min-width:1100px) and (max-width:1250px){.hdr__nav{gap:14px}.hdr__nav a{font-size:11px;letter-spacing:.8px}}
-@media(max-width:1099px){.model__media{flex:0 0 auto;width:100%}.model__col{flex:1 1 auto;width:100%}.hdr__nav a:last-child{display:none}}
+@media(max-width:1099px){.model__media{flex:0 0 auto;width:100%}.model__col{flex:1 1 auto;width:100%}}
 @media(max-width:639px){.micro{white-space:normal;line-height:20px}.hero__t{font-size:44px;line-height:46px}.hero__meta{gap:24px;margin-top:28px}.hero__meta div{max-width:155px}.hero{min-height:620px}.hero__actions .btn{padding-inline:20px;white-space:normal}.hdr__nav{gap:16px}.hdr__in{gap:16px}.hdr__nav a{font-size:11px;letter-spacing:.8px}.btn{white-space:normal;text-align:center}}
-@media print{.hdr,.hero__actions,.cta-wrap,.skip,.download-note{display:none!important}.js .rv{opacity:1;transform:none}.rule{transform:none}.hero{min-height:0;padding:32px}.sect{padding:28px}.model__row{display:block}.model__media{display:none}.model__col{max-width:none}.sect,.hero,.foot{background:white!important;color:#222!important}.d1,.d2,.d3,.h3,.body,.body-sm,.micro,.facts,.spec__k,.spec__v,.check label,.foot__note,.chip__v,.chip__l{color:#222!important}.spec,.check li{break-inside:avoid}}
+@media print{.hdr,.hero__actions,.cta-wrap,.skip{display:none!important}.js .rv{opacity:1;transform:none}.rule{transform:none}.hero{min-height:0;padding:32px}.sect{padding:28px}.model__row{display:block}.model__media{display:none}.model__col{max-width:none}.sect,.hero,.foot{background:white!important;color:#222!important}.d1,.d2,.d3,.h3,.body,.body-sm,.micro,.facts,.spec__k,.spec__v,.check label,.foot__note,.chip__v,.chip__l{color:#222!important}.spec,.check li{break-inside:avoid}}
 </style>
 </head>
 <body class="no-js">
@@ -522,15 +521,13 @@ ul{list-style:none}
 <a class="hdr__logo" href="https://teatromisterio.github.io/Guide/">CAVIAR</a>
 <nav class="hdr__nav" aria-label="Guide sections">
 <a href="#start">Before you start</a><a href="#steps">Setup</a><a href="#region">Availability</a><a href="#fix">Troubleshooting</a><a href="#check">Checklist</a>
-<a href="https://teatromisterio.github.io/Guide/ray-ban-meta-activation.html" lang="ru" aria-label="Read this guide in Russian">RU</a>
 </nav></div></header>
 <main id="main">
 <section class="hero" id="top"><div class="hero__media" aria-hidden="true"></div><div class="hero__in"><div class="hero__col">
 <p class="micro rv">Ray-Ban Meta · Owner’s guide</p>
 <h1 class="d1 hero__t rv d-1">Getting<br>started</h1>
 <div class="hero__meta rv d-2"><div><span class="micro">Allow around</span><p class="body-sm">10 minutes to set up and take your first photo</p></div><div><span class="micro">Follow</span><p class="body-sm">Six simple steps, from the app to your first update</p></div></div>
-<div class="cta-wrap hero__actions rv d-2"><a class="btn" href="#steps">Start setup</a><button class="btn btn--sec" type="button" id="download-html">Download HTML guide <span aria-hidden="true">↓</span></button></div>
-<p class="download-note rv d-2">Save a complete copy to read offline in any browser.</p>
+<div class="cta-wrap hero__actions rv d-2"><a class="btn" href="#steps">Start setup</a></div>
 </div></div></section>
 <section class="sect sect--light" id="start"><div class="wrap">
 <p class="micro rv">Before you start</p>
@@ -595,17 +592,6 @@ pills.forEach(function(btn){btn.addEventListener('click',function(){
 pills.forEach(function(b){b.setAttribute('aria-pressed',String(b===btn));});
 facts.textContent='';(OS[btn.getAttribute('data-os')]||[]).forEach(function(text){var li=document.createElement('li');li.textContent=text;facts.appendChild(li);});
 });});
-document.getElementById('download-html').addEventListener('click',function(){
-var copy=document.documentElement.cloneNode(true);
-// Export a fresh, fully readable document; the downloaded copy works offline.
-copy.classList.remove('js');copy.querySelector('body').classList.remove('js');copy.querySelector('body').classList.add('no-js');
-copy.querySelectorAll('.rv').forEach(function(el){el.classList.add('is-in');});
-copy.querySelectorAll('input[type="checkbox"]').forEach(function(el){el.removeAttribute('checked');});
-copy.querySelectorAll('[data-os]').forEach(function(el){el.setAttribute('aria-pressed',String(el.getAttribute('data-os')==='ios'));});
-var offlineFacts=copy.querySelector('#os-facts');offlineFacts.textContent='';OS.ios.forEach(function(text){var li=document.createElement('li');li.textContent=text;offlineFacts.appendChild(li);});
-var blob=new Blob(['<!DOCTYPE html>\n'+copy.outerHTML],{type:'text/html;charset=utf-8'});
-var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='caviar-ray-ban-meta-setup-guide-en.html';document.body.appendChild(a);a.click();a.remove();window.setTimeout(function(){URL.revokeObjectURL(url);},10000);
-});
 var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 if(!reduced&&'IntersectionObserver' in window){
 document.body.classList.remove('no-js');document.body.classList.add('js');document.documentElement.classList.add('js');
