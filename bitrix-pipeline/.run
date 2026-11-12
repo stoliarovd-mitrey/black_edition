@@ -1,1 +1,1 @@
-Retry store and amount CRM sync after verifying target sheet header.
+Refresh CRM store and values after expanding Sheet range to include all fields.
