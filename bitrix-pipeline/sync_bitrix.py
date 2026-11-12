@@ -219,8 +219,8 @@ def main():
     latest = now - timedelta(days=REFRESH_DAYS)
     initial = not existing["CRM_Deals"] or not existing["CRM_Leads"]
     # Backfill all deals once whenever new classification/store columns are introduced.
-    buyer_type_backfill = not existing["CRM_Deals"] or any(
-        len(row) < len(HEADER["CRM_Deals"]) for row in existing["CRM_Deals"]
+    buyer_type_backfill = not existing["CRM_Deals"] or not any(
+        len(row) >= len(HEADER["CRM_Deals"]) for row in existing["CRM_Deals"]
     )
     leads_phone_backfill = not existing["CRM_Leads"] or any(
         len(row) < len(HEADER["CRM_Leads"]) for row in existing["CRM_Leads"]
