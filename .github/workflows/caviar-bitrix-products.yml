@@ -27,7 +27,7 @@ jobs:
           BITRIX24_WEBHOOK_URL: ${{ secrets.BITRIX24_WEBHOOK_URL }}
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GA4_SERVICE_ACCOUNT_JSON }}
           GA4_SHEET_ID: ${{ vars.GA4_SHEET_ID }}
-          BITRIX_PRODUCTS_MAX_DEALS: "80"
+          BITRIX_PRODUCTS_MAX_DEALS: "1200"
         run: |
           test -n "$BITRIX24_WEBHOOK_URL"
           test -n "$GOOGLE_SERVICE_ACCOUNT_JSON"
