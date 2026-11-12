@@ -90,7 +90,7 @@ def get_products(deal_ids):
 
 def main():
     sess=AuthorizedSession(service_account.Credentials.from_service_account_info(CREDS,scopes=SCOPES))
-    deals=get_values(sess,"CRM_Deals",["dealId","createdAt","modifiedAt","closedDateField","categoryId","stageId","stageSemanticId","closed","sourceId","sourceDescription","utmSource","utmMedium","utmCampaign","utmContent","utmTerm","opportunity","currency","assignedById","clientKey","leadId","originId","dealType","buyerType","buyerTypeRaw","store","ga4Site","storeRaw","paidClientField"])
+    deals=get_values(sess,"CRM_Deals",["dealId","createdAt","modifiedAt","closedDateField","categoryId","stageId","stageSemanticId","closed","sourceId","sourceDescription","utmSource","utmMedium","utmCampaign","utmContent","utmTerm","opportunity","currency","assignedById","clientKey","leadId","originId","dealType","buyerType","buyerTypeRaw","store","ga4Site","storeRaw"])
     previous_products=get_values(sess,"CRM_Products",PRODUCTS_HEADER)
     checks=get_values(sess,"CRM_ProductChecks",CHECKS_HEADER)
     checked={str(row[0]):row for row in checks if row}
