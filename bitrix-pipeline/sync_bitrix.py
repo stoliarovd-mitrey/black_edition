@@ -220,9 +220,30 @@ def main():
         print(f"{tab}: written {len(rows)-1} records")
     print("Bitrix CRM sync finished successfully (no personal names or contact details stored)")
 
+def record_failure(exc):
+    try:
+        # Do not include URLs, tokens or CRM records in the diagnostic.
+        code = str(exc).split("?")[0].split(" (secret suppressed)")[0][:180]
+        clean = code.replace(WEBHOOK, "[REDACTED]")
+        credentials = service_account.Credentials.from_service_account_info(
+            CREDS, scopes=SCOPES
+        )
+        session = AuthorizedSession(credentials)
+        from urllib.parse import quote
+        now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        url = (f"https://sheets.googleapis.com/v4/spreadsheets/{SHEET_ID}/values/"
+               + quote("'CRM_Checks'!A:G",safe="") + ":append")
+        resp = session.post(url, params={"valueInputOption":"RAW","insertDataOption":"INSERT_ROWS"},
+                            json={"values":[[now,"SYNC_ERROR",0,"","","ERROR",clean]]},timeout=30)
+        if resp.status_code>=400:
+            print("CRM diagnostics could not be written",file=sys.stderr)
+    except Exception:
+        print("CRM diagnostics unavailable",file=sys.stderr)
+
 if __name__ == "__main__":
     try:
         main()
     except Exception as exc:
-        print("Bitrix sync failed:",str(exc).split("?")[0][:300],file=sys.stderr)
+        record_failure(exc)
+        print("Bitrix sync failed:",str(exc).split("?")[0][:200],file=sys.stderr)
         sys.exit(1)
