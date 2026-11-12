@@ -10,6 +10,7 @@ import json
 import os
 import sys
 import time
+import phonenumbers
 from datetime import datetime, timedelta, timezone
 from urllib.parse import urlsplit
 import requests
@@ -24,8 +25,8 @@ START_DATE = os.getenv("BITRIX_START_DATE", "2023-01-01")
 REFRESH_DAYS = int(os.getenv("BITRIX_REFRESH_DAYS", "60"))
 MAX_ROWS = int(os.getenv("BITRIX_MAX_ROWS", "50000"))
 HEADER = {
-    "CRM_Deals": ["dealId","createdAt","modifiedAt","closedDateField","categoryId","stageId","stageSemanticId","closed","sourceId","sourceDescription","utmSource","utmMedium","utmCampaign","utmContent","utmTerm","opportunity","currency","assignedById","clientKey","leadId","originId","dealType","buyerType","buyerTypeRaw","store","ga4Site","storeRaw","paidClientField"],
-    "CRM_Leads": ["leadId","createdAt","modifiedAt","statusId","statusSemanticId","sourceId","sourceDescription","utmSource","utmMedium","utmCampaign","utmContent","utmTerm","assignedById","clientKey","isReturnCustomer","opportunity","currency"],
+    "CRM_Deals": ["dealId","createdAt","modifiedAt","closedDateField","categoryId","stageId","stageSemanticId","closed","sourceId","sourceDescription","utmSource","utmMedium","utmCampaign","utmContent","utmTerm","opportunity","currency","assignedById","clientKey","leadId","originId","dealType","buyerType","buyerTypeRaw","store","ga4Site","storeRaw"],
+    "CRM_Leads": ["leadId","createdAt","modifiedAt","statusId","statusSemanticId","sourceId","sourceDescription","utmSource","utmMedium","utmCampaign","utmContent","utmTerm","assignedById","clientKey","isReturnCustomer","opportunity","currency","marketFromPhone","phoneMarketReason"],
     "CRM_Stages": ["entityId","statusId","name","semantics","sort","categoryId"],
     "CRM_Fields": ["object","field","label","type","isRequired"],
     "CRM_Checks": ["checkedAtUTC","object","records","earliestCreatedAt","latestCreatedAt","status","note"]
@@ -34,10 +35,10 @@ WHITELISTS = {
     "deal": ["ID","DATE_CREATE","DATE_MODIFY","CLOSEDATE","CATEGORY_ID","STAGE_ID","STAGE_SEMANTIC_ID",
              "CLOSED","SOURCE_ID","SOURCE_DESCRIPTION","UTM_SOURCE","UTM_MEDIUM","UTM_CAMPAIGN",
              "UTM_CONTENT","UTM_TERM","OPPORTUNITY","CURRENCY_ID","ASSIGNED_BY_ID","CONTACT_ID",
-             "COMPANY_ID","LEAD_ID","ORIGIN_ID","TYPE_ID","UF_CRM_1661441015959","UF_CRM_606035AA978EA","UF_CRM_1614947278479"],
+             "COMPANY_ID","LEAD_ID","ORIGIN_ID","TYPE_ID","UF_CRM_1661441015959","UF_CRM_606035AA978EA"],
     "lead": ["ID","DATE_CREATE","DATE_MODIFY","STATUS_ID","STATUS_SEMANTIC_ID","SOURCE_ID",
              "SOURCE_DESCRIPTION","UTM_SOURCE","UTM_MEDIUM","UTM_CAMPAIGN","UTM_CONTENT","UTM_TERM",
-             "ASSIGNED_BY_ID","CONTACT_ID","COMPANY_ID","IS_RETURN_CUSTOMER","OPPORTUNITY","CURRENCY_ID"]
+             "ASSIGNED_BY_ID","CONTACT_ID","COMPANY_ID","IS_RETURN_CUSTOMER","OPPORTUNITY","CURRENCY_ID","PHONE"]
 }
 
 def require_https_webhook(url):
@@ -161,12 +162,54 @@ def normalized_deal(d):
     return [val(d,x) for x in ["ID","DATE_CREATE","DATE_MODIFY","CLOSEDATE","CATEGORY_ID","STAGE_ID","STAGE_SEMANTIC_ID",
             "CLOSED","SOURCE_ID","SOURCE_DESCRIPTION","UTM_SOURCE","UTM_MEDIUM","UTM_CAMPAIGN","UTM_CONTENT",
             "UTM_TERM","OPPORTUNITY","CURRENCY_ID","ASSIGNED_BY_ID"]] + [
-            client_key(d),val(d,"LEAD_ID"),val(d,"ORIGIN_ID"),val(d,"TYPE_ID"),*buyer_type(d),*store_type(d),val(d,"UF_CRM_1614947278479")]
+            client_key(d),val(d,"LEAD_ID"),val(d,"ORIGIN_ID"),val(d,"TYPE_ID"),*buyer_type(d),*store_type(d)]
+
+
+def market_from_phone(record):
+    """Region heuristic for leads only: RU + Kazakhstan -> ru, valid others -> global.
+    Do not store, hash, print or export raw phone numbers.
+    """
+    value = record.get("PHONE")
+    numbers = []
+    if isinstance(value, list):
+        numbers = [str(it.get("VALUE","")) for it in value if isinstance(it, dict) and it.get("VALUE")]
+    elif isinstance(value, dict) and value.get("VALUE"):
+        numbers = [str(value["VALUE"])]
+    elif isinstance(value, str) and value.strip():
+        numbers = [value]
+    if not numbers:
+        return ("unknown", "no_phone")
+    recognized = set()
+    for raw in numbers:
+        raw = raw.strip()
+        compact = "".join(c for c in raw if c.isdigit())
+        if raw.startswith("+"):
+            candidate = "+" + compact
+        elif raw.startswith("00") and len(compact) > 4:
+            candidate = "+" + compact[2:]
+        elif len(compact) == 11 and compact[0] in "78":
+            candidate = "+7" + compact[1:]
+        else:
+            # An unlabeled local number is not evidence of a country.
+            continue
+        try:
+            parsed = phonenumbers.parse(candidate, None)
+        except phonenumbers.NumberParseException:
+            continue
+        if not phonenumbers.is_valid_number(parsed):
+            continue
+        recognized.add("ru" if parsed.country_code == 7 else "global")
+    if len(recognized) == 1:
+        market = next(iter(recognized))
+        return (market, "phone_country_code")
+    if len(recognized) > 1:
+        return ("unknown", "conflicting_phones")
+    return ("unknown", "invalid_or_local_phone")
 
 def normalized_lead(d):
     return [val(d,x) for x in ["ID","DATE_CREATE","DATE_MODIFY","STATUS_ID","STATUS_SEMANTIC_ID","SOURCE_ID",
             "SOURCE_DESCRIPTION","UTM_SOURCE","UTM_MEDIUM","UTM_CAMPAIGN","UTM_CONTENT","UTM_TERM","ASSIGNED_BY_ID"]] + [
-            client_key(d),val(d,"IS_RETURN_CUSTOMER"),val(d,"OPPORTUNITY"),val(d,"CURRENCY_ID")]
+            client_key(d),val(d,"IS_RETURN_CUSTOMER"),val(d,"OPPORTUNITY"),val(d,"CURRENCY_ID"),*market_from_phone(d)]
 
 def main():
     require_https_webhook(WEBHOOK)
@@ -175,9 +218,12 @@ def main():
     now = datetime.now(timezone.utc)
     latest = now - timedelta(days=REFRESH_DAYS)
     initial = not existing["CRM_Deals"] or not existing["CRM_Leads"]
-    # Backfill all deals once whenever new classification/store/amount columns are introduced.
+    # Backfill all deals once whenever new classification/store columns are introduced.
     buyer_type_backfill = not existing["CRM_Deals"] or any(
         len(row) < len(HEADER["CRM_Deals"]) for row in existing["CRM_Deals"]
+    )
+    leads_phone_backfill = not existing["CRM_Leads"] or any(
+        len(row) < len(HEADER["CRM_Leads"]) for row in existing["CRM_Leads"]
     )
     mode = "historical" if initial else "modified_60d"
     status_rows = paged("crm.status.list", {})
@@ -192,7 +238,7 @@ def main():
             raise RuntimeError(f"Bitrix {kind} lacks mandatory fields")
         if kind == "deal" and buyer_type_backfill:
             query_filter = {">=DATE_CREATE": "2020-01-01"}
-        elif initial:
+        elif initial or (kind == "lead" and leads_phone_backfill):
             query_filter = {">=DATE_CREATE": START_DATE}
         else:
             query_filter = {">=DATE_MODIFY": latest.strftime("%Y-%m-%d")}
@@ -223,10 +269,10 @@ def main():
     def check_row(tab, records):
         dates = sorted(str(r[1]) for r in records if len(r)>1 and r[1])
         return [timestamp,tab,len(records),dates[0] if dates else "",dates[-1] if dates else "","OK",
-                "Current-state snapshot, not historical stage transitions; opportunity is not verified revenue"]
+                "Current-state snapshot (not stage history); amount = opportunity, never use paidClientField"]
     exports["CRM_Checks"] = [check_row(tab,exports[tab]) for tab in ["CRM_Deals","CRM_Leads"]] + [
         [timestamp,"CRM_Stages",len(stages),"","","OK","Stage semantics from current CRM settings"],
-        [timestamp,"CRM_Fields",len(meta),"","","OK","Schema metadata; no client names, phones or emails"]
+        [timestamp,"CRM_Fields",len(meta),"","","OK","Schema metadata; phone used only in memory for market inference, never stored"]
     ]
     # Preflight all existing tabs and capacity before mutating any cells.
     grid = google(session,"GET","",params={"fields":"sheets(properties(sheetId,title,gridProperties(rowCount,columnCount)))"})
