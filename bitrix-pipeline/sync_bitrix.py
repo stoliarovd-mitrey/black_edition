@@ -113,7 +113,7 @@ def google(session, method, suffix, **kwargs):
 
 def sheet_rows(session, tab):
     from urllib.parse import quote
-    data = google(session, "GET", "/values/" + quote("'" + tab + "'!A:Z", safe=""), params={"valueRenderOption":"UNFORMATTED_VALUE"})
+    data = google(session, "GET", "/values/" + quote("'" + tab + "'!A:AZ", safe=""), params={"valueRenderOption":"UNFORMATTED_VALUE"})
     rows = data.get("values", [])
     if not rows or rows[0][:len(HEADER[tab])] != HEADER[tab]:
         raise RuntimeError(f"CRM tab {tab} missing or unexpected header; refusing overwrite")
@@ -244,7 +244,7 @@ def main():
     # Update data tabs first, write checks LAST; stale check timestamp signals incomplete runs.
     for tab in ["CRM_Deals","CRM_Leads","CRM_Stages","CRM_Fields","CRM_Checks"]:
         rows = [HEADER[tab]] + exports[tab]
-        google(session,"POST","/values:batchClear",json={"ranges":[f"'{tab}'!A:Z"]})
+        google(session,"POST","/values:batchClear",json={"ranges":[f"'{tab}'!A:AZ"]})
         for index in range(0,len(rows),750):
             google(session,"POST","/values:batchUpdate",json={"valueInputOption":"RAW","data":[{
                 "range":f"'{tab}'!A{index+1}","values":rows[index:index+750]}]})
