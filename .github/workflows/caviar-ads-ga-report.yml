@@ -9,7 +9,7 @@ permissions:
 jobs:
   extract:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -23,20 +23,26 @@ jobs:
         shell: python
         run: |
           """GA4 comparison; all results remain in the existing private data Sheet."""
-          import importlib.util,json,os
+          import importlib.util,json,os,time
           from datetime import datetime,timezone
           spec=importlib.util.spec_from_file_location('ga4','ga4-pipeline/sync_ga4.py')
           ga4=importlib.util.module_from_spec(spec);spec.loader.exec_module(ga4)
           session=ga4.AuthorizedSession(ga4.service_account.Credentials.from_service_account_info(json.loads(os.environ['GOOGLE_SERVICE_ACCOUNT_JSON']),scopes=ga4.SCOPES))
+          def fast_json(s,method,url,**kwargs):
+              for attempt in range(2):
+                  response=s.request(method,url,timeout=25,**kwargs)
+                  if response.ok:return response.json()
+                  if response.status_code in (429,500,502,503,504) and attempt==0:
+                      time.sleep(2);continue
+                  raise RuntimeError("HTTP "+str(response.status_code))
+              raise RuntimeError("API unavailable")
+          ga4.api_json=fast_json
           stamp=datetime.now(timezone.utc).isoformat()
           rows=[['site','year','report','dimensions','metrics','metadata']]
           checks=[['atUTC','site','year','report','status','rows']]
           properties=[['site','propertyId','metadataJSON']]
           for site,pid in ga4.PROPERTIES.items():
-              try:
-                  meta=ga4.api_json(session,'GET',f'https://analyticsadmin.googleapis.com/v1beta/properties/{pid}')
-                  properties.append([site,pid,json.dumps({k:meta.get(k) for k in ['displayName','createTime','timeZone','currencyCode','parent']})])
-              except Exception:properties.append([site,pid,'Property metadata unavailable'])
+              properties.append([site,pid,'Optional Admin metadata skipped; coverage measured from daily GA4 rows'])
               for year in [2024,2025,2026]:
                   for name,dims,metrics in [
                       ('total',[],['totalUsers','activeUsers','sessions','engagedSessions','engagementRate','keyEvents','screenPageViews']),
@@ -46,7 +52,8 @@ jobs:
                       offset=0;count=0
                       while True:
                           body={'dateRanges':[{'startDate':f'{year}-09-01','endDate':f'{year}-11-12'}],'dimensions':[{'name':x} for x in dims],'metrics':[{'name':x} for x in metrics],'limit':'10000','offset':str(offset)}
-                          try:data=ga4.api_json(session,'POST',f'https://analyticsdata.googleapis.com/v1beta/properties/{pid}:runReport',json=body)
+                          print(site,year,name,'querying',flush=True)
+                    try:data=ga4.api_json(session,'POST',f'https://analyticsdata.googleapis.com/v1beta/properties/{pid}:runReport',json=body)
                           except Exception:
                               checks.append([stamp,site,year,name,'ERROR',count]);break
                           for r in data.get('rows',[]):
@@ -56,7 +63,7 @@ jobs:
                           offset+=len(data.get('rows',[]))
                           if not data.get('rows') or offset>=data.get('rowCount',0):
                               checks.append([stamp,site,year,name,'OK' if count else 'NO_DATA',count]);break
-          tabs={'Ads_GA4':rows,'Ads_GA_Checks':checks,'Ads_GA_Properties':properties}
+          tabs={'Ads_GA4_Fast':rows,'Ads_GA_Checks_Fast':checks,'Ads_GA_Properties_Fast':properties}
           meta=ga4.api_json(session,'GET',f'https://sheets.googleapis.com/v4/spreadsheets/{ga4.SPREADSHEET_ID}',params={'fields':'sheets(properties(sheetId,title,gridProperties))'})
           exists={s['properties']['title']:s['properties'] for s in meta['sheets']};requests=[]
           for t,v in tabs.items():
