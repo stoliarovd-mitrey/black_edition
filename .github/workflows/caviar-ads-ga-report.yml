@@ -52,6 +52,7 @@ jobs:
                       offset=0;count=0
                       while True:
                           body={'dateRanges':[{'startDate':f'{year}-09-01','endDate':f'{year}-11-12'}],'dimensions':[{'name':x} for x in dims],'metrics':[{'name':x} for x in metrics],'limit':'10000','offset':str(offset)}
+                          body['dimensionFilter']={'filter':{'fieldName':'hostName','stringFilter':{'matchType':'FULL_REGEXP','value':r'(^|\.)caviar-phones?\.ru$' if site=='ru' else r'(^|\.)caviar\.global$','caseSensitive':False}}}
                           print(site,year,name,'querying',flush=True)
                           try:data=ga4.api_json(session,'POST',f'https://analyticsdata.googleapis.com/v1beta/properties/{pid}:runReport',json=body)
                           except Exception:
@@ -63,7 +64,7 @@ jobs:
                           offset+=len(data.get('rows',[]))
                           if not data.get('rows') or offset>=data.get('rowCount',0):
                               checks.append([stamp,site,year,name,'OK' if count else 'NO_DATA',count]);break
-          tabs={'Ads_GA4_Fast':rows,'Ads_GA_Checks_Fast':checks,'Ads_GA_Properties_Fast':properties}
+          tabs={'Ads_GA4_Site':rows,'Ads_GA_Checks_Site':checks,'Ads_GA_Properties_Site':properties}
           meta=ga4.api_json(session,'GET',f'https://sheets.googleapis.com/v4/spreadsheets/{ga4.SPREADSHEET_ID}',params={'fields':'sheets(properties(sheetId,title,gridProperties))'})
           exists={s['properties']['title']:s['properties'] for s in meta['sheets']};requests=[]
           for t,v in tabs.items():
