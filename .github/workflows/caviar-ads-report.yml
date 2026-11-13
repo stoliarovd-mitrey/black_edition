@@ -1,0 +1,103 @@
+name: Caviar CRM advertising comparison 2024-2026
+on:
+  push:
+    paths:
+      - '.github/workflows/caviar-ads-report.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check google-auth requests phonenumbers
+      - name: Read CRM attribution fields into existing private data source
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GA4_SERVICE_ACCOUNT_JSON }}
+          BITRIX24_WEBHOOK_URL: ${{ secrets.BITRIX24_WEBHOOK_URL }}
+          GA4_SHEET_ID: ${{ vars.GA4_SHEET_ID }}
+        shell: python
+        run: |
+          """Read-only CRM acquisition extract. Private output only, no contacts or credentials."""
+          import importlib.util,json,os,re
+          from datetime import datetime,timezone
+          from urllib.parse import quote
+          
+          spec=importlib.util.spec_from_file_location('crm','bitrix-pipeline/sync_bitrix.py')
+          crm=importlib.util.module_from_spec(spec);spec.loader.exec_module(crm)
+          session=crm.AuthorizedSession(crm.service_account.Credentials.from_service_account_info(crm.CREDS,scopes=crm.SCOPES))
+          stamp=datetime.now(timezone.utc).isoformat()
+          out=[['object','year','id','recordJSON']]
+          schema=[['object','field','label','type','optionsJSON']]
+          checks=[['atUTC','object','year','records','status']]
+          statuses=crm.paged('crm.status.list',{})
+          
+          def clean(v):
+              s=str(v or '')
+              s=re.sub(r'[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}','[email]',s)
+              s=re.sub(r'(?<!\w)\+?\d[\d ()-]{8,}\d','[phone]',s)
+              return s[:3000]
+          
+          for kind in ['deal','lead']:
+              fields=crm.bitrix('crm.'+kind+'.fields').get('result',{})
+              extra={}
+              for k,v in fields.items():
+                  label=v.get('formLabel') or v.get('listLabel') or v.get('title') or k
+                  if k.startswith('UF_') and (k in ['UF_CRM_1661441015959','UF_CRM_606035AA978EA'] or re.search('источ|канал|магазин|домен|путь клиента|тип клиента|старый|новый|причин|способ коммуник|интересующ|модел',str(v),re.I)):
+                      extra[k]=label
+                      schema.append([kind,k,label,v.get('type',''),json.dumps(v.get('items',[]),ensure_ascii=False)])
+              select=list(dict.fromkeys(crm.WHITELISTS[kind]+['TITLE','COMMENTS']+list(extra)))
+              select=[x for x in select if x in fields]
+              for year in [2024,2025,2026]:
+                  records=crm.paged('crm.'+kind+'.list',{'filter':{'>=DATE_CREATE':f'{year}-09-01T00:00:00+03:00','<DATE_CREATE':f'{year}-11-13T00:00:00+03:00'},'select':select,'order':{'ID':'ASC'}})
+                  for d in records:
+                      vals={k:d.get(k,'') for k in select if k not in ['TITLE','COMMENTS','PHONE','CONTACT_ID','COMPANY_ID'] and not k.startswith('UF_')}
+                      vals['clientKey']=crm.client_key(d)
+                      vals['extra']={k:d.get(k,'') for k in extra if d.get(k) not in [None,'',[]]}
+                      for k in ['SOURCE_DESCRIPTION']:
+                          vals[k]=clean(vals.get(k))
+                      evidence=[]
+                      if re.search(r'(^|[\s_-])(тест|test)([\s_-]|$)',str(d.get('TITLE','')),re.I): evidence.append('title_test')
+                      if re.search(r'(?:^|\n)name:\s*[^\n]*(?:тест|test)',str(d.get('COMMENTS','')),re.I): evidence.append('form_name_test')
+                      for k,label in extra.items():
+                          if re.search('причин',label,re.I) and re.search('тест|test',str(d.get(k,'')),re.I): evidence.append('manager_test')
+                          if isinstance(vals['extra'].get(k),str): vals['extra'][k]=clean(vals['extra'][k])
+                      vals['isTest']=bool(evidence);vals['testEvidence']=','.join(evidence)
+                      if kind=='deal':
+                          vals['buyerType']=crm.buyer_type(d)[0]; vals['store']=crm.store_type(d)[0]
+                      else:
+                          vals['phoneMarket'],vals['phoneReason']=crm.market_from_phone(d)
+                      out.append([kind,year,str(d['ID']),json.dumps(vals,ensure_ascii=False)])
+                  checks.append([stamp,kind,year,len(records),'OK'])
+          
+          lead_ids={r[2] for r in out[1:] if r[0]=='lead'}
+          linked={str(json.loads(r[3]).get('LEAD_ID','')) for r in out[1:] if r[0]=='deal'}-{'','0'}-lead_ids
+          for start in range(0,len(linked),50):
+              ids=sorted(linked,key=int)[start:start+50]
+              for d in crm.paged('crm.lead.list',{'filter':{'ID':ids},'select':select,'order':{'ID':'ASC'}}):
+                  vals={k:d.get(k,'') for k in select if k not in ['TITLE','COMMENTS','PHONE','CONTACT_ID','COMPANY_ID'] and not k.startswith('UF_')}
+                  vals['clientKey']=crm.client_key(d)
+                  vals['extra']={k:(clean(d[k]) if isinstance(d[k],str) else d[k]) for k in extra if d.get(k) not in [None,'',[]]}
+                  vals['phoneMarket'],vals['phoneReason']=crm.market_from_phone(d)
+                  vals['SOURCE_DESCRIPTION']=clean(vals.get('SOURCE_DESCRIPTION'))
+                  vals['isTest']=False;vals['testEvidence']='reference_only'
+                  out.append(['lead_ref',int(str(d.get('DATE_CREATE','2026'))[:4]),str(d['ID']),json.dumps(vals,ensure_ascii=False)])
+          checks.append([stamp,'lead_ref','linked_outside_period',len(out)-1-sum(int(x[3]) for x in checks[1:]),'OK'])
+          stage=[['entityId','statusId','name','semantics']]+[[d.get('ENTITY_ID',''),d.get('STATUS_ID',''),d.get('NAME',''),d.get('SEMANTICS') or (d.get('EXTRA') or {}).get('SEMANTICS','')] for d in statuses]
+          tabs={'Ads_Extract':out,'Ads_Fields':schema,'Ads_Stages':stage,'Ads_Checks':checks}
+          meta=crm.google(session,'GET','',params={'fields':'sheets(properties(sheetId,title,gridProperties))'})
+          existing={s['properties']['title']:s['properties'] for s in meta['sheets']}
+          req=[]
+          for t,rows in tabs.items():
+              if t not in existing:req.append({'addSheet':{'properties':{'title':t,'gridProperties':{'rowCount':len(rows)+100,'columnCount':6,'frozenRowCount':1}}}})
+              elif existing[t]['gridProperties']['rowCount']<len(rows):req.append({'updateSheetProperties':{'properties':{'sheetId':existing[t]['sheetId'],'gridProperties':{'rowCount':len(rows)+100}},'fields':'gridProperties.rowCount'}})
+          if req:crm.google(session,'POST',':batchUpdate',json={'requests':req})
+          for t,rows in tabs.items():
+              for i in range(0,len(rows),500):
+                  crm.google(session,'POST','/values:batchUpdate',json={'valueInputOption':'RAW','data':[{'range':f"'{t}'!A{i+1}",'values':rows[i:i+500]}]})
+          print('Acquisition extract stored in private Sheet. No private records in logs.')
