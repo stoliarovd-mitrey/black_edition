@@ -80,6 +80,9 @@ jobs:
                   report(site,pid,period,start,end,'channels',['sessionSourceMedium'],['totalUsers','sessions'],constructor)
                   report(site,pid,period,start,end,'landing',['landingPage'],['totalUsers','sessions'],constructor)
                   report(site,pid,period,start,end,'devices',['deviceCategory'],['totalUsers','sessions'],constructor)
+              report(site,pid,'nov','2026-11-01','2026-11-10','hostnames',['hostName'],['totalUsers','sessions'])
+              report(site,pid,'nov','2026-11-01','2026-11-10','constructor_hostnames',['hostName'],['totalUsers','sessions'],constructor)
+              report(site,pid,'nov','2026-11-01','2026-11-10','device_events',['deviceCategory','eventName'],['totalUsers','eventCount'],constructor)
               report(site,pid,'all','2026-06-24','2026-11-10','daily',['date'],['totalUsers','sessions','screenPageViews'],constructor)
               report(site,pid,'all','2026-06-24','2026-11-10','zd_daily',['date','eventName'],['totalUsers','eventCount'],events)
           
@@ -92,16 +95,17 @@ jobs:
               return data
           
           def scrub(value):
-              s=re.sub(r'<[^>]+>',' ',str(value or ''))
+              s=re.sub(r'image: data:image/[^\\n]+','[image omitted]',str(value or ''))
+              s=re.sub(r'<[^>]+>',' ',s)
               s=re.sub(r'[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}','[email]',s)
               s=re.sub(r'(?<!\w)\+?\d[\d ()-]{8,}\d','[phone]',s)
               return s[:12000]
           
           try:
               fields=bx('crm.lead.fields',{}).get('result',{})
-              custom={k:v.get('formLabel') or v.get('title') or k for k,v in fields.items() if k.startswith('UF_') and any(w in str(v).lower() for w in ['модел','домен','путь клиента','магазин','конструкт'])}
+              custom={k:v.get('formLabel') or v.get('title') or k for k,v in fields.items() if k.startswith('UF_') and any(w in str(v).lower() for w in ['модел','домен','путь клиента','магазин','конструкт','причин','отказ'])}
               leads={}
-              for field,needle in [('TITLE','contructor'),('TITLE','constructor'),('TITLE','конструкт'),('TITLE','zodiac'),('TITLE','зодиак'),('COMMENTS','contructor'),('COMMENTS','constructor'),('COMMENTS','конструкт')]:
+              for field,needle in [('TITLE','contructor'),('TITLE','constructor'),('TITLE','конструкт'),('TITLE','zodiac'),('TITLE','зодиак'),('COMMENTS','contructor'),('COMMENTS','constructor'),('COMMENTS','конструкт'),('COMMENTS','ZD-')]:
                   start=0
                   while True:
                       d=bx('crm.lead.list',{'filter':{'%'+field:needle},'select':['ID','DATE_CREATE','STATUS_ID','TITLE','SOURCE_ID','SOURCE_DESCRIPTION','UTM_SOURCE','UTM_MEDIUM','UTM_CAMPAIGN','COMMENTS']+list(custom),'order':{'ID':'ASC'},'start':start})
