@@ -53,7 +53,7 @@ jobs:
                       while True:
                           body={'dateRanges':[{'startDate':f'{year}-09-01','endDate':f'{year}-11-12'}],'dimensions':[{'name':x} for x in dims],'metrics':[{'name':x} for x in metrics],'limit':'10000','offset':str(offset)}
                           print(site,year,name,'querying',flush=True)
-                    try:data=ga4.api_json(session,'POST',f'https://analyticsdata.googleapis.com/v1beta/properties/{pid}:runReport',json=body)
+                          try:data=ga4.api_json(session,'POST',f'https://analyticsdata.googleapis.com/v1beta/properties/{pid}:runReport',json=body)
                           except Exception:
                               checks.append([stamp,site,year,name,'ERROR',count]);break
                           for r in data.get('rows',[]):
