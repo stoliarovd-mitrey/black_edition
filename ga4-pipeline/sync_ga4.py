@@ -5,10 +5,13 @@ import os
 import sys
 import time
 from datetime import date, datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 from google.oauth2 import service_account
 from google.auth.transport.requests import AuthorizedSession
 
 PROPERTIES = {"ru": "368821033", "global": "474782469"}
+# Days are defined by the timezone configured for each GA4 property, not UTC.
+SITE_TIMEZONES = {"ru": "Europe/Moscow", "global": "America/Los_Angeles"}
 SPREADSHEET_ID = os.environ["GA4_SHEET_ID"]
 SCOPES = [
     "https://www.googleapis.com/auth/analytics.readonly",
@@ -79,10 +82,10 @@ def metric(x):
     except (ValueError, TypeError):
         return x
 
-def to_sheet_row(tab, site, dim_values, metric_values):
+def to_sheet_row(tab, site, dim_values, metric_values, status="PRELIMINARY"):
     day = iso_date(dim_values[0])
     if tab == "Daily":
-        return [day, site] + [metric(x) for x in metric_values] + ["OK"]
+        return [day, site] + [metric(x) for x in metric_values] + [status]
     if tab == "Sources":
         return [day, site, dim_values[1], dim_values[2]] + [metric(x) for x in metric_values]
     if tab == "Countries":
@@ -102,45 +105,83 @@ def read_existing(session, tab):
         raise RuntimeError(f"Unexpected header in tab {tab}. Refusing to overwrite.")
     return rows[1:] if rows else []
 
+def collection_window(site, collected_at_utc, bootstrap, refresh_days, full_backfill=False):
+    """Use the property-local date; the current day is always incomplete.
+
+    The most recent *completed* local calendar day remains PRELIMINARY.
+    GA4 may revise even older data, so the last refresh_days days are refetched.
+    """
+    local_today = collected_at_utc.astimezone(ZoneInfo(SITE_TIMEZONES[site])).date()
+    end = local_today - timedelta(days=1)
+    start = bootstrap if full_backfill else max(bootstrap, end - timedelta(days=refresh_days - 1))
+    settled_through = local_today - timedelta(days=2)
+    return start, end, settled_through
+
+
+def day_status(day, settled_through):
+    return "OK" if date.fromisoformat(day) <= settled_through else "PRELIMINARY"
+
+
 def main():
     raw = os.environ["GOOGLE_SERVICE_ACCOUNT_JSON"]
     credentials = service_account.Credentials.from_service_account_info(json.loads(raw), scopes=SCOPES)
     session = AuthorizedSession(credentials)
-    end = date.today() - timedelta(days=1)  # yesterday may be incomplete for GA4 Global (US-Pacific timezone)
+    now_utc = datetime.now(timezone.utc)
     bootstrap = date.fromisoformat(os.getenv("GA4_BOOTSTRAP_START", "2026-06-24"))
     refresh_days = int(os.getenv("GA4_REFRESH_DAYS", "35"))
-    start = min(end - timedelta(days=refresh_days - 1), bootstrap) if os.getenv("GA4_FULL_BACKFILL", "") == "1" else end - timedelta(days=refresh_days - 1)
-    # Automatically backfill to bootstrap if the workbook has no historical rows.
+    if refresh_days < 3:
+        raise ValueError("GA4_REFRESH_DAYS must be >= 3")
     existing = {tab: read_existing(session, tab) for tab in TABS}
-    # A partially failed first run may fill Daily but leave other tabs incomplete.
-    # Require every report tab to cover the bootstrap and most recent requested date.
-    if any(
-        not existing[t]
-        or min(str(r[0]) for r in existing[t] if r) > bootstrap.isoformat()
-        or max(str(r[0]) for r in existing[t] if r) < end.isoformat()
-        for t in TABS
-    ):
-        start = bootstrap
-    if end < start:
-        print("No completed dates to sync")
-        return
+
+    # Only initial missing historical coverage forces backfill; a property-local
+    # date not yet available must NEVER trigger a complete historical refetch.
+    needs_bootstrap = any(not existing[t] for t in TABS)
+    for site in PROPERTIES:
+        daily_dates = [date.fromisoformat(str(r[0])) for r in existing["Daily"] if len(r) >= 2 and str(r[1]) == site]
+        if not daily_dates or min(daily_dates) > bootstrap:
+            needs_bootstrap = True
+
+    full_backfill = os.getenv("GA4_FULL_BACKFILL", "") == "1" or needs_bootstrap
+    windows = {
+        site: collection_window(site, now_utc, bootstrap, refresh_days, full_backfill)
+        for site in PROPERTIES
+    }
     fetched = {tab: [] for tab in TABS}
-    now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    stamp = now_utc.isoformat(timespec="seconds")
     for site, property_id in PROPERTIES.items():
+        start, end, settled_through = windows[site]
+        if end < start:
+            print(f"{site}: no completed dates to sync")
+            continue
+        print(f"{site}: {start}..{end} (property timezone {SITE_TIMEZONES[site]}); settled through {settled_through}")
         site_rows = {}
         for tab, (dims, metrics) in REPORTS.items():
             report = run_report(session, property_id, dims, metrics, start.isoformat(), end.isoformat())
-            site_rows[tab] = [to_sheet_row(tab, site, d, m) for d, m in report]
+            site_rows[tab] = [
+                to_sheet_row(tab, site, d, m, day_status(iso_date(d[0]), settled_through))
+                for d, m in report
+            ]
             print(f"{site} {tab}: {len(report)} rows")
         for tab, rows in site_rows.items():
             fetched[tab].extend(rows)
+        daily_dates = {row[0] for row in site_rows["Daily"]}
         for day_index in range((end - start).days + 1):
             day = (start + timedelta(days=day_index)).isoformat()
-            observed = any(row[0] == day for row in site_rows["Daily"])
-            fetched["Checks"].append([day, site, now, ("PRELIMINARY" if day == end.isoformat() else "OK") if observed else "NO_DATA", ("Latest day: GA4 may still be processing or in a different timezone" if day == end.isoformat() else "GA4 daily report present") if observed else "No GA4 daily row; investigate tag or processing delay"])
+            observed = day in daily_dates
+            status = day_status(day, settled_through) if observed else "NO_DATA"
+            note = (
+                "Last completed local day; GA4 can still revise it"
+                if status == "PRELIMINARY"
+                else "GA4 daily report present" if observed
+                else "No GA4 daily row; investigate tracking, access or processing delay"
+            )
+            fetched["Checks"].append([day, site, stamp, status, note])
+            if not observed:
+                print(f"WARNING: {site} {day}: NO_DATA")
+
     payload = []
     for tab, header in TABS.items():
-        old = [r for r in existing[tab] if r and str(r[0]) < start.isoformat()]
+        old = [r for r in existing[tab] if len(r) >= 2 and str(r[0]) < windows.get(str(r[1]), (bootstrap,))[0].isoformat()]
         all_rows = old + fetched[tab]
         all_rows.sort(key=lambda x: (str(x[0]), str(x[1]), str(x[2]) if len(x) > 2 else ""))
         payload.append({"range": f"'{tab}'!A1", "values": [header] + all_rows})
@@ -162,8 +203,8 @@ def main():
     if grid_updates:
         api_json(session, "POST", f"https://sheets.googleapis.com/v4/spreadsheets/{SPREADSHEET_ID}:batchUpdate",
                  json={"requests": grid_updates})
-    # Clear stale rows and write in bounded batches (avoid oversized Sheets API payloads).
-    api_json(session, "POST", sheets_url("values:batchClear"), json={"ranges": [spreadsheet_range(t) for t in TABS]})
+    # Write before clearing tails so a failed run does not first erase the whole workbook.
+    # All CRM_* tabs are left untouched.
     for item in payload:
         tab = item["range"].split("'")[1]
         rows = item["values"]
@@ -172,8 +213,12 @@ def main():
             api_json(session, "POST", sheets_url("values:batchUpdate"),
                      json={"valueInputOption": "RAW",
                            "data": [{"range": f"'{tab}'!A{offset + 1}", "values": block}]})
+        previous_size = len(existing[tab]) + 1
+        if previous_size > len(rows):
+            api_json(session, "POST", sheets_url("values:batchClear"),
+                     json={"ranges": [f"'{tab}'!A{len(rows) + 1}:Z{previous_size}"]})
         print(f"Sheet {tab}: {len(rows) - 1} data rows stored")
-    print(f"Synced {start}..{end}; private Google Sheet {SPREADSHEET_ID}")
+    print("Synced per-property local completed dates into private Google Sheet")
 
 if __name__ == "__main__":
     try:
