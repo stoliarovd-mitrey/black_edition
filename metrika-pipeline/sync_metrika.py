@@ -7,6 +7,7 @@ import json
 import os
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime, timezone
 from urllib.parse import quote, urlparse
 
@@ -32,6 +33,9 @@ REPORTS = {
 
 class ApiError(Exception):
     """Sanitized error that is safe in public Action logs."""
+    def __init__(self, message, details=None):
+        super().__init__(message)
+        self.details = details
 
 
 def api_json(session, method, url, **kwargs):
@@ -49,7 +53,11 @@ def api_json(session, method, url, **kwargs):
             except ValueError:
                 raise ApiError("API returned invalid JSON") from None
         if response.status_code not in (429, 500, 502, 503, 504) or attempt == 3:
-            raise ApiError("API HTTP " + str(response.status_code))
+            try:
+                detail = response.json()
+            except ValueError:
+                detail = {"responseType": "non-JSON"}
+            raise ApiError("API HTTP " + str(response.status_code), detail)
         time.sleep(2 ** attempt)
     raise ApiError("API retries exhausted")
 
@@ -65,12 +73,14 @@ def host(value):
 
 def markets_for_counter(counter):
     values = [counter.get("site"), counter.get("site2")]
-    values.extend(counter.get("mirrors") or [])
-    values.extend(counter.get("mirrors2") or [])
+    # External Taplink tags may list Caviar landing URLs as mirrors.
+    # Select the primary site; those external tags are not site analytics.
     hosts = {host(v) for v in values}
     result = {m for m, aliases in DOMAINS.items() if hosts.intersection(aliases)}
     if str(counter.get("id")) == "11882827":
         result.add("ru")
+    if str(counter.get("id")) == "46387191":
+        result.add("global")
     return sorted(result)
 
 
@@ -209,6 +219,7 @@ def main():
         if not any(m == market for _, m in selected):
             checks.append([stamp, "", market, "", "counter", "NO_ACCESSIBLE_COUNTER", 0, "No matching counter in this account; not zero traffic."])
     seen = set()
+    tasks = []
     for c, market in selected:
         cid = str(c["id"])
         crows.append([cid, market, c.get("name", ""), host(c.get("site") or c.get("site2")), jsonstr(c.get("mirrors") or c.get("mirrors2") or []), c.get("create_time", ""), c.get("time_zone_name", ""), stamp])
@@ -218,22 +229,44 @@ def main():
             seen.add(cid)
         for year, date1, date2 in date_windows():
             for name, dims in REPORTS.items():
-                try:
-                    rows, metadata = report(yandex, cid, market, date1, date2, dims)
-                    visits = metadata["totals"].get("ym:s:visits", 0)
-                    status = "OK" if visits else "NO_DATA"
-                    checks.append([stamp, cid, market, year, name, status, len(rows), "Sampled" if any(p.get("sampled") for p in metadata["pages"]) else "Unsampled"])
-                    for d, m in rows:
-                        rrows.append([cid, market, year, date1, date2, name, jsonstr(d), jsonstr(m), jsonstr(metadata), stamp])
-                except ApiError as e:
-                    failed = True
-                    checks.append([stamp, cid, market, year, name, "ERROR", 0, str(e)])
+                tasks.append((cid, market, year, date1, date2, name, dims))
+    def query_task(task):
+        cid, market, year, date1, date2, name, dims = task
+        client = requests.Session()
+        client.headers["Authorization"] = "OAuth " + token
+        print("Querying " + market + " " + year + " " + name, flush=True)
+        try:
+            rows, metadata = report(client, cid, market, date1, date2, dims)
+            visits = metadata["totals"].get("ym:s:visits", 0)
+            check = [stamp, cid, market, year, name, "OK" if visits else "NO_DATA", len(rows), "Sampled" if any(p.get("sampled") for p in metadata["pages"]) else "Unsampled"]
+            values = [[cid, market, year, date1, date2, name, jsonstr(d), jsonstr(m), jsonstr(metadata), stamp] for d, m in rows]
+            return values, check
+        except ApiError as e:
+            note = str(e) + (" | " + jsonstr(e.details) if e.details is not None else "")
+            return [], [stamp, cid, market, year, name, "ERROR", 0, note[:45000]]
+        finally:
+            client.close()
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        for values, check in pool.map(query_task, tasks):
+            rrows.extend(values)
+            checks.append(check)
+            failed = failed or check[5] == "ERROR"
+    # Keep old successful values for any query that failed on a refresh.
+    failed_keys = {(r[1], r[2], str(r[3]), r[4]) for r in checks[1:] if r[5] == "ERROR"}
+    if failed_keys:
+        try:
+            old = api_json(google, "GET", "https://sheets.googleapis.com/v4/spreadsheets/" + spreadsheet_id + "/values/" + quote("Metrika_Reports!A1:J100000", safe="")).get("values", [])
+            for row in old[1:]:
+                if len(row) >= 10 and (str(row[0]), row[1], str(row[2]), row[5]) in failed_keys:
+                    rrows.append(row)
+        except ApiError:
+            pass
     tabs = {"Metrika_Checks": checks}
-    if selected and not failed:
+    if selected:
         tabs.update({"Metrika_Counters": crows, "Metrika_Goals": grows, "Metrika_Reports": rrows})
     write_tabs(google, spreadsheet_id, tabs)
     if failed or not selected:
-        print("Connection/report checks need attention; previous report snapshots preserved.")
+        print("Some checks need attention; successful reports saved and earlier failed-report snapshots preserved.")
         return 2
     print("Read-only Metrica export completed. Private values stored only in Google Sheets.")
     return 0

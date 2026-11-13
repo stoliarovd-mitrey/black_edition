@@ -22,8 +22,9 @@ is enabled. Run on demand or change `metrika-pipeline/.run` to trigger a run.
 
 ## Export and interpretation
 
-- Only counters whose site/mirror matches caviar-phone.ru, caviar-phones.ru or
-  caviar.global are selected; Russian counter 11882827 is also recognized.
+- Only counters whose primary site matches caviar-phone.ru, caviar-phones.ru or
+  caviar.global are selected. Verified site counters 11882827 (Russia) and
+  46387191 (Global) are recognized. Taplink and marketplace tags are excluded.
 - Windows: 1 September–12 November inclusive in 2024, 2025, 2026 (73 days).
 - Totals, daily rows, source/engine, UTM and landing domain/path. Unique visitors
   for a period come from a single period query, never a sum over days/sources.
@@ -34,8 +35,9 @@ is enabled. Run on demand or change `metrika-pipeline/.run` to trigger a run.
   their entry site. A counter missing from access is not interpreted as zero.
 - Goal definitions are exported, but goal counts are not interpreted as CRM leads.
 - Tables: `Metrika_Counters`, `Metrika_Goals`, `Metrika_Reports`, `Metrika_Checks`.
-  Full snapshots are staged privately and committed in one Sheets batch; failed
-  primary reports preserve previous data snapshots and update only checks.
+  Snapshots are staged privately and committed in one Sheets batch. Successful
+  queries are retained even if another query fails; earlier values for failed
+  queries are preserved when available. Query errors are recorded privately.
 - Multiple counters are exported separately. Do not add their unique visitor
   counts together without accounting for audience overlap.
 

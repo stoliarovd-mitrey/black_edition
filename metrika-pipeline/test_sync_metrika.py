@@ -7,7 +7,7 @@ import sync_metrika as m
 class MetricaTests(unittest.TestCase):
     def test_market_selection_uses_exact_domains_and_mirrors(self):
         self.assertEqual(m.markets_for_counter({"id": 1, "site2": {"site": "https://www.caviar.global/"}}), ["global"])
-        self.assertEqual(m.markets_for_counter({"id": 1, "site": "caviar-cn.com", "mirrors2": [{"site": "caviar-phones.ru"}]}), ["ru"])
+        self.assertEqual(m.markets_for_counter({"id": 1, "site": "vk.com/caviar.iphone", "mirrors2": [{"site": "caviar-phone.ru/catalog/"}]}), [])
         self.assertEqual(m.markets_for_counter({"id": 1, "site": "caviar.global.example.com"}), [])
         self.assertEqual(m.markets_for_counter({"id": 1, "site": "caviar-cn.com"}), [])
 
