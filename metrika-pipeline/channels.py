@@ -55,15 +55,22 @@ def main():
         return core.api_json(google,'GET',base+'/values/'+quote(a1,safe='')).get('values',[])
     filters = build_filters(read('Metrika_UTM_Map!A2:D500'),read('Metrika_Engine_Map!A2:D200'))
     stamp = datetime.now(timezone.utc).isoformat()
+    try:
+        cached = {(r[0],str(r[1]),r[2],r[9]):r for r in read('Metrika_Channels!A2:K1000') if len(r)>=11}
+    except core.ApiError:
+        cached = {}
     rows = [['market','year','channel','users','visits','bounceRate','pageDepth','durationSeconds','sampled','filter','checkedUTC']]
     checks = [['market','year','channel','status','note']]
     tasks = [(market,cid,y,start,end,ch,f) for market,cid in [('ru',11882827),('global',46387191)] for y,start,end in core.date_windows() for ch,f in filters.items()]
     def query(task):
         market,cid,year,start,end,channel,segment=task
+        full_filter=core.domain_filter(market)+' AND '+segment
+        old=cached.get((market,str(year),channel,full_filter))
+        if old:
+            return old,[market,year,channel,'OK_CACHED','Identical whole-period segment; prior successful query retained']
         client=requests.Session()
         client.headers['Authorization']='OAuth '+os.environ['YANDEX_METRIKA_TOKEN']
         try:
-            full_filter=core.domain_filter(market)+' AND '+segment
             if len(full_filter)>10000: raise ValueError('Filter exceeds documented limit')
             result=core.api_json(client,'GET',core.YANDEX_API+'/stat/v1/data',params={'ids':cid,'date1':start,'date2':end,'metrics':','.join(METRICS),'filters':full_filter,'accuracy':'full','attribution':core.ATTRIBUTION,'include_undefined':'true','lang':'ru','limit':1})
             values=result.get('totals',[0]*len(METRICS))
