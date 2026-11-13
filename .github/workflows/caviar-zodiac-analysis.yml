@@ -4,6 +4,9 @@ on:
     paths:
       - '.github/workflows/caviar-zodiac-analysis.yml'
   workflow_dispatch:
+concurrency:
+  group: caviar-ga4-sheet-sync
+  cancel-in-progress: false
 permissions:
   contents: read
 jobs:
@@ -11,10 +14,43 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - run: python -m pip install --disable-pip-version-check google-auth requests
+      - name: Refresh standard exports for November 11 and 12
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GA4_SERVICE_ACCOUNT_JSON }}
+          GA4_SHEET_ID: ${{ vars.GA4_SHEET_ID }}
+        shell: python
+        run: |
+          import importlib.util, json, os
+          from datetime import date, datetime, timezone, timedelta
+          from zoneinfo import ZoneInfo
+          from urllib.parse import quote
+          spec = importlib.util.spec_from_file_location("ga4sync", "ga4-pipeline/sync_ga4.py")
+          mod = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(mod)
+          now = datetime.now(timezone.utc)
+          # One-off requested date range; regular collector rules stay unchanged.
+          mod.collection_window = lambda site, *args: (date(2026,11,11), date(2026,11,12), min(date(2026,11,11), now.astimezone(ZoneInfo(mod.SITE_TIMEZONES[site])).date() - timedelta(days=2)))
+          mod.main()
+          credentials = mod.service_account.Credentials.from_service_account_info(json.loads(os.environ["GOOGLE_SERVICE_ACCOUNT_JSON"]), scopes=mod.SCOPES)
+          session = mod.AuthorizedSession(credentials)
+          data = []
+          for tab in ["Daily", "Checks"]:
+              rows = mod.read_existing(session, tab)
+              for row in rows:
+                  if len(row) < 2 or row[0] != "2026-11-12": continue
+                  current = now.astimezone(ZoneInfo(mod.SITE_TIMEZONES[row[1]])).date().isoformat()
+                  if row[0] >= current:
+                      if tab == "Daily": row[-1] = "PARTIAL"
+                      else:
+                          row[3] = "PARTIAL"
+                          row[4] = "Property-local day still in progress at fetch; incomplete and subject to processing delay"
+              data.append({"range": "'" + tab + "'!A1", "values": [mod.TABS[tab]] + rows})
+          mod.api_json(session, "POST", mod.sheets_url("values:batchUpdate"), json={"valueInputOption":"RAW","data":data})
       - name: Read GA4 and CRM into existing private Sheet
         env:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GA4_SERVICE_ACCOUNT_JSON }}
@@ -34,7 +70,7 @@ jobs:
           creds=service_account.Credentials.from_service_account_info(json.loads(os.environ['GOOGLE_SERVICE_ACCOUNT_JSON']),scopes=['https://www.googleapis.com/auth/analytics.readonly','https://www.googleapis.com/auth/spreadsheets'])
           session=AuthorizedSession(creds)
           stamp=datetime.now(timezone.utc).isoformat()
-          checks=[['atUTC','object','status','detail']]
+          checks=[['atUTC','object','status','detail'],[stamp,'requested_range','PRELIMINARY','2026-11-01 through 2026-11-12 inclusive; Global Nov 12 may still be a partial local day and GA4 may revise recent dates']]
           ga=[['site','period','report','dimensions','metrics','metadata']]
           crm=[['id','createdAt','statusId','title','sourceId','sourceDescription','utmSource','utmMedium','utmCampaign','fields','matchType']]
           
@@ -68,7 +104,7 @@ jobs:
           constructor=contains('pagePath','/zodiac/contructor')
           zodiac=contains('pagePath','/zodiac/')
           events={'filter':{'fieldName':'eventName','stringFilter':{'matchType':'BEGINS_WITH','value':'zd_'}}}
-          periods=[('all','2026-06-24','2026-11-10'),('oct','2026-10-01','2026-10-31'),('nov','2026-11-01','2026-11-10')]
+          periods=[('all','2026-06-24','2026-11-12'),('oct','2026-10-01','2026-10-31'),('nov','2026-11-01','2026-11-12'),('nov11','2026-11-11','2026-11-11'),('nov12','2026-11-12','2026-11-12')]
           for site,pid in [('ru','368821033'),('global','474782469')]:
               for period,start,end in periods:
                   report(site,pid,period,start,end,'site_total',[],['totalUsers','activeUsers','sessions','screenPageViews'])
@@ -80,11 +116,11 @@ jobs:
                   report(site,pid,period,start,end,'channels',['sessionSourceMedium'],['totalUsers','sessions'],constructor)
                   report(site,pid,period,start,end,'landing',['landingPage'],['totalUsers','sessions'],constructor)
                   report(site,pid,period,start,end,'devices',['deviceCategory'],['totalUsers','sessions'],constructor)
-              report(site,pid,'nov','2026-11-01','2026-11-10','hostnames',['hostName'],['totalUsers','sessions'])
-              report(site,pid,'nov','2026-11-01','2026-11-10','constructor_hostnames',['hostName'],['totalUsers','sessions'],constructor)
-              report(site,pid,'nov','2026-11-01','2026-11-10','device_events',['deviceCategory','eventName'],['totalUsers','eventCount'],constructor)
-              report(site,pid,'all','2026-06-24','2026-11-10','daily',['date'],['totalUsers','sessions','screenPageViews'],constructor)
-              report(site,pid,'all','2026-06-24','2026-11-10','zd_daily',['date','eventName'],['totalUsers','eventCount'],events)
+              report(site,pid,'nov','2026-11-01','2026-11-12','hostnames',['hostName'],['totalUsers','sessions'])
+              report(site,pid,'nov','2026-11-01','2026-11-12','constructor_hostnames',['hostName'],['totalUsers','sessions'],constructor)
+              report(site,pid,'nov','2026-11-01','2026-11-12','device_events',['deviceCategory','eventName'],['totalUsers','eventCount'],constructor)
+              report(site,pid,'all','2026-06-24','2026-11-12','daily',['date'],['totalUsers','sessions','screenPageViews'],constructor)
+              report(site,pid,'all','2026-06-24','2026-11-12','zd_daily',['date','eventName'],['totalUsers','eventCount'],events)
           
           webhook=os.environ['BITRIX24_WEBHOOK_URL'].rstrip('/')+'/'
           http=requests.Session()
