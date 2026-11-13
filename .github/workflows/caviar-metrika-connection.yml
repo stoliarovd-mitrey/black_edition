@@ -1,0 +1,46 @@
+name: Caviar Metrica connection check
+on:
+  push:
+    paths:
+      - '.github/workflows/caviar-metrika-connection.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  connection:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check google-auth requests
+      - name: Check read-only Metrica connection
+        env:
+          YANDEX_METRIKA_TOKEN: ${{ secrets.YANDEX_METRIKA_TOKEN }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GA4_SERVICE_ACCOUNT_JSON }}
+          GA4_SHEET_ID: ${{ vars.GA4_SHEET_ID }}
+        shell: python
+        run: |
+          import os,json
+          from datetime import datetime,timezone
+          import requests
+          from google.oauth2 import service_account
+          from google.auth.transport.requests import AuthorizedSession
+          stamp=datetime.now(timezone.utc).isoformat()
+          token=os.environ['YANDEX_METRIKA_TOKEN'].strip()
+          try:
+           r=requests.get('https://api-metrika.yandex.net/management/v1/counters',params={'field':'mirrors','per_page':1000},headers={'Authorization':'OAuth '+token},timeout=20)
+           data=r.json()
+           status=str(r.status_code)
+          except Exception as e:
+           data={'diagnostic':type(e).__name__};status='NETWORK_ERROR'
+          rows=[['checkedUTC','httpStatus','responseJSON'],[stamp,status,json.dumps(data,ensure_ascii=False)[:45000]]]
+          cred=service_account.Credentials.from_service_account_info(json.loads(os.environ['GOOGLE_SERVICE_ACCOUNT_JSON']),scopes=['https://www.googleapis.com/auth/spreadsheets'])
+          s=AuthorizedSession(cred);base='https://sheets.googleapis.com/v4/spreadsheets/'+os.environ['GA4_SHEET_ID']
+          r=s.get(base,params={'fields':'sheets(properties(sheetId,title))'},timeout=30);r.raise_for_status()
+          if not any(x['properties']['title']=='Metrika_Connection' for x in r.json()['sheets']):
+           r=s.post(base+':batchUpdate',json={'requests':[{'addSheet':{'properties':{'title':'Metrika_Connection','gridProperties':{'rowCount':100,'columnCount':3,'frozenRowCount':1}}}}]},timeout=30);r.raise_for_status()
+          r=s.post(base+'/values:batchUpdate',json={'valueInputOption':'RAW','data':[{'range':'Metrika_Connection!A1','values':rows}]},timeout=30);r.raise_for_status()
+          print('Connection diagnostic stored privately. HTTP status: '+status)
+          
