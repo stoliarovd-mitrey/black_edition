@@ -1,0 +1,130 @@
+name: Caviar Zodiac read-only analysis
+on:
+  push:
+    paths:
+      - '.github/workflows/caviar-zodiac-analysis.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check google-auth requests
+      - name: Read GA4 and CRM into existing private Sheet
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GA4_SERVICE_ACCOUNT_JSON }}
+          BITRIX24_WEBHOOK_URL: ${{ secrets.BITRIX24_WEBHOOK_URL }}
+          GA4_SHEET_ID: ${{ vars.GA4_SHEET_ID }}
+        shell: python
+        run: |
+          """One-off read-only Zodiac analysis; results go only to the existing private Sheet."""
+          import os, json, re, time
+          from datetime import datetime, timezone
+          from urllib.parse import quote
+          import requests
+          from google.oauth2 import service_account
+          from google.auth.transport.requests import AuthorizedSession
+          
+          sheet=os.environ['GA4_SHEET_ID']
+          creds=service_account.Credentials.from_service_account_info(json.loads(os.environ['GOOGLE_SERVICE_ACCOUNT_JSON']),scopes=['https://www.googleapis.com/auth/analytics.readonly','https://www.googleapis.com/auth/spreadsheets'])
+          session=AuthorizedSession(creds)
+          stamp=datetime.now(timezone.utc).isoformat()
+          checks=[['atUTC','object','status','detail']]
+          ga=[['site','period','report','dimensions','metrics','metadata']]
+          crm=[['id','createdAt','statusId','title','sourceId','sourceDescription','utmSource','utmMedium','utmCampaign','fields','matchType']]
+          
+          def req(s,method,url,**kw):
+              for i in range(5):
+                  r=s.request(method,url,timeout=100,**kw)
+                  if r.ok: return r.json()
+                  if r.status_code in (429,500,502,503,504):
+                      time.sleep(2**i); continue
+                  raise RuntimeError('HTTP '+str(r.status_code))
+              raise RuntimeError('Retries exhausted')
+          
+          def report(site,pid,period,start,end,name,dims,metrics,filt=None):
+              offset=0
+              while True:
+                  body={'dateRanges':[{'startDate':start,'endDate':end}], 'dimensions':[{'name':x} for x in dims], 'metrics':[{'name':x} for x in metrics], 'limit':'10000','offset':str(offset)}
+                  if filt: body['dimensionFilter']=filt
+                  try: data=req(session,'POST',f'https://analyticsdata.googleapis.com/v1beta/properties/{pid}:runReport',json=body)
+                  except Exception as e:
+                      checks.append([stamp,site+':'+period+':'+name,'ERROR',str(e)]); return
+                  meta=json.dumps(data.get('metadata',{}),ensure_ascii=False)
+                  for row in data.get('rows',[]):
+                      d=dict(zip(dims,[x.get('value','') for x in row.get('dimensionValues',[])]))
+                      m=dict(zip(metrics,[x.get('value','') for x in row['metricValues']]))
+                      ga.append([site,period,name,json.dumps(d,ensure_ascii=False),json.dumps(m),meta])
+                  offset+=len(data.get('rows',[]))
+                  if offset>=data.get('rowCount',0) or not data.get('rows'): break
+              checks.append([stamp,site+':'+period+':'+name,'OK',offset])
+          
+          def contains(field,value): return {'filter':{'fieldName':field,'stringFilter':{'matchType':'CONTAINS','value':value,'caseSensitive':False}}}
+          constructor=contains('pagePath','/zodiac/contructor')
+          zodiac=contains('pagePath','/zodiac/')
+          events={'filter':{'fieldName':'eventName','stringFilter':{'matchType':'BEGINS_WITH','value':'zd_'}}}
+          periods=[('all','2026-06-24','2026-11-10'),('oct','2026-10-01','2026-10-31'),('nov','2026-11-01','2026-11-10')]
+          for site,pid in [('ru','368821033'),('global','474782469')]:
+              for period,start,end in periods:
+                  report(site,pid,period,start,end,'site_total',[],['totalUsers','activeUsers','sessions','screenPageViews'])
+                  report(site,pid,period,start,end,'constructor_total',[],['totalUsers','activeUsers','sessions','screenPageViews','userEngagementDuration','eventCount','keyEvents'],constructor)
+                  report(site,pid,period,start,end,'pages',['pagePath'],['totalUsers','sessions','screenPageViews'],zodiac)
+                  report(site,pid,period,start,end,'constructor_events',['eventName'],['totalUsers','eventCount'],constructor)
+                  report(site,pid,period,start,end,'zd_events',['eventName'],['totalUsers','eventCount'],events)
+                  report(site,pid,period,start,end,'referrers',['pageReferrer'],['totalUsers','screenPageViews'],constructor)
+                  report(site,pid,period,start,end,'channels',['sessionSourceMedium'],['totalUsers','sessions'],constructor)
+                  report(site,pid,period,start,end,'landing',['landingPage'],['totalUsers','sessions'],constructor)
+                  report(site,pid,period,start,end,'devices',['deviceCategory'],['totalUsers','sessions'],constructor)
+              report(site,pid,'all','2026-06-24','2026-11-10','daily',['date'],['totalUsers','sessions','screenPageViews'],constructor)
+              report(site,pid,'all','2026-06-24','2026-11-10','zd_daily',['date','eventName'],['totalUsers','eventCount'],events)
+          
+          webhook=os.environ['BITRIX24_WEBHOOK_URL'].rstrip('/')+'/'
+          http=requests.Session()
+          def bx(method,params):
+              if method not in ['crm.lead.fields','crm.lead.list']: raise ValueError('read only')
+              data=req(http,'POST',webhook+method+'.json',json=params)
+              if data.get('error'): raise RuntimeError('Bitrix error '+str(data['error']))
+              return data
+          
+          def scrub(value):
+              s=re.sub(r'<[^>]+>',' ',str(value or ''))
+              s=re.sub(r'[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}','[email]',s)
+              s=re.sub(r'(?<!\w)\+?\d[\d ()-]{8,}\d','[phone]',s)
+              return s[:12000]
+          
+          try:
+              fields=bx('crm.lead.fields',{}).get('result',{})
+              custom={k:v.get('formLabel') or v.get('title') or k for k,v in fields.items() if k.startswith('UF_') and any(w in str(v).lower() for w in ['модел','домен','путь клиента','магазин','конструкт'])}
+              leads={}
+              for field,needle in [('TITLE','contructor'),('TITLE','constructor'),('TITLE','конструкт'),('TITLE','zodiac'),('TITLE','зодиак'),('COMMENTS','contructor'),('COMMENTS','constructor'),('COMMENTS','конструкт')]:
+                  start=0
+                  while True:
+                      d=bx('crm.lead.list',{'filter':{'%'+field:needle},'select':['ID','DATE_CREATE','STATUS_ID','TITLE','SOURCE_ID','SOURCE_DESCRIPTION','UTM_SOURCE','UTM_MEDIUM','UTM_CAMPAIGN','COMMENTS']+list(custom),'order':{'ID':'ASC'},'start':start})
+                      for x in d.get('result',[]): leads[x['ID']]=x
+                      if 'next' not in d: break
+                      start=d['next']
+                      time.sleep(.3)
+              for x in sorted(leads.values(),key=lambda x:int(x['ID'])):
+                  details={custom[k]:scrub(x.get(k)) for k in custom if x.get(k)}
+                  comments=scrub(x.get('COMMENTS'))
+                  if comments: details['COMMENTS']=comments
+                  match='constructor' if re.search(r'contructor|constructor|конструкт|/zodiac/con',json.dumps(x,ensure_ascii=False),re.I) else 'collection_only'
+                  crm.append([x['ID'],x.get('DATE_CREATE',''),x.get('STATUS_ID',''),scrub(x.get('TITLE')),x.get('SOURCE_ID',''),scrub(x.get('SOURCE_DESCRIPTION')),x.get('UTM_SOURCE',''),x.get('UTM_MEDIUM',''),x.get('UTM_CAMPAIGN',''),json.dumps(details,ensure_ascii=False),match])
+              checks.append([stamp,'CRM','OK',len(leads)])
+          except Exception as e: checks.append([stamp,'CRM','ERROR',str(e)])
+          
+          base=f'https://sheets.googleapis.com/v4/spreadsheets/{sheet}'
+          existing=req(session,'GET',base,params={'fields':'sheets(properties(title))'})
+          titles={x['properties']['title'] for x in existing['sheets']}
+          tabs={'Zodiac_GA4':ga,'Zodiac_CRM':crm,'Zodiac_Checks':checks}
+          new=[{'addSheet':{'properties':{'title':t,'gridProperties':{'rowCount':max(1000,len(v)+100),'columnCount':12,'frozenRowCount':1}}}} for t,v in tabs.items() if t not in titles]
+          if new: req(session,'POST',base+':batchUpdate',json={'requests':new})
+          for tab,rows in tabs.items():
+              req(session,'POST',base+'/values/'+quote(tab+'!A1:L10000',safe='')+':clear',json={})
+              req(session,'PUT',base+'/values/'+quote(tab+'!A1',safe=''),params={'valueInputOption':'RAW'},json={'values':rows})
+          print('Zodiac read-only analysis finished. Results stored only in private Sheet.')
