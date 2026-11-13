@@ -1,0 +1,69 @@
+name: Caviar historical GA resource discovery
+on:
+  push:
+    paths:
+      - '.github/workflows/caviar-ga-history-discovery.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check google-auth requests
+      - name: Discover read-only accessible Google Analytics resources
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GA4_SERVICE_ACCOUNT_JSON }}
+          GA4_SHEET_ID: ${{ vars.GA4_SHEET_ID }}
+        shell: python
+        run: |
+          """Discover only GA resources accessible to the existing read-only identity."""
+          import os,json,time
+          from datetime import datetime,timezone
+          from google.oauth2 import service_account
+          from google.auth.transport.requests import AuthorizedSession
+          
+          cred=service_account.Credentials.from_service_account_info(json.loads(os.environ['GOOGLE_SERVICE_ACCOUNT_JSON']),scopes=['https://www.googleapis.com/auth/analytics.readonly','https://www.googleapis.com/auth/spreadsheets'])
+          session=AuthorizedSession(cred)
+          stamp=datetime.now(timezone.utc).isoformat()
+          rows=[['checkedAtUTC','resource','status','responseJSON']]
+          def read(url):
+              try:
+                  response=session.get(url,timeout=20)
+                  try:data=response.json()
+                  except ValueError:data={'message':'Non-JSON response'}
+                  return str(response.status_code),data
+              except Exception as e:return 'ERROR',{'message':type(e).__name__}
+          
+          status,accounts=read('https://analyticsadmin.googleapis.com/v1beta/accountSummaries?pageSize=200')
+          rows.append([stamp,'accountSummaries',status,json.dumps(accounts,ensure_ascii=False)[:45000]])
+          properties=set()
+          if status=='200':
+              page=accounts
+              for i in range(10):
+                  for account in page.get('accountSummaries',[]):
+                      for prop in account.get('propertySummaries',[]):properties.add(prop.get('property',''))
+                  if not page.get('nextPageToken'):break
+                  from urllib.parse import quote
+                  status,page=read('https://analyticsadmin.googleapis.com/v1beta/accountSummaries?pageSize=200&pageToken='+quote(page['nextPageToken'],safe=''))
+                  rows.append([stamp,'accountSummariesPage',status,json.dumps(page,ensure_ascii=False)[:45000]])
+                  if status!='200':break
+          properties.update(['properties/368821033','properties/474782469'])
+          for prop in sorted(properties):
+              if not prop:continue
+              status,data=read('https://analyticsadmin.googleapis.com/v1beta/'+prop)
+              rows.append([stamp,prop,status,json.dumps(data,ensure_ascii=False)[:45000]])
+          
+          base='https://sheets.googleapis.com/v4/spreadsheets/'+os.environ['GA4_SHEET_ID']
+          response=session.get(base,params={'fields':'sheets(properties(sheetId,title,gridProperties))'},timeout=40);response.raise_for_status()
+          title='GA_History_Access';existing={s['properties']['title']:s['properties'] for s in response.json()['sheets']}
+          if title not in existing:
+              r=session.post(base+':batchUpdate',json={'requests':[{'addSheet':{'properties':{'title':title,'gridProperties':{'rowCount':max(200,len(rows)+10),'columnCount':4,'frozenRowCount':1}}}}]},timeout=40);r.raise_for_status()
+          elif existing[title]['gridProperties']['rowCount']<len(rows):
+              r=session.post(base+':batchUpdate',json={'requests':[{'updateSheetProperties':{'properties':{'sheetId':existing[title]['sheetId'],'gridProperties':{'rowCount':len(rows)+10}},'fields':'gridProperties.rowCount'}}]},timeout=40);r.raise_for_status()
+          r=session.post(base+'/values:batchUpdate',json={'valueInputOption':'RAW','data':[{'range':title+'!A1','values':rows}]},timeout=40);r.raise_for_status()
+          print('Read-only GA resource discovery stored in private data Sheet.')
