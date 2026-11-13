@@ -1,0 +1,68 @@
+name: Caviar advertising GA4 history 2024-2026
+on:
+  push:
+    paths:
+      - '.github/workflows/caviar-ads-ga-report.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check google-auth requests
+      - name: Read historical GA4 data into private source
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GA4_SERVICE_ACCOUNT_JSON }}
+          GA4_SHEET_ID: ${{ vars.GA4_SHEET_ID }}
+        shell: python
+        run: |
+          """GA4 comparison; all results remain in the existing private data Sheet."""
+          import importlib.util,json,os
+          from datetime import datetime,timezone
+          spec=importlib.util.spec_from_file_location('ga4','ga4-pipeline/sync_ga4.py')
+          ga4=importlib.util.module_from_spec(spec);spec.loader.exec_module(ga4)
+          session=ga4.AuthorizedSession(ga4.service_account.Credentials.from_service_account_info(json.loads(os.environ['GOOGLE_SERVICE_ACCOUNT_JSON']),scopes=ga4.SCOPES))
+          stamp=datetime.now(timezone.utc).isoformat()
+          rows=[['site','year','report','dimensions','metrics','metadata']]
+          checks=[['atUTC','site','year','report','status','rows']]
+          properties=[['site','propertyId','metadataJSON']]
+          for site,pid in ga4.PROPERTIES.items():
+              try:
+                  meta=ga4.api_json(session,'GET',f'https://analyticsadmin.googleapis.com/v1beta/properties/{pid}')
+                  properties.append([site,pid,json.dumps({k:meta.get(k) for k in ['displayName','createTime','timeZone','currencyCode','parent']})])
+              except Exception:properties.append([site,pid,'Property metadata unavailable'])
+              for year in [2024,2025,2026]:
+                  for name,dims,metrics in [
+                      ('total',[],['totalUsers','activeUsers','sessions','engagedSessions','engagementRate','keyEvents','screenPageViews']),
+                      ('sources',['sessionSourceMedium','sessionDefaultChannelGroup'],['totalUsers','sessions','engagedSessions','keyEvents']),
+                      ('daily',['date'],['totalUsers','sessions','engagedSessions','keyEvents']),
+                      ('hostname',['hostName'],['totalUsers','sessions'])]:
+                      offset=0;count=0
+                      while True:
+                          body={'dateRanges':[{'startDate':f'{year}-09-01','endDate':f'{year}-11-12'}],'dimensions':[{'name':x} for x in dims],'metrics':[{'name':x} for x in metrics],'limit':'10000','offset':str(offset)}
+                          try:data=ga4.api_json(session,'POST',f'https://analyticsdata.googleapis.com/v1beta/properties/{pid}:runReport',json=body)
+                          except Exception:
+                              checks.append([stamp,site,year,name,'ERROR',count]);break
+                          for r in data.get('rows',[]):
+                              d=dict(zip(dims,[v.get('value','') for v in r.get('dimensionValues',[])]))
+                              m=dict(zip(metrics,[v.get('value','') for v in r.get('metricValues',[])]))
+                              rows.append([site,year,name,json.dumps(d,ensure_ascii=False),json.dumps(m),json.dumps(data.get('metadata',{}))]);count+=1
+                          offset+=len(data.get('rows',[]))
+                          if not data.get('rows') or offset>=data.get('rowCount',0):
+                              checks.append([stamp,site,year,name,'OK' if count else 'NO_DATA',count]);break
+          tabs={'Ads_GA4':rows,'Ads_GA_Checks':checks,'Ads_GA_Properties':properties}
+          meta=ga4.api_json(session,'GET',f'https://sheets.googleapis.com/v4/spreadsheets/{ga4.SPREADSHEET_ID}',params={'fields':'sheets(properties(sheetId,title,gridProperties))'})
+          exists={s['properties']['title']:s['properties'] for s in meta['sheets']};requests=[]
+          for t,v in tabs.items():
+              if t not in exists:requests.append({'addSheet':{'properties':{'title':t,'gridProperties':{'rowCount':len(v)+100,'columnCount':8,'frozenRowCount':1}}}})
+              elif exists[t]['gridProperties']['rowCount']<len(v):requests.append({'updateSheetProperties':{'properties':{'sheetId':exists[t]['sheetId'],'gridProperties':{'rowCount':len(v)+100}},'fields':'gridProperties.rowCount'}})
+          if requests:ga4.api_json(session,'POST',f'https://sheets.googleapis.com/v4/spreadsheets/{ga4.SPREADSHEET_ID}:batchUpdate',json={'requests':requests})
+          for t,v in tabs.items():
+              for i in range(0,len(v),500):ga4.api_json(session,'POST',ga4.sheets_url('values:batchUpdate'),json={'valueInputOption':'RAW','data':[{'range':f"'{t}'!A{i+1}",'values':v[i:i+500]}]})
+          print('Historical GA4 comparison stored privately; no private values in logs.')
