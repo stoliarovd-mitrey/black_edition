@@ -21,9 +21,9 @@ Do not grant the service account GA4 Editor/Admin access: Viewer is sufficient. 
 
 ## Schedule
 
-GitHub Actions runs at **04:15 UTC (07:15 Moscow)** every day. GitHub's schedule may run late during high load. The daily 08:30 Moscow analysis should consume the private Sheet only after a successful sync.
+GitHub Actions runs at **04:15 UTC (07:15 Moscow)** and **10:15 UTC (13:15 Moscow)** every day. The second run happens after midnight in Los Angeles, so it can collect the previous property-local day for Global. GitHub's schedule may run late or occasionally skip a run. The daily 08:30 Moscow analysis should read the last successfully synced and settled dates; it must not assume that yesterday's Global calendar day has ended.
 
-The first successful run loads data from June 24, 2026 through yesterday. Subsequent runs refresh the last **35 days** because GA4 frequently revises recent data. The last 1–2 days may still be preliminary; compare only settled dates and review the `Checks` tab for missing dates.
+The first successful run loads data from June 24, 2026 through the last completed **property-local** day. Subsequent runs refresh the last **35 property-local days** for each property. The latest completed local date is tagged `PRELIMINARY` in **both** `Daily` and `Checks`; the current local date is never downloaded as a full day. Compare only dates tagged `OK` in both tabs and inspect `Checks` for `NO_DATA`. Raw data may still be revised by GA4 after a date becomes `OK`. Backfill happens only when historical coverage is absent or `GA4_FULL_BACKFILL=1` is specified.
 
 ## Tabs and interpretation
 
@@ -32,7 +32,7 @@ The first successful run loads data from June 24, 2026 through yesterday. Subseq
 - `Countries`: country breakdown
 - `LandingPages`: landing page path (GA4 naming)
 - `Events`: event names and counts
-- `Checks`: daily existence checks, not proof of complete data
+- `Checks`: property-local daily existence and maturity checks (`OK`, `PRELIMINARY`, `NO_DATA`), not proof of complete data
 
 A missing row is a potential tracking issue, not evidence of zero visits. Key events are not necessarily leads or orders. Investigate traffic anomalies using GA4 and server logs; do not automatically filter whole countries.
 
