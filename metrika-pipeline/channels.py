@@ -52,7 +52,7 @@ def main():
     book = os.environ['GA4_SHEET_ID']
     base = 'https://sheets.googleapis.com/v4/spreadsheets/' + book
     def read(a1):
-        return core.api_json(google,'GET',base+'/values/'+quote(a1,safe='')).get('values',[])
+        return core.api_json(google,'GET',base+'/values/'+quote(a1,safe=''),params={'valueRenderOption':'UNFORMATTED_VALUE'}).get('values',[])
     filters = build_filters(read('Metrika_UTM_Map!A2:D500'),read('Metrika_Engine_Map!A2:D200'))
     stamp = datetime.now(timezone.utc).isoformat()
     try:
