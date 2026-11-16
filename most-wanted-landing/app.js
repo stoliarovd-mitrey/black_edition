@@ -1,0 +1,20 @@
+'use strict';
+const contactDialog=document.querySelector('#contact-dialog');
+const filmDialog=document.querySelector('#film-dialog');
+const imageDialog=document.querySelector('#image-dialog');
+const film=filmDialog.querySelector('video');
+const heroVideo=document.querySelector('.hero-video');
+const motionButton=document.querySelector('.motion-toggle');
+const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
+let heroPaused=reducedMotion.matches;
+const setHeroState=()=>{motionButton.setAttribute('aria-pressed',String(heroPaused));motionButton.setAttribute('aria-label',heroPaused?'Воспроизвести фоновое видео':'Приостановить фоновое видео');motionButton.firstElementChild.innerHTML=heroPaused?'<path fill="currentColor" d="m5 3 10 6-10 6z"/>':'<path fill="currentColor" d="M5 4h2v10H5zM11 4h2v10h-2z"/>';if(heroPaused)heroVideo.pause();else heroVideo.play().catch(()=>{});};
+setHeroState();
+motionButton.addEventListener('click',()=>{heroPaused=!heroPaused;setHeroState();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)heroVideo.pause();else if(!heroPaused)heroVideo.play().catch(()=>{});});
+document.querySelectorAll('[data-contact]').forEach(button=>button.addEventListener('click',()=>{const model=button.dataset.contact;document.querySelector('#contact-model').textContent=model?`Вас интересует ${model}. Консультант расскажет об исполнении и условиях заказа.`:'Поможем выбрать вашу модель Most Wanted.';const message=model?`Здравствуйте! Меня интересует ${model} из коллекции Most Wanted. Расскажите, пожалуйста, о стоимости и условиях заказа.`:'Здравствуйте! Меня интересует коллекция Most Wanted. Помогите, пожалуйста, выбрать модель.';document.querySelector('#whatsapp-link').href=`https://wa.me/79101040490?text=${encodeURIComponent(message)}`;contactDialog.showModal();}));
+document.querySelector('[data-film]').addEventListener('click',()=>{heroVideo.pause();filmDialog.showModal();film.play().catch(()=>{});});
+filmDialog.addEventListener('close',()=>{film.pause();if(!heroPaused)heroVideo.play().catch(()=>{});});
+document.querySelectorAll('[data-image]').forEach(button=>button.addEventListener('click',()=>{const target=imageDialog.querySelector('img');target.src=`assets/${button.dataset.image}-1440.webp`;target.alt=button.querySelector('img').alt;imageDialog.showModal();}));
+document.querySelectorAll('dialog').forEach(dialog=>{dialog.querySelector('[data-close]').addEventListener('click',()=>dialog.close());dialog.addEventListener('click',event=>{if(event.target!==dialog)return;const bounds=dialog.getBoundingClientRect();if(event.clientX<bounds.left||event.clientX>bounds.right||event.clientY<bounds.top||event.clientY>bounds.bottom)dialog.close();});});
+const modelLinks=[...document.querySelectorAll('.nav-models a')];
+if('IntersectionObserver' in window){const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting)modelLinks.forEach(link=>{const active=link.hash===`#${entry.target.id}`;link.classList.toggle('active',active);if(active)link.setAttribute('aria-current','location');else link.removeAttribute('aria-current');});});},{rootMargin:'-20% 0px -35% 0px',threshold:0});document.querySelectorAll('.model').forEach(model=>observer.observe(model));}
