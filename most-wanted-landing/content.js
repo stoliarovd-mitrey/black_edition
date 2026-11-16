@@ -22,11 +22,16 @@
   for (const node of nodes) {
     const element = node.parentElement;
     const value = node.textContent.trim();
-    if (!value || !/[\p{L}\p{N}]/u.test(value) || element.closest('script,style,svg,video,[data-close],.motion-toggle,.skip-link')) continue;
+    if (!value || !/[\p{L}\p{N}]/u.test(value) || element.closest('script,style,svg,video,[data-close],.motion-toggle,.skip-link,[data-cms-field]')) continue;
     const prefix = node.textContent.match(/^\s*/)[0];
     const suffix = node.textContent.match(/\s*$/)[0];
     fields.push({id: `text-${String(fields.length + 1).padStart(3, '0')}`, kind: 'text', label: value, section: sectionName(element), value, original: value, node, element, prefix, suffix});
   }
+  // Explicit fields can be added without shifting existing saved text IDs.
+  document.querySelectorAll('[data-cms-field]').forEach(element => {
+    const value=element.textContent.trim();
+    fields.push({id:element.dataset.cmsField,kind:'text',label:element.dataset.cmsLabel||value,section:sectionName(element),value,original:value,node:element,element,prefix:'',suffix:''});
+  });
   function addMedia(element, attribute, kind) {
     const value = element.getAttribute(attribute);
     if (!value) return;
@@ -108,7 +113,7 @@
         if (block) parent.postMessage({type:'caviar-select-block', id:block.dataset.layoutId}, location.origin);
         return;
       }
-      const candidates = fields.filter(f => f.element === event.target || f.element.contains(event.target));
+      const candidates = fields.filter(f => f.element === event.target || f.element.contains(event.target) || f.targets?.some(target => target.element === event.target || target.element.contains(event.target)));
       const field = candidates.find(f => f.kind === 'image' && event.target.closest('img')) || candidates.find(f => f.kind === 'text') || candidates[0];
       event.preventDefault(); event.stopImmediatePropagation();
       if (field) parent.postMessage({type:'caviar-select', id:field.id}, location.origin);

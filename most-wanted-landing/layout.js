@@ -71,6 +71,10 @@
       }
       if(['lineup','details'].includes(block.type)) {
         const columns=number(config.columns,1,6),mobileColumns=number(config.mobileColumns,1,2);
+        if(block.type==='lineup') {
+          const legacyColumns=config.variant!=='poster'&&(columns!==null||mobileColumns!==null);
+          block.element.classList.toggle('lineup-poster',config.variant!=='catalog-grid'&&!legacyColumns);
+        }
         const grid=`${selector} ${block.type==='lineup'?'.lineup-grid':'.detail-grid'}`;
         if(columns!==null)css.push(`@media(min-width:761px){${grid}{grid-template-columns:repeat(${Math.round(columns)},minmax(0,1fr))}}`);
         if(mobileColumns!==null)css.push(`@media(max-width:760px){${grid}{grid-template-columns:repeat(${Math.round(mobileColumns)},minmax(0,1fr))}}`);

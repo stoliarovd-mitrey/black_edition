@@ -152,8 +152,9 @@
       const count=document.createElement('span');count.className='structure-index';count.title='Перетащить блок за номер';count.draggable=true;count.textContent=String(index+1).padStart(2,'0');
       const button=document.createElement('button');button.className='structure-select';button.title=`Настроить блок: ${block.label}`;
       const label=document.createElement('span');label.className='structure-title';label.textContent=block.label;
-      const wire=document.createElement('span');wire.className=`wire ${block.type} ${config.variant||(block.reverse?'image-right':'image-left')}`;wire.setAttribute('aria-hidden','true');
-      const cells=block.type==='lineup'?Number(config.columns||3):1;
+      const poster=block.type==='lineup'&&block.element.classList.contains('lineup-poster');
+      const wire=document.createElement('span');wire.className=`wire ${block.type} ${poster?'poster':config.variant||(block.reverse?'image-right':'image-left')}`;wire.setAttribute('aria-hidden','true');
+      const cells=poster?6:block.type==='lineup'?Number(config.columns||3):1;
       for(let cell=0;cell<cells;cell++)wire.append(document.createElement('i'));wire.append(document.createElement('b'));
       const kind=document.createElement('small');kind.className='structure-kind';kind.textContent=config.hidden?'Блок скрыт':typeLabels[block.type];
       button.append(label,wire,kind);button.addEventListener('click',()=>selectLayout(block.id));row.append(count,button);
@@ -203,14 +204,15 @@
     else {
       const config=state.layout?.blocks?.[id]||{};
       $('layout-visible').checked=!config.hidden;
-      const options=block.type==='model'?[['','Исходное расположение'],['image-left','Фото слева, текст справа'],['image-right','Текст слева, фото справа'],['image-top','Фото над текстом'],['image-bottom','Текст над фото']]:[['','Исходное расположение'],['two-columns','Две колонки'],['stacked','Друг под другом']];
+      const options=block.type==='lineup'?[['poster','Постер с коллажем'],['catalog-grid','Обычная сетка']]:block.type==='model'?[['','Исходное расположение'],['image-left','Фото слева, текст справа'],['image-right','Текст слева, фото справа'],['image-top','Фото над текстом'],['image-bottom','Текст над фото']]:[['','Исходное расположение'],['two-columns','Две колонки'],['stacked','Друг под другом']];
       $('layout-variant').replaceChildren(...options.map(([value,label])=>{const option=document.createElement('option');option.value=value;option.textContent=label;return option;}));
-      $('variant-control').hidden=!['model','columns','details'].includes(block.type);
+      $('variant-control').hidden=!['model','columns','details','lineup'].includes(block.type);
       $('share-control').hidden=block.type!=='model'||['image-top','image-bottom'].includes(config.variant);
       $('ratio-control').hidden=block.type!=='model';
-      $('columns-control').hidden=!['lineup','details'].includes(block.type);
+      $('columns-control').hidden=block.type!=='details'&&(block.type!=='lineup'||block.element.classList.contains('lineup-poster'));
       $('height-control').hidden=!block.canHeight;
       for(const [input,key] of [['layout-variant','variant'],['layout-share','imageShare'],['layout-ratio','ratio'],['layout-columns','columns'],['layout-mobile-columns','mobileColumns'],['layout-height','height'],['layout-padding-top','paddingTop'],['layout-padding-bottom','paddingBottom'],['layout-gap','gap']])$(input).value=config[key]??'';
+      if(block.type==='lineup')$('layout-variant').value=block.element.classList.contains('lineup-poster')?'poster':'catalog-grid';
       const index=orderedBlocks().findIndex(item=>item.id===id);$('block-up').disabled=index===0;$('block-down').disabled=index===orderedBlocks().length-1;
     }
     updateStatus();
