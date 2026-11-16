@@ -7,8 +7,8 @@
   <meta name="referrer" content="same-origin">
   <title>Редактор Most Wanted · Caviar</title>
   <link rel="icon" href="../assets/caviar.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="editor.css?v=1">
-  <script defer src="editor.js?v=1"></script>
+  <link rel="stylesheet" href="editor.css?v=2-grid">
+  <script defer src="editor.js?v=2-grid"></script>
 </head>
 <body>
   <header class="topbar">
@@ -24,14 +24,16 @@
   </header>
   <main class="workspace">
     <aside class="library-panel" aria-label="Содержимое страницы">
-      <div class="panel-intro"><span class="overline">СТРАНИЦА</span><h2>Содержимое</h2><p>Выберите элемент здесь<br>или нажмите на него в макете.</p></div>
-      <label class="search"><span class="sr-only">Поиск по содержимому</span><input id="search" type="search" placeholder="Найти текст или модель"></label>
-      <div class="tabs" role="group" aria-label="Тип содержимого"><button class="active" data-filter="all">Всё</button><button data-filter="text">Текст</button><button data-filter="image">Фото</button><button data-filter="video">Видео</button></div>
+      <div class="mode-switch" role="group" aria-label="Режим редактора"><button class="active" data-mode="content">Контент</button><button data-mode="layout">Сетка</button></div>
+      <div class="panel-intro"><span class="overline">СТРАНИЦА</span><h2 id="sidebar-title">Содержимое</h2><p id="sidebar-description">Выберите элемент здесь<br>или нажмите на него в макете.</p></div>
+      <label class="search" id="content-search"><span class="sr-only">Поиск по содержимому</span><input id="search" type="search" placeholder="Найти текст или модель"></label>
+      <div class="tabs" id="content-tabs" role="group" aria-label="Тип содержимого"><button class="active" data-filter="all">Всё</button><button data-filter="text">Текст</button><button data-filter="image">Фото</button><button data-filter="video">Видео</button></div>
       <div id="field-list" class="field-list"><p class="empty">Загружаем содержимое…</p></div>
+      <div id="layout-list" class="layout-list" hidden></div>
       <div class="library-footer"><button id="import" class="text-button">Открыть черновик</button><button id="reset" class="text-button danger" disabled>Сбросить изменения</button><input id="import-file" type="file" accept="application/json,.json" hidden></div>
     </aside>
     <section class="preview-panel" aria-label="Предпросмотр посадочной">
-      <div class="preview-toolbar"><span><i></i> ПРЕДПРОСМОТР</span><div class="view-switch" role="group" aria-label="Размер экрана"><button class="active" data-width="desktop">Компьютер</button><button data-width="mobile">Телефон</button></div><a href="../" target="_blank" rel="noopener">Открыть сайт</a></div>
+      <div class="preview-toolbar"><span><i></i> ПРЕДПРОСМОТР</span><div class="view-switch" role="group" aria-label="Размер экрана"><button class="active" data-width="desktop">Компьютер</button><button data-width="mobile">Телефон</button></div><button id="toggle-guides" class="guide-toggle" aria-pressed="false">Направляющие</button><a href="../" target="_blank" rel="noopener">Открыть сайт</a></div>
       <div class="preview-stage"><div id="preview-shell" class="preview-shell"><iframe id="preview" src="../?editor=1" title="Редактируемая посадочная Most Wanted"></iframe></div></div>
       <div class="preview-footer"><span id="change-count">Изменений нет</span><span>Черновик виден только вам до публикации</span></div>
     </section>
@@ -50,6 +52,29 @@
           <p id="media-usage" class="usage"></p>
         </div>
         <button id="revert-field" class="text-button revert">Вернуть опубликованное значение</button>
+      </div>
+      <div id="layout-inspector" hidden>
+        <div class="inspector-heading"><span class="overline">СЕТКА ПОСАДОЧНОЙ</span><h2 id="layout-title">Общая сетка</h2><p id="layout-subtitle">Настройки ширины и расстояний.</p></div>
+        <div id="global-layout-controls">
+          <label for="layout-max-width">Максимальная ширина контента, px</label><input id="layout-max-width" type="number" min="800" max="2400" step="20" placeholder="Как в исходном дизайне">
+          <label for="layout-side">Поля по краям, px</label><input id="layout-side" type="number" min="12" max="160" step="4" placeholder="Как в исходном дизайне">
+          <label for="layout-global-gap">Расстояние между колонками, px</label><input id="layout-global-gap" type="number" min="8" max="160" step="4" placeholder="Как в исходном дизайне">
+          <label for="guide-columns">Колонки направляющих</label><select id="guide-columns"><option value="12">12 колонок</option><option value="6">6 колонок</option><option value="4">4 колонки</option></select>
+          <p class="hint">Направляющие видны только в редакторе. Колонки самого блока настраиваются отдельно.</p>
+        </div>
+        <div id="block-layout-controls" hidden>
+          <label class="visibility-control"><input id="layout-visible" type="checkbox" checked><span>Показывать блок на странице</span></label>
+          <div class="block-move"><button id="block-up">Выше</button><button id="block-down">Ниже</button></div>
+          <div id="variant-control"><label for="layout-variant">Расположение элементов</label><select id="layout-variant"></select></div>
+          <div id="share-control"><label for="layout-share">Доля изображения в строке, %</label><input id="layout-share" type="number" min="30" max="70" step="5" placeholder="По исходному дизайну"></div>
+          <div id="ratio-control"><label for="layout-ratio">Пропорции изображения</label><select id="layout-ratio"><option value="">Исходные</option><option value="1">Квадрат 1:1</option><option value="4/3">Горизонтальные 4:3</option><option value="3/4">Вертикальные 3:4</option><option value="16/9">Широкие 16:9</option></select></div>
+          <div id="columns-control"><label for="layout-columns">Колонки на компьютере</label><select id="layout-columns"><option value="">По исходному дизайну</option><option value="1">1 колонка</option><option value="2">2 колонки</option><option value="3">3 колонки</option><option value="4">4 колонки</option><option value="6">6 колонок</option></select><label for="layout-mobile-columns">Колонки на телефоне</label><select id="layout-mobile-columns"><option value="">По исходному дизайну</option><option value="1">1 колонка</option><option value="2">2 колонки</option></select></div>
+          <div id="height-control"><label for="layout-height">Высота блока, px</label><input id="layout-height" type="number" min="300" max="1200" step="20" placeholder="По исходному дизайну"></div>
+          <div class="number-pair"><div><label for="layout-padding-top">Отступ сверху, px</label><input id="layout-padding-top" type="number" min="0" max="240" step="4" placeholder="Исходный"></div><div><label for="layout-padding-bottom">Отступ снизу, px</label><input id="layout-padding-bottom" type="number" min="0" max="240" step="4" placeholder="Исходный"></div></div>
+          <label for="layout-gap">Расстояние внутри блока, px</label><input id="layout-gap" type="number" min="0" max="160" step="4" placeholder="По исходному дизайну">
+          <p class="hint">На телефоне фото и текст адаптируются в одну колонку. Порядок секций одинаков на всех экранах.</p>
+        </div>
+        <button id="revert-layout" class="text-button revert">Вернуть опубликованные настройки</button>
       </div>
       <div class="inspector-note"><span>ВАШ ЧЕРНОВИК</span><p>Сохраняется в этом браузере. Скачайте копию, чтобы перенести её на другой компьютер.</p></div>
     </aside>

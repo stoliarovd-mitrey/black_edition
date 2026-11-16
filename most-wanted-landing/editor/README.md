@@ -10,4 +10,8 @@ The public editor itself has no write credentials. Opening it does not grant rep
 
 `content.js` discovers fields from the source HTML before applying overrides from `content.json`. Text IDs follow original text-node order, and media IDs follow original asset discovery order. Keep this order stable when changing the source structure, or migrate the overrides as part of a structural edit. Font or CSS changes do not change field IDs.
 
-The four display headings use the supplied Grand Theft Auto font. Model names, navigation, paragraphs and buttons retain Nunito Sans.
+Only the hero MOST WANTED heading uses the supplied Grand Theft Auto font. All other headings, model names, navigation, paragraphs and buttons retain Nunito Sans.
+
+## Layout editing
+
+The Layout (Сетка) mode shows every main section in document order. Drag a block before another or use Выше / Ниже. Configure visibility, image/text placement, column count, image aspect ratio, desktop width and padding. Mobile layouts remain stacked, with separately configurable catalog columns. Guides are editor-only. Layout settings live under `layout` in the same content revision and are included in browser drafts, backups, HTML export and GitHub publishing. Empty settings preserve the original design. Content fields are discovered before reordering to preserve their IDs.

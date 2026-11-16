@@ -19,6 +19,6 @@ dialog{border:0;padding:0;color:var(--ink);background:var(--paper);max-height:90
 
 .icon{display:inline-block;width:18px;height:18px;vertical-align:middle;flex-shrink:0}.motion-icon{width:14px;height:14px;display:block;margin:auto}
 
-/* Display font is limited to the hero and three chapter headings. */
-.hero h1,.chapter>h2{font-family:'Grand Theft Auto','Nunito Sans',sans-serif;font-weight:400;letter-spacing:0;line-height:1.04}
+/* The custom display font is limited to the hero title. */
+.hero h1{font-family:'Grand Theft Auto','Nunito Sans',sans-serif;font-weight:400;letter-spacing:0;line-height:1.04}
 .hero h1{font-size:clamp(46px,18vw,320px)}

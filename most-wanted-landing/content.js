@@ -91,6 +91,7 @@
   }).then(data => {
     if (data.version === 1 && data.overrides && typeof data.overrides === 'object') current = data;
     apply(current.overrides);
+    window.CaviarLayout?.apply(current.layout || {});
   }).catch(error => { console.warn('Caviar content:', error.message); });
   window.CaviarContent = {fields, apply, ready, baseURL: baseURL.href, get document() { return current; }, get overrides() { return applied; }};
   if (editorMode) {
@@ -101,6 +102,12 @@
     document.head.append(style);
     document.addEventListener('click', event => {
       if (!(event.target instanceof Element)) return;
+      if (document.documentElement.dataset.editorMode === 'layout') {
+        const block = event.target.closest('[data-layout-id]');
+        event.preventDefault(); event.stopImmediatePropagation();
+        if (block) parent.postMessage({type:'caviar-select-block', id:block.dataset.layoutId}, location.origin);
+        return;
+      }
       const candidates = fields.filter(f => f.element === event.target || f.element.contains(event.target));
       const field = candidates.find(f => f.kind === 'image' && event.target.closest('img')) || candidates.find(f => f.kind === 'text') || candidates[0];
       event.preventDefault(); event.stopImmediatePropagation();

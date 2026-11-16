@@ -9,6 +9,7 @@
   let cms, fields = [], published, state, activeID, filter = 'all', busy = false, database;
   let history = [], files = new Map(), blobURLs = new Map(), saveTimer, toastTimer, lastEdit = 0, lastField = '';
   let saveQueue = Promise.resolve(), ready = false, initializing = false;
+  let layoutAPI, mode = 'content', layoutID = 'global', guidesVisible = false, draggedID = null;
   function toast(message) { $('toast').textContent = message; $('toast').hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => $('toast').hidden = true, 4500); }
   function fail(error) { console.error(error); toast(error.message || 'Не удалось выполнить действие. Черновик сохранён.'); }
   function openDB() {
@@ -45,7 +46,12 @@
   }
   function scheduleSave() { $('save-status').textContent = 'Сохраняем черновик…'; clearTimeout(saveTimer); saveTimer = setTimeout(saveDraft, 350); }
   function changedIDs() {
-    return [...new Set([...Object.keys(state.overrides), ...Object.keys(published.overrides)])].filter(id => JSON.stringify(state.overrides[id] || {}) !== JSON.stringify(published.overrides[id] || {}));
+    const changed = [...new Set([...Object.keys(state.overrides), ...Object.keys(published.overrides)])].filter(id => JSON.stringify(state.overrides[id] || {}) !== JSON.stringify(published.overrides[id] || {}));
+    const current = state.layout || {}, before = published.layout || {};
+    if (JSON.stringify(current.global || {}) !== JSON.stringify(before.global || {})) changed.push('layout:global');
+    if (JSON.stringify(current.order || []) !== JSON.stringify(before.order || [])) changed.push('layout:order');
+    for (const id of new Set([...Object.keys(current.blocks || {}), ...Object.keys(before.blocks || {})])) if (JSON.stringify(current.blocks?.[id] || {}) !== JSON.stringify(before.blocks?.[id] || {})) changed.push(`layout:${id}`);
+    return changed;
   }
   function previewOverrides() {
     const overrides = clone(state.overrides);
@@ -55,7 +61,7 @@
     }
     return overrides;
   }
-  function applyPreview() { cms.apply(previewOverrides()); updateStatus(); }
+  function applyPreview() { cms.apply(previewOverrides()); layoutAPI?.apply(state.layout || {}); updateStatus(); }
   function updateStatus() {
     const changes = changedIDs();
     $('change-count').textContent = changes.length ? `Изменено элементов: ${changes.length}` : 'Изменений нет';
@@ -66,6 +72,8 @@
       button.classList.toggle('active', button.dataset.id === activeID);
       button.querySelector('.changed').hidden = !changes.includes(button.dataset.id);
     });
+    document.querySelectorAll('.structure-row').forEach(row => row.classList.toggle('active',mode==='layout'&&row.dataset.block===layoutID));
+    document.querySelector('.layout-global')?.classList.toggle('active',mode==='layout'&&layoutID==='global');
   }
   function checkpoint() {
     const now = Date.now();
@@ -106,6 +114,7 @@
     updateStatus();
   }
   function select(id, scroll = true) {
+    if(mode!=='content')return;
     const field = fields.find(item => item.id === id); if (!field || busy) return;
     activeID = id; lastField = '';
     const doc = $('preview').contentDocument;
@@ -125,6 +134,87 @@
     else renderMedia(field);
     updateStatus();
   }
+  const typeLabels={hero:'Первый экран',model:'Модель · фото и текст',lineup:'Каталог моделей',details:'Детали коллекции',columns:'Текстовые колонки',nav:'Навигация',media:'Медиа',chapter:'Заголовок раздела'};
+  function orderedBlocks() {
+    const source = Array.isArray(state.layout?.order)?state.layout.order:[];
+    const ids = [...new Set([...source,...layoutAPI.blocks.map(block=>block.id)])];
+    return ids.map(id=>layoutAPI.blocks.find(block=>block.id===id)).filter(Boolean);
+  }
+  function renderStructure() {
+    if(!layoutAPI)return;
+    const list=$('layout-list');list.replaceChildren();
+    const global=document.createElement('button');global.className='layout-global';global.textContent='Общая сетка';
+    const note=document.createElement('small');note.textContent='Ширина, поля и направляющие';global.append(note);global.addEventListener('click',()=>selectLayout('global'));list.append(global);
+    orderedBlocks().forEach((block,index)=>{
+      const config=state.layout?.blocks?.[block.id]||{};
+      const row=document.createElement('div');row.className='structure-row';row.dataset.block=block.id;row.draggable=true;row.classList.toggle('is-hidden',config.hidden===true);
+      const count=document.createElement('span');count.className='structure-index';count.title='Перетащить блок за номер';count.draggable=true;count.textContent=String(index+1).padStart(2,'0');
+      const button=document.createElement('button');button.className='structure-select';button.title=`Настроить блок: ${block.label}`;
+      const label=document.createElement('span');label.className='structure-title';label.textContent=block.label;
+      const wire=document.createElement('span');wire.className=`wire ${block.type} ${config.variant||(block.reverse?'image-right':'image-left')}`;wire.setAttribute('aria-hidden','true');
+      const cells=block.type==='lineup'?Number(config.columns||3):1;
+      for(let cell=0;cell<cells;cell++)wire.append(document.createElement('i'));wire.append(document.createElement('b'));
+      const kind=document.createElement('small');kind.className='structure-kind';kind.textContent=config.hidden?'Блок скрыт':typeLabels[block.type];
+      button.append(label,wire,kind);button.addEventListener('click',()=>selectLayout(block.id));row.append(count,button);
+      row.addEventListener('dragstart',event=>{if(busy){event.preventDefault();return;}draggedID=block.id;event.dataTransfer.setData('text/plain',block.id);event.dataTransfer.effectAllowed='move';row.classList.add('dragging');});
+      row.addEventListener('dragend',()=>{draggedID=null;document.querySelectorAll('.structure-row').forEach(el=>el.classList.remove('dragging','drop-target'));});
+      row.addEventListener('dragover',event=>{if(draggedID&&draggedID!==block.id){event.preventDefault();row.classList.add('drop-target');}});
+      row.addEventListener('dragleave',()=>row.classList.remove('drop-target'));
+      row.addEventListener('drop',event=>{event.preventDefault();row.classList.remove('drop-target');if(!draggedID||draggedID===block.id)return;const ids=orderedBlocks().map(item=>item.id).filter(id=>id!==draggedID);ids.splice(ids.indexOf(block.id),0,draggedID);layoutChange(layout=>layout.order=normalizeOrder(ids),true);});
+      list.append(row);
+    });
+    updateStatus();
+  }
+  function normalizeOrder(ids) { return ids.every((id,index)=>id===layoutAPI.blocks[index]?.id)?[]:ids; }
+  function setMode(next) {
+    mode=next;
+    document.querySelectorAll('[data-mode]').forEach(button=>button.classList.toggle('active',button.dataset.mode===mode));
+    for(const id of ['content-search','content-tabs','field-list'])$(id).hidden=mode!=='content';
+    $('layout-list').hidden=mode!=='layout';
+    $('sidebar-title').textContent=mode==='layout'?'Сетка посадочной':'Содержимое';
+    $('sidebar-description').textContent=mode==='layout'?'Перетаскивайте блоки за номер или выберите блок для настройки.':'Выберите элемент здесь или нажмите на него в макете.';
+    if(!ready)return;
+    $('preview').contentDocument.documentElement.dataset.editorMode=mode;
+    $('layout-inspector').hidden=mode!=='layout';
+    $('inspector-content').hidden=mode!=='content'||!activeID;
+    $('inspector-empty').hidden=mode==='layout'||!!activeID;
+    if(mode==='layout'){renderStructure();selectLayout(layoutID,false);}else if(activeID)select(activeID,false);
+  }
+  function refreshInspector(){if(mode==='layout'){renderStructure();selectLayout(layoutID,false);}else if(activeID)select(activeID,false);}
+  function layoutChange(mutate,force=false) {
+    if(busy||!ready)return;
+    const now=Date.now(),key=`layout:${layoutID}`;
+    if(force||now-lastEdit>700||lastField!==key){history.push(clone(state));if(history.length>60)history.shift();}
+    lastEdit=now;lastField=key;
+    state.layout ||= {};mutate(state.layout);
+    applyPreview();renderStructure();scheduleSave();
+  }
+  function selectLayout(id,scroll=true) {
+    if(mode!=='layout'||!layoutAPI||busy)return;
+    const block=layoutAPI.blocks.find(item=>item.id===id);if(id!=='global'&&!block)return;
+    layoutID=id;
+    $('preview').contentDocument.querySelectorAll('[data-editor-selected]').forEach(el=>el.removeAttribute('data-editor-selected'));
+    if(block){block.element.dataset.editorSelected='true';if(scroll)block.element.scrollIntoView({block:'start',behavior:'smooth'});}
+    $('layout-title').textContent=block?block.label:'Общая сетка';
+    $('layout-subtitle').textContent=block?typeLabels[block.type]:'Настройки всей посадочной. На телефоне поля адаптируются.';
+    $('global-layout-controls').hidden=!!block;$('block-layout-controls').hidden=!block;
+    if(!block){const config=state.layout?.global||{};for(const [id,key] of [['layout-max-width','maxWidth'],['layout-side','side'],['layout-global-gap','gap']])$(id).value=config[key]??'';}
+    else {
+      const config=state.layout?.blocks?.[id]||{};
+      $('layout-visible').checked=!config.hidden;
+      const options=block.type==='model'?[['','Исходное расположение'],['image-left','Фото слева, текст справа'],['image-right','Текст слева, фото справа'],['image-top','Фото над текстом'],['image-bottom','Текст над фото']]:[['','Исходное расположение'],['two-columns','Две колонки'],['stacked','Друг под другом']];
+      $('layout-variant').replaceChildren(...options.map(([value,label])=>{const option=document.createElement('option');option.value=value;option.textContent=label;return option;}));
+      $('variant-control').hidden=!['model','columns','details'].includes(block.type);
+      $('share-control').hidden=block.type!=='model'||['image-top','image-bottom'].includes(config.variant);
+      $('ratio-control').hidden=block.type!=='model';
+      $('columns-control').hidden=!['lineup','details'].includes(block.type);
+      $('height-control').hidden=!block.canHeight;
+      for(const [input,key] of [['layout-variant','variant'],['layout-share','imageShare'],['layout-ratio','ratio'],['layout-columns','columns'],['layout-mobile-columns','mobileColumns'],['layout-height','height'],['layout-padding-top','paddingTop'],['layout-padding-bottom','paddingBottom'],['layout-gap','gap']])$(input).value=config[key]??'';
+      const index=orderedBlocks().findIndex(item=>item.id===id);$('block-up').disabled=index===0;$('block-down').disabled=index===orderedBlocks().length-1;
+    }
+    updateStatus();
+  }
+  function moveBlock(step){const ids=orderedBlocks().map(block=>block.id),index=ids.indexOf(layoutID),next=index+step;if(index<0||next<0||next>=ids.length)return;[ids[index],ids[next]]=[ids[next],ids[index]];layoutChange(layout=>layout.order=normalizeOrder(ids),true);selectLayout(layoutID,false);}
   function renderMedia(field) {
     const change = state.overrides[field.id] || {};
     const path = change.url || field.original;
@@ -194,14 +284,15 @@
         if (blob.size > 45 * 1048576) throw new Error('Файл в черновике превышает 45 МБ.');
         importedFiles.set(item.path, {name:item.name, type:blob.type, blob});
       }
-      history.push(clone(state)); state = clone(data.state); files = new Map([...files, ...importedFiles]); applyPreview(); renderList(); if(activeID) select(activeID,false); await saveDraft(); toast('Черновик открыт');
+      history.push(clone(state)); state = clone(data.state); files = new Map([...files, ...importedFiles]); applyPreview(); renderList(); refreshInspector(); await saveDraft(); toast('Черновик открыт');
     } catch (error) { fail(error); }
     finally { $('import-file').value = ''; }
   }
   async function exportHTML() {
     const doc = $('preview').contentDocument.cloneNode(true);
-    doc.querySelectorAll('[data-editor-only],script[src*="content.js"],base').forEach(el => el.remove());
+    doc.querySelectorAll('[data-editor-only],script[src*="content.js"],script[src*="layout.js"],base').forEach(el => el.remove());
     doc.documentElement.classList.remove('caviar-editor-preview');
+    delete doc.documentElement.dataset.editorMode;
     doc.querySelectorAll('[data-editor-selected]').forEach(el => el.removeAttribute('data-editor-selected'));
     doc.querySelectorAll('dialog[open]').forEach(el => el.removeAttribute('open'));
     const base = doc.createElement('base'); base.href = landingURL.href; doc.head.prepend(base);
@@ -239,7 +330,7 @@
         const blob = await api('git/blobs','POST',{encoding:'base64',content:(await toDataURL(file.blob)).split(',')[1]});
         entries.push({path:folder+path,mode:'100644',type:'blob',sha:blob.sha});
       }
-      const next = {version:1,revision:crypto.randomUUID(),updatedAt:new Date().toISOString(),overrides:clone(state.overrides)};
+      const next = {version:1,revision:crypto.randomUUID(),updatedAt:new Date().toISOString(),overrides:clone(state.overrides),layout:clone(state.layout || {})};
       entries.push({path:folder+'content.json',mode:'100644',type:'blob',content:JSON.stringify(next,null,2)+'\n'});
       progress('Сохраняем изменения в репозитории…');
       const tree = await api('git/trees','POST',{base_tree:commit.tree.sha,tree:entries});
@@ -249,7 +340,7 @@
       await api('git/refs/heads/main','PATCH',{sha:saved.sha,force:false});
       published = clone(next); state = clone(next); history = [];
       // Keep uploaded Blobs in the local draft until GitHub Pages deploys their paths.
-      await saveDraft(); renderList(); updateStatus();
+      await saveDraft(); renderList(); renderStructure(); updateStatus();
       progress('Изменения сохранены на GitHub. Посадочная обновится после сборки Pages, обычно через 1–2 минуты.');
       $('deployment-link').hidden = false; toast('Изменения отправлены на публикацию');
     } catch (error) { progress(error.message); await saveDraft(); }
@@ -260,6 +351,7 @@
     initializing = true;
     try {
       cms = $('preview').contentWindow.CaviarContent;
+      layoutAPI = $('preview').contentWindow.CaviarLayout;
       if (!cms) throw new Error('Не удалось загрузить посадочную. Обновите редактор.');
       await cms.ready;
       ready = true; fields = cms.fields; published = clone(cms.document); state = clone(published);
@@ -268,28 +360,38 @@
         if (draft?.state?.overrides) {
           files = new Map(draft.files || []);
           if (draft.baseRevision === published.revision) state = draft.state;
-          else if (JSON.stringify(draft.state.overrides) !== JSON.stringify(published.overrides)) {
-            if (await confirmAction('Найдён старый черновик', 'Опубликованная страница уже обновилась. Восстановить ваш черновик поверх неё? Можно отменить и загрузить опубликованную версию.')) state = {...clone(published), overrides:clone(draft.state.overrides)};
+          else if (JSON.stringify(draft.state.overrides) !== JSON.stringify(published.overrides) || JSON.stringify(draft.state.layout || {}) !== JSON.stringify(published.layout || {})) {
+            if (await confirmAction('Найдён старый черновик', 'Опубликованная страница уже обновилась. Восстановить ваш черновик поверх неё? Можно отменить и загрузить опубликованную версию.')) state = {...clone(published), overrides:clone(draft.state.overrides),layout:clone(draft.state.layout || {})};
           }
         }
         $('save-status').textContent = 'Черновик сохранён в браузере';
       } catch { $('save-status').textContent = 'Скачайте копию черновика'; toast('Автосохранение недоступно. Скачивайте черновик перед закрытием.'); }
-      applyPreview(); renderList();
+      applyPreview(); renderList(); renderStructure();
       $('backup').disabled = false; $('download-html').disabled = false;
       const first = fields.find(field => field.element.closest('h1')); if (first) select(first.id,false);
+      setMode(mode);
     } catch (error) { $('save-status').textContent = 'Не удалось загрузить страницу'; fail(error); }
     finally { initializing = false; }
   }
+  function resizePreview(){
+    const shell=$('preview-shell'),frame=$('preview');
+    if(shell.classList.contains('mobile')){frame.style.width='100%';frame.style.height='100%';frame.style.transform='none';return;}
+    const width=Math.max(1280,shell.clientWidth),scale=shell.clientWidth/width;
+    if(!scale)return;frame.style.width=width+'px';frame.style.height=Math.ceil(shell.clientHeight/scale)+'px';frame.style.transform=`scale(${scale})`;frame.style.transformOrigin='top left';
+  }
+  new ResizeObserver(resizePreview).observe($('preview-shell'));
+  resizePreview();
   $('preview').addEventListener('load',init);
   if ($('preview').contentWindow?.CaviarContent) init();
   window.addEventListener('message',event => {
     if (event.origin !== location.origin || event.source !== $('preview').contentWindow) return;
     if (event.data?.type === 'caviar-select') select(event.data.id,false);
+    if (event.data?.type === 'caviar-select-block') { if(mode!=='layout')setMode('layout'); selectLayout(event.data.id,false); }
     if (event.data?.type === 'caviar-ready') init();
   });
   $('search').addEventListener('input', () => ready && renderList());
   document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>{filter=button.dataset.filter;document.querySelectorAll('[data-filter]').forEach(el=>el.classList.toggle('active',el===button));if(ready)renderList();}));
-  document.querySelectorAll('[data-width]').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('[data-width]').forEach(el=>el.classList.toggle('active',el===button));$('preview-shell').classList.toggle('mobile',button.dataset.width==='mobile');}));
+  document.querySelectorAll('[data-width]').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('[data-width]').forEach(el=>el.classList.toggle('active',el===button));$('preview-shell').classList.toggle('mobile',button.dataset.width==='mobile');resizePreview();}));
   $('text-value').addEventListener('input',()=>changeField({text:$('text-value').value}));
   $('media-alt').addEventListener('input',()=>changeField({alt:$('media-alt').value}));
   $('media-file').addEventListener('change',()=>upload($('media-file').files[0]).catch(fail));
@@ -302,9 +404,9 @@
     catch { return toast('Укажите полный адрес файла, начиная с https://'); }
     changeField({url});renderMedia(fields.find(field=>field.id===activeID));
   });
-  $('undo').addEventListener('click',()=>{if(busy||!history.length)return;state=history.pop();lastField='';applyPreview();renderList();if(activeID)select(activeID,false);scheduleSave();});
+  $('undo').addEventListener('click',()=>{if(busy||!history.length)return;state=history.pop();lastField='';applyPreview();renderList();refreshInspector();scheduleSave();});
   $('revert-field').addEventListener('click',()=>{if(busy)return;lastField='';checkpoint();if(published.overrides[activeID])state.overrides[activeID]=clone(published.overrides[activeID]);else delete state.overrides[activeID];applyPreview();renderList();select(activeID,false);scheduleSave();});
-  $('reset').addEventListener('click',async()=>{if(busy||!await confirmAction('Сбросить изменения?', 'Черновик вернётся к опубликованной версии. Вы сможете отменить сброс кнопкой «Отменить».'))return;history.push(clone(state));state=clone(published);applyPreview();renderList();if(activeID)select(activeID,false);await saveDraft();});
+  $('reset').addEventListener('click',async()=>{if(busy||!await confirmAction('Сбросить изменения?', 'Черновик вернётся к опубликованной версии. Вы сможете отменить сброс кнопкой «Отменить».'))return;history.push(clone(state));state=clone(published);applyPreview();renderList();refreshInspector();await saveDraft();});
   $('backup').addEventListener('click',()=>backup().catch(fail));
   $('download-html').addEventListener('click',()=>exportHTML().catch(fail));
   $('import').addEventListener('click',()=>ready&&$('import-file').click());
@@ -313,6 +415,26 @@
   $('publish-dialog').addEventListener('cancel',event=>{if(busy)event.preventDefault();else $('github-token').value='';});
   $('publish-dialog').querySelector('form').addEventListener('submit',event=>{if(busy)event.preventDefault();else $('github-token').value='';});
   $('confirm-publish').addEventListener('click',publish);
+  document.querySelectorAll('[data-mode]').forEach(button=>button.addEventListener('click',()=>setMode(button.dataset.mode)));
+  $('toggle-guides').addEventListener('click',()=>{guidesVisible=!guidesVisible;$('toggle-guides').setAttribute('aria-pressed',String(guidesVisible));layoutAPI?.setGuides({visible:guidesVisible,columns:Number($('guide-columns').value)});});
+  $('guide-columns').addEventListener('change',()=>{guidesVisible=true;$('toggle-guides').setAttribute('aria-pressed','true');layoutAPI?.setGuides({visible:true,columns:Number($('guide-columns').value)});});
+  const inputs=[['layout-max-width','maxWidth',true],['layout-side','side',true],['layout-global-gap','gap',true],['layout-variant','variant'],['layout-share','imageShare'],['layout-ratio','ratio'],['layout-columns','columns'],['layout-mobile-columns','mobileColumns'],['layout-height','height'],['layout-padding-top','paddingTop'],['layout-padding-bottom','paddingBottom'],['layout-gap','gap']];
+  for(const [id,key,global] of inputs)$(id).addEventListener($(id).type==='number'?'input':'change',()=>{
+    const input=$(id);
+    if(input.type==='number'&&input.value!==''&&(!Number.isFinite(Number(input.value))||Number(input.value)<Number(input.min)||Number(input.value)>Number(input.max)))return;
+    layoutChange(layout=>{
+      let config;
+      if(global)config=(layout.global ||= {});else config=((layout.blocks ||= {})[layoutID] ||= {});
+      if(input.value==='')delete config[key];else config[key]=input.type==='number'||['columns','mobileColumns'].includes(key)?Number(input.value):input.value;
+    });
+    if(!global)selectLayout(layoutID,false);
+  });
+  $('layout-visible').addEventListener('change',()=>{layoutChange(layout=>{const config=((layout.blocks ||= {})[layoutID] ||= {});if($('layout-visible').checked)delete config.hidden;else config.hidden=true;});selectLayout(layoutID,false);});
+  $('block-up').addEventListener('click',()=>moveBlock(-1));$('block-down').addEventListener('click',()=>moveBlock(1));
+  $('revert-layout').addEventListener('click',()=>{
+    layoutChange(layout=>{if(layoutID==='global')layout.global=clone(published.layout?.global || {});else{layout.blocks ||= {};if(published.layout?.blocks?.[layoutID])layout.blocks[layoutID]=clone(published.layout.blocks[layoutID]);else delete layout.blocks[layoutID];}},true);
+    selectLayout(layoutID,false);
+  });
   window.addEventListener('pagehide',()=>{if(ready)saveDraft();});
   window.addEventListener('beforeunload',event=>{if(busy){event.preventDefault();event.returnValue='';}});
 })();
