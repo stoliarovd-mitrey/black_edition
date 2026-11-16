@@ -68,6 +68,7 @@
     $('publish').disabled = busy || !changes.length;
     $('reset').disabled = busy || !changes.length;
     $('undo').disabled = busy || !history.length;
+    $('confirm-publish').disabled = busy || !changes.length;
     document.querySelectorAll('.field-item').forEach(button => {
       button.classList.toggle('active', button.dataset.id === activeID);
       button.querySelector('.changed').hidden = !changes.includes(button.dataset.id);
@@ -302,20 +303,29 @@
     download(new Blob(['<!doctype html>\n'+doc.documentElement.outerHTML],{type:'text/html;charset=utf-8'}),'most-wanted-edited.html');
     toast('HTML скачан. Исходные медиа и оформление загружаются с опубликованного сайта.');
   }
+  async function checkToken() {
+    if(busy)return;
+    let client;
+    try {client=window.CaviarGitHub.createClient($('github-token').value,repo);}
+    catch(error){$('token-status').textContent=error.message;$('github-token').focus();return;}
+    busy=true;updateStatus();$('check-token').disabled=true;$('github-token').readOnly=true;
+    $('token-status').textContent='Проверяем токен и разрешение на запись…';
+    try {await client.probe();$('token-status').textContent='Токен принят. Доступ к записи в stoliarovd-mitrey/black_edition подтверждён. Страница не изменена.';}
+    catch(error){$('token-status').textContent=error.message;}
+    finally{busy=false;$('check-token').disabled=false;$('github-token').readOnly=false;updateStatus();}
+  }
   async function publish() {
-    const token = $('github-token').value.trim(); if (!token) { $('github-token').focus(); return toast('Вставьте GitHub-токен для публикации.'); }
-    busy = true; updateStatus(); $('confirm-publish').disabled = true; $('deployment-link').hidden = true;
+    let client;
+    try { client = window.CaviarGitHub.createClient($('github-token').value,repo); }
+    catch(error) { $('publish-progress').textContent=error.message; $('github-token').focus(); return; }
+    if(!changedIDs().length) return toast('Сначала измените текст, медиа или сетку.');
+    busy = true; updateStatus(); $('confirm-publish').disabled = true; $('check-token').disabled = true; $('github-token').readOnly = true; $('deployment-link').hidden = true;
     const progress = message => $('publish-progress').textContent = message;
-    const api = async (path, method='GET', body) => {
-      const response = await fetch(`https://api.github.com/repos/${repo}/${path}`, {method,headers:{Authorization:`Bearer ${token}`,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28',...(body?{'Content-Type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{})});
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) {
-        if ([401,403,404].includes(response.status)) throw new Error('GitHub не разрешил запись. Проверьте токен, репозиторий black_edition и разрешение Contents: Read and write.');
-        throw new Error(`GitHub: ${data.message || response.status}. Черновик сохранён.`);
-      }
-      return data;
-    };
+    const {api} = client;
     try {
+      progress('Проверяем токен и доступ к записи…');
+      await client.probe();
+      $('token-status').textContent='Токен принят. Доступ к записи в black_edition подтверждён.';
       progress('Проверяем актуальную версию страницы…');
       const branch = await api('git/ref/heads/main');
       const head = branch.object.sha;
@@ -339,12 +349,13 @@
       if (fresh.object.sha !== head) throw new Error('Во время публикации репозиторий обновился. Нажмите «Сохранить на GitHub» ещё раз. Черновик сохранён.');
       await api('git/refs/heads/main','PATCH',{sha:saved.sha,force:false});
       published = clone(next); state = clone(next); history = [];
+      $('github-token').value = '';
       // Keep uploaded Blobs in the local draft until GitHub Pages deploys their paths.
       await saveDraft(); renderList(); renderStructure(); updateStatus();
       progress('Изменения сохранены на GitHub. Посадочная обновится после сборки Pages, обычно через 1–2 минуты.');
       $('deployment-link').hidden = false; toast('Изменения отправлены на публикацию');
     } catch (error) { progress(error.message); await saveDraft(); }
-    finally { busy = false; $('github-token').value = ''; $('confirm-publish').disabled = false; updateStatus(); }
+    finally { busy = false; $('check-token').disabled = false; $('github-token').readOnly = false; updateStatus(); }
   }
   async function init() {
     if (ready || initializing) return;
@@ -415,6 +426,9 @@
   $('publish-dialog').addEventListener('cancel',event=>{if(busy)event.preventDefault();else $('github-token').value='';});
   $('publish-dialog').querySelector('form').addEventListener('submit',event=>{if(busy)event.preventDefault();else $('github-token').value='';});
   $('confirm-publish').addEventListener('click',publish);
+  $('check-token').addEventListener('click',checkToken);
+  $('github-token').addEventListener('input',()=>{$('token-status').textContent='';});
+  $('github-access').addEventListener('click',()=>{if(!ready)return;$('publish-summary').textContent='Проверка доступа не публикует ваши изменения.';$('publish-progress').textContent='';$('publish-dialog').showModal();updateStatus();});
   document.querySelectorAll('[data-mode]').forEach(button=>button.addEventListener('click',()=>setMode(button.dataset.mode)));
   $('toggle-guides').addEventListener('click',()=>{guidesVisible=!guidesVisible;$('toggle-guides').setAttribute('aria-pressed',String(guidesVisible));layoutAPI?.setGuides({visible:guidesVisible,columns:Number($('guide-columns').value)});});
   $('guide-columns').addEventListener('change',()=>{guidesVisible=true;$('toggle-guides').setAttribute('aria-pressed','true');layoutAPI?.setGuides({visible:true,columns:Number($('guide-columns').value)});});

@@ -8,7 +8,8 @@
   <title>Редактор Most Wanted · Caviar</title>
   <link rel="icon" href="../assets/caviar.svg" type="image/svg+xml">
   <link rel="stylesheet" href="editor.css?v=2-grid">
-  <script defer src="editor.js?v=2-grid"></script>
+  <script defer src="github-client.js?v=1"></script>
+  <script defer src="editor.js?v=3-token-check"></script>
 </head>
 <body>
   <header class="topbar">
@@ -30,7 +31,7 @@
       <div class="tabs" id="content-tabs" role="group" aria-label="Тип содержимого"><button class="active" data-filter="all">Всё</button><button data-filter="text">Текст</button><button data-filter="image">Фото</button><button data-filter="video">Видео</button></div>
       <div id="field-list" class="field-list"><p class="empty">Загружаем содержимое…</p></div>
       <div id="layout-list" class="layout-list" hidden></div>
-      <div class="library-footer"><button id="import" class="text-button">Открыть черновик</button><button id="reset" class="text-button danger" disabled>Сбросить изменения</button><input id="import-file" type="file" accept="application/json,.json" hidden></div>
+      <div class="library-footer"><button id="import" class="text-button">Открыть черновик</button><button id="github-access" class="text-button">Проверить доступ GitHub</button><button id="reset" class="text-button danger" disabled>Сбросить изменения</button><input id="import-file" type="file" accept="application/json,.json" hidden></div>
     </aside>
     <section class="preview-panel" aria-label="Предпросмотр посадочной">
       <div class="preview-toolbar"><span><i></i> ПРЕДПРОСМОТР</span><div class="view-switch" role="group" aria-label="Размер экрана"><button class="active" data-width="desktop">Компьютер</button><button data-width="mobile">Телефон</button></div><button id="toggle-guides" class="guide-toggle" aria-pressed="false">Направляющие</button><a href="../" target="_blank" rel="noopener">Открыть сайт</a></div>
@@ -84,8 +85,9 @@
     <form method="dialog"><button class="close" aria-label="Закрыть">×</button></form>
     <span class="overline">GITHUB PAGES</span><h2>Опубликовать изменения</h2><p>Тексты и медиа будут сохранены в <strong>stoliarovd-mitrey / black_edition</strong>. GitHub обновит посадочную после завершения сборки.</p>
     <label for="github-token">Личный GitHub-токен</label><input id="github-token" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…">
-    <p class="hint">Токен используется только для этой публикации и не сохраняется в черновике или файлах сайта.</p>
-    <details><summary>Как создать токен</summary><p>Откройте <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">Fine-grained personal access token</a>. Выберите только репозиторий <strong>black_edition</strong> и разрешение <strong>Contents: Read and write</strong>. Скопируйте токен сюда.</p></details>
+    <p class="hint">Нужен отдельный личный токен. Подключение GitHub в ChatGPT сюда не переносится. Токен остаётся только в открытом окне и не записывается в черновик или файлы.</p>
+    <button id="check-token" class="quiet wide">Проверить токен и доступ к записи</button><p id="token-status" class="hint" role="status"></p>
+    <details><summary>Как создать токен</summary><p>Откройте <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">Fine-grained personal access token</a>. Укажите <strong>Resource owner: stoliarovd-mitrey</strong>, выберите <strong>Only select repositories → black_edition</strong> и разрешение <strong>Repository permissions → Contents: Read and write</strong>. Скопируйте токен сюда целиком. Проверка доступа не публикует изменения страницы.</p></details>
     <div class="publish-summary" id="publish-summary"></div>
     <button id="confirm-publish" class="primary wide">Сохранить на GitHub</button><p id="publish-progress" class="hint" role="status"></p>
     <a id="deployment-link" href="https://github.com/stoliarovd-mitrey/black_edition/actions" target="_blank" rel="noopener" hidden>Проверить публикацию на GitHub</a>
