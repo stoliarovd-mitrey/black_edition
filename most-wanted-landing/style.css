@@ -1,3 +1,4 @@
+@font-face{font-family:'Grand Theft Auto';src:url('assets/grand-theft-auto.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap}
 @font-face{font-family:'Nunito Sans';src:url('assets/NunitoSans.ttf') format('truetype');font-style:normal;font-weight:200 900;font-display:swap}
 :root{--ink:#151722;--paper:#f7f5f2;--sand:#ece5da;--pink:#edb6cb;--cyan:#8acacc;--side:clamp(24px,7.2vw,140px)}
 *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:82px}body{margin:0;background:var(--paper);color:var(--ink);font-family:'Nunito Sans',Arial,sans-serif;-webkit-font-smoothing:antialiased}button,a{-webkit-tap-highlight-color:transparent}button{font:inherit;cursor:pointer}a{color:inherit;text-decoration:underline;text-underline-offset:.22em;text-decoration-thickness:1px}.brand{text-decoration:none}button{color:inherit}img{display:block;max-width:100%}p,h1,h2,h3,figure{margin:0}p{font-size:17px;line-height:1.6}h2{font-size:clamp(36px,3.7vw,60px);font-weight:650;line-height:1.08;letter-spacing:-.045em}button:focus-visible,a:focus-visible{outline:3px solid #b06e91;outline-offset:6px}.section-pad{padding:80px var(--side)}.eyebrow{font-size:11px;font-weight:750;line-height:1.5;letter-spacing:.16em;text-transform:uppercase}.small-label{font-size:12px;color:#72717a}.skip-link{position:fixed;left:20px;top:-100px;z-index:100;background:white;color:black;padding:14px}.skip-link:focus{top:12px}
@@ -17,3 +18,7 @@ dialog{border:0;padding:0;color:var(--ink);background:var(--paper);max-height:90
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
 
 .icon{display:inline-block;width:18px;height:18px;vertical-align:middle;flex-shrink:0}.motion-icon{width:14px;height:14px;display:block;margin:auto}
+
+/* Display font is limited to the hero and three chapter headings. */
+.hero h1,.chapter>h2{font-family:'Grand Theft Auto','Nunito Sans',sans-serif;font-weight:400;letter-spacing:0;line-height:1.04}
+.hero h1{font-size:clamp(46px,18vw,320px)}

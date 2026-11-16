@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="same-origin">
+  <title>Редактор Most Wanted · Caviar</title>
+  <link rel="icon" href="../assets/caviar.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="editor.css?v=1">
+  <script defer src="editor.js?v=1"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="logo" href="../" target="_blank" rel="noopener"><img src="../assets/caviar.svg" alt="Caviar"></a>
+    <div class="project"><span>КОНТЕНТ-СТУДИЯ</span><h1>Most Wanted</h1></div>
+    <div id="save-status" class="save-status" role="status">Загрузка страницы…</div>
+    <div class="top-actions">
+      <button id="undo" class="quiet" disabled>Отменить</button>
+      <button id="backup" class="quiet" disabled>Скачать черновик</button>
+      <button id="download-html" class="quiet" disabled>Скачать HTML</button>
+      <button id="publish" class="primary" disabled>Опубликовать</button>
+    </div>
+  </header>
+  <main class="workspace">
+    <aside class="library-panel" aria-label="Содержимое страницы">
+      <div class="panel-intro"><span class="overline">СТРАНИЦА</span><h2>Содержимое</h2><p>Выберите элемент здесь<br>или нажмите на него в макете.</p></div>
+      <label class="search"><span class="sr-only">Поиск по содержимому</span><input id="search" type="search" placeholder="Найти текст или модель"></label>
+      <div class="tabs" role="group" aria-label="Тип содержимого"><button class="active" data-filter="all">Всё</button><button data-filter="text">Текст</button><button data-filter="image">Фото</button><button data-filter="video">Видео</button></div>
+      <div id="field-list" class="field-list"><p class="empty">Загружаем содержимое…</p></div>
+      <div class="library-footer"><button id="import" class="text-button">Открыть черновик</button><button id="reset" class="text-button danger" disabled>Сбросить изменения</button><input id="import-file" type="file" accept="application/json,.json" hidden></div>
+    </aside>
+    <section class="preview-panel" aria-label="Предпросмотр посадочной">
+      <div class="preview-toolbar"><span><i></i> ПРЕДПРОСМОТР</span><div class="view-switch" role="group" aria-label="Размер экрана"><button class="active" data-width="desktop">Компьютер</button><button data-width="mobile">Телефон</button></div><a href="../" target="_blank" rel="noopener">Открыть сайт</a></div>
+      <div class="preview-stage"><div id="preview-shell" class="preview-shell"><iframe id="preview" src="../?editor=1" title="Редактируемая посадочная Most Wanted"></iframe></div></div>
+      <div class="preview-footer"><span id="change-count">Изменений нет</span><span>Черновик виден только вам до публикации</span></div>
+    </section>
+    <aside class="inspector" aria-label="Редактирование элемента">
+      <div id="inspector-empty" class="inspector-empty"><span class="big-star">✦</span><h2>Начните с детали</h2><p>Тексты, фотографии и видео собраны слева. Нажмите на любой элемент, чтобы изменить его.</p></div>
+      <div id="inspector-content" hidden>
+        <div class="inspector-heading"><span id="field-kind" class="overline"></span><h2 id="field-title"></h2><p id="field-section"></p></div>
+        <div id="text-controls"><label for="text-value">Текст на странице</label><textarea id="text-value" rows="10" spellcheck="true"></textarea><p class="hint">Изменения сразу появляются в макете.</p></div>
+        <div id="media-controls" hidden>
+          <div id="media-preview" class="media-preview"></div>
+          <label class="upload-area" id="drop-zone" for="media-file"><strong>Загрузить с компьютера</strong><span id="upload-hint">или перетащить файл сюда</span><input id="media-file" type="file" hidden></label>
+          <p id="file-info" class="hint"></p>
+          <label for="media-url">Или ссылка на файл</label><div class="url-input"><input id="media-url" type="url" placeholder="https://…"><button id="apply-url">Применить</button></div>
+          <p class="hint">Нужен прямой адрес изображения или видеофайла. Ссылки на YouTube и страницы сайтов не подходят.</p>
+          <div id="alt-control"><label for="media-alt">Описание изображения</label><textarea id="media-alt" rows="3" placeholder="Что изображено на фотографии"></textarea><p class="hint">Для доступности и поиска.</p></div>
+          <p id="media-usage" class="usage"></p>
+        </div>
+        <button id="revert-field" class="text-button revert">Вернуть опубликованное значение</button>
+      </div>
+      <div class="inspector-note"><span>ВАШ ЧЕРНОВИК</span><p>Сохраняется в этом браузере. Скачайте копию, чтобы перенести её на другой компьютер.</p></div>
+    </aside>
+  </main>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <dialog id="publish-dialog">
+    <form method="dialog"><button class="close" aria-label="Закрыть">×</button></form>
+    <span class="overline">GITHUB PAGES</span><h2>Опубликовать изменения</h2><p>Тексты и медиа будут сохранены в <strong>stoliarovd-mitrey / black_edition</strong>. GitHub обновит посадочную после завершения сборки.</p>
+    <label for="github-token">Личный GitHub-токен</label><input id="github-token" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…">
+    <p class="hint">Токен используется только для этой публикации и не сохраняется в черновике или файлах сайта.</p>
+    <details><summary>Как создать токен</summary><p>Откройте <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">Fine-grained personal access token</a>. Выберите только репозиторий <strong>black_edition</strong> и разрешение <strong>Contents: Read and write</strong>. Скопируйте токен сюда.</p></details>
+    <div class="publish-summary" id="publish-summary"></div>
+    <button id="confirm-publish" class="primary wide">Сохранить на GitHub</button><p id="publish-progress" class="hint" role="status"></p>
+    <a id="deployment-link" href="https://github.com/stoliarovd-mitrey/black_edition/actions" target="_blank" rel="noopener" hidden>Проверить публикацию на GitHub</a>
+  </dialog>
+  <dialog id="confirm-dialog"><span class="overline">ЧЕРНОВИК</span><h2 id="confirm-title"></h2><p id="confirm-body"></p><div class="dialog-actions"><button id="confirm-no" class="quiet">Отмена</button><button id="confirm-yes" class="primary">Продолжить</button></div></dialog>
+</body>
+</html>
