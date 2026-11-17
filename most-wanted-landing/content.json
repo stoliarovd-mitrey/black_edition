@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "revision": "a8b24196-c70a-45fb-8e6b-0915dde34f17",
-  "updatedAt": "2026-11-17T10:42:38.262Z",
+  "revision": "8a9ed4a4-d989-477d-bc6c-b552e506b35d",
+  "updatedAt": "2026-11-17T10:59:26.132Z",
   "overrides": {
     "text-007": {
       "text": "Коллекция, вдохновленная"
@@ -116,7 +116,7 @@
       "mime": "image/jpeg"
     },
     "media-002": {
-      "url": "assets/editor/64107b69-c864-451f-b731-a82b72b5ba2a.jpg",
+      "url": "assets/editor/60a34d3b-b927-46c1-91c7-fc04ef4efc2c.jpg",
       "mime": "image/jpeg"
     }
   },
