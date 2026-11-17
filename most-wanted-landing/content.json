@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "revision": "462eb0d2-4b11-406a-b053-10701ca4c52c",
-  "updatedAt": "2026-11-17T12:41:57.291Z",
+  "revision": "ddbc3a9f-70a7-41f7-80dc-6d2fe3d7e6c6",
+  "updatedAt": "2026-11-17T13:57:23.739Z",
   "overrides": {
     "text-007": {
       "text": "Коллекция, вдохновленная"
@@ -116,30 +116,30 @@
       "mime": "image/jpeg"
     },
     "media-002": {
-      "url": "assets/editor/9e8980ab-709d-4296-95ee-83f8e4feae64.jpg",
+      "url": "assets/editor/5f234c85-5162-4fad-9c6a-b116ce9748ca.jpg",
       "mime": "image/jpeg"
     },
     "media-003": {
-      "url": "assets/editor/f88aff19-dc73-4d7b-aa65-87ec37317f80.jpg",
+      "url": "assets/editor/919284ed-59ca-48ec-bf5c-74bdf0ccfffb.jpg",
       "mime": "image/jpeg"
     },
     "text-042": {
       "text": "Холодный титан встречается с насыщенными цветами. Неоновый рисунок оживляет поверхность корпуса, а декоративное изображение Beretta 92FS отсылает к криминальным историям большого города."
     },
     "media-005": {
-      "url": "assets/editor/c7d286bc-234d-4460-821a-a04db52df36b.jpg",
+      "url": "assets/editor/7b51ce23-bd2b-4e0a-971f-d6610d3b3608.jpg",
       "mime": "image/jpeg"
     },
     "media-006": {
-      "url": "assets/editor/01354bbe-73f4-49d8-ba4f-4bfffa497a46.jpg",
+      "url": "assets/editor/ddcb10f7-26f9-4027-9cf8-22ad157b9a45.jpg",
       "mime": "image/jpeg"
     },
     "media-007": {
-      "url": "assets/editor/b7b21487-3454-4bc6-a06d-59aae49459d6.jpg",
+      "url": "assets/editor/ef1573fa-e513-4d81-b996-2e3d90166785.jpg",
       "mime": "image/jpeg"
     },
     "media-008": {
-      "url": "assets/editor/b4145fb7-a5e5-4a19-aa9a-2e1525669b7d.jpg",
+      "url": "assets/editor/78117732-38d4-4283-a62d-d60d9d7c7d45.jpg",
       "mime": "image/jpeg"
     }
   },
