@@ -1,22 +1,18 @@
 # Короткие ссылки Caviar
 
-После подключения Cloudflare адрес `https://go.caviar.global/most-wanted` перенаправит на страницу коллекции Most Wanted. [Тестовый переход на GitHub Pages](https://stoliarovd-mitrey.github.io/black_edition/caviar-links/?s=most-wanted) использует тот же список ссылок.
+В [генераторе](https://stoliarovd-mitrey.github.io/black_edition/caviar-links/) вставьте HTTPS-ссылку на `caviar.global` или `caviar-phones.ru` и нажмите «Сократить». Каждый запуск создаёт новый адрес вида `https://caviar.global/k7qx3m2a`.
 
-## Как добавить или изменить ссылку
+Нажмите «Скопировать запись и открыть GitHub», вставьте запись в редактор с предложенным именем файла и выберите **Commit changes** в `main`. Каждый адрес хранится в отдельном файле в `entries/`. После сборки Cloudflare короткая ссылка начнёт работать. Изменить страницу назначения можно в том же файле. Исходный пример `most-wanted` хранится в `links.json`.
 
-Откройте [links.json в редакторе GitHub](https://github.com/stoliarovd-mitrey/black_edition/edit/main/caviar-links/links.json), добавьте пару «короткое имя → полный адрес» и сохраните коммит в `main`. В имени разрешены строчные латинские буквы, цифры и дефисы между ними. После сборки адрес будет доступен на `go.caviar.global`.
+Генератор и GitHub Pages доступны до подключения Cloudflare. [Тестовый переход Most Wanted](https://stoliarovd-mitrey.github.io/black_edition/caviar-links/?s=most-wanted) проверяет адрес назначения на GitHub Pages. Записи хранятся в публичном репозитории, поэтому используйте общедоступные ссылки.
 
-```json
-{
-  "most-wanted": "https://caviar.global/collections/most-wanted/promo/",
-  "global": "https://caviar.global/?utm_source=whatsapp"
-}
-```
+## Подключение Cloudflare
 
-Сокращатель принимает HTTPS-ссылки на `caviar.global`, `caviar-phones.ru` и их `www`-адреса. UTM-метки и идентификаторы рекламных кликов из короткой ссылки добавляются к адресу назначения. Метка, заданная в `links.json`, имеет приоритет. Ответ 302 позволяет менять адрес назначения у уже разосланных ссылок. Клики отслеживаются на посадочной странице через её аналитику.
+В аккаунте, который управляет зоной `caviar.global`, подключите Cloudflare Workers Builds к репозиторию `stoliarovd-mitrey/black_edition`. Укажите имя Worker `caviar-links`, ветку `main`, корневой каталог `caviar-links` и Node.js 22 или новее.
 
-## Первое подключение
+- Команда проверки `npm test`
+- Команда деплоя `npm run deploy`
 
-В [Cloudflare Workers & Pages](https://dash.cloudflare.com/) создайте Worker из GitHub-репозитория `stoliarovd-mitrey/black_edition` в аккаунте, который управляет зоной `caviar.global`. На экране настройки сборки задайте имя `caviar-links`, ветку `main` и корневой каталог `caviar-links`. Команда проверки `node --test worker.test.mjs`, команда публикации `npx wrangler deploy`. Используйте Node.js 22 или новее. Права для подключения репозитория и домена выдаются в Cloudflare.
+У существующей DNS-записи `caviar.global` должен быть включён прокси Cloudflare. Деплой создаёт Worker Routes только для опубликованных коротких имён. Когда путь начинается с короткого имени, но ведёт на другую страницу, Worker передаёт запрос действующему сайту. Основной домен остаётся на текущем сервере.
 
-При деплое `wrangler.jsonc` зарегистрирует `go.caviar.global` как Custom Domain. Cloudflare создаст запись DNS и сертификат. После публикации проверьте заголовки перехода командой `curl -I 'https://go.caviar.global/most-wanted?utm_source=whatsapp'`.
+После первого деплоя `curl -I 'https://caviar.global/most-wanted?utm_source=whatsapp'` должен вернуть `302` и адрес лендинга с UTM-меткой. Кампанийные метки из короткой ссылки дополняют адрес назначения. Если метка уже задана там, сохраняется исходное значение. Для проверки действующего сайта отдельно откройте `https://caviar.global/`.

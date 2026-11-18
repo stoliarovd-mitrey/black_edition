@@ -10,31 +10,58 @@
     :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #13120f; color: #f4f0e8; }
     * { box-sizing: border-box; }
     body { margin: 0; }
-    main { width: min(100% - 2.5rem, 49rem); margin: clamp(3rem, 11vw, 8rem) auto; }
-    header { padding-bottom: 2rem; border-bottom: 1px solid #494137; }
-    h1 { margin: 0; font: 400 clamp(2.35rem, 7vw, 4.25rem)/1.1 Georgia, serif; }
-    p { color: #c7bfb2; line-height: 1.55; }
+    main { width: min(100% - 2.5rem, 47rem); margin: clamp(3rem, 10vw, 7rem) auto; }
+    h1 { margin: 0 0 1.75rem; font: 400 clamp(2.15rem, 6vw, 3.75rem)/1.1 Georgia, serif; }
+    h2 { margin: 0 0 1rem; font: 400 1.6rem/1.2 Georgia, serif; }
+    p { color: #c7bfb2; line-height: 1.55; margin: .75rem 0; }
     a { color: #edca93; text-underline-offset: .22em; }
-    a:focus-visible { outline: 2px solid #edca93; outline-offset: .3rem; }
-    ul { padding: 0; margin: 0; list-style: none; }
-    li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1.5rem; padding: 1.5rem 0; border-bottom: 1px solid #494137; }
-    code { overflow-wrap: anywhere; font-size: .96rem; }
+    :focus-visible { outline: 2px solid #edca93; outline-offset: .19rem; }
+    label { display: block; margin: 0 0 .55rem; }
+    .row { display: flex; gap: .65rem; align-items: stretch; }
+    input, textarea { width: 100%; min-width: 0; border: 1px solid #6d6150; border-radius: .35rem; background: #1e1c17; color: inherit; padding: .78rem .9rem; font: inherit; }
+    textarea { resize: vertical; }
+    button, .button { font: 600 .95rem/1.35 system-ui, sans-serif; white-space: nowrap; padding: .8rem 1rem; border: 1px solid #edca93; border-radius: .35rem; color: #231a0f; background: #edca93; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; }
+    button:hover, .button:hover { background: #f8dba9; }
+    .secondary { color: #edca93; background: transparent; }
+    .secondary:hover { color: #231a0f; }
+    #result, .example { margin-top: 1.75rem; padding-top: 1.65rem; border-top: 1px solid #494137; }
+    #short-url { font-family: ui-monospace, monospace; }
+    #notice { min-height: 1.55em; }
     [hidden] { display: none; }
+    @media (max-width: 38rem) { .row { flex-direction: column; } }
   </style>
   <script type="module" src="./preview.js"></script>
 </head>
 <body>
   <main>
-    <header>
-      <h1>Короткие ссылки Caviar</h1>
-      <div id="controls" hidden>
-        <p>Проверьте переход перед публикацией на go.caviar.global.</p>
-        <a href="https://github.com/stoliarovd-mitrey/black_edition/edit/main/caviar-links/links.json">Изменить ссылки в GitHub</a>
-      </div>
-    </header>
-    <p id="status" role="status">Загружаем ссылки…</p>
-    <ul id="links" aria-label="Тестовые переходы"></ul>
-    <noscript><p>Для проверки перехода включите JavaScript.</p></noscript>
+    <h1>Короткие ссылки Caviar</h1>
+    <section id="generator" hidden>
+      <form id="create-link">
+        <label for="destination">Длинная ссылка</label>
+        <div class="row">
+          <input id="destination" type="url" placeholder="https://caviar.global/collections/…" required spellcheck="false">
+          <button type="submit">Сократить</button>
+        </div>
+      </form>
+      <p id="error" role="alert" hidden></p>
+      <section id="result" aria-labelledby="result-title" hidden>
+        <h2 id="result-title">Короткая ссылка</h2>
+        <div class="row">
+          <input id="short-url" aria-labelledby="result-title" readonly>
+          <button id="copy-link" class="secondary" type="button">Скопировать ссылку</button>
+        </div>
+        <p>Вставьте запись в редактор GitHub и нажмите <strong>Commit changes</strong>. Ссылка заработает после публикации в Cloudflare.</p>
+        <a id="publish" class="button" target="_blank" rel="noopener noreferrer">Скопировать запись и открыть GitHub</a>
+        <p id="notice" role="status"></p>
+        <div id="copy-fallback" hidden>
+          <label for="record">Запись для GitHub</label>
+          <textarea id="record" rows="3" readonly></textarea>
+        </div>
+      </section>
+      <div class="example"><a href="?s=most-wanted">Проверить пример с Most Wanted</a></div>
+    </section>
+    <p id="status" role="status" hidden></p>
+    <noscript><p>Включите JavaScript, чтобы создавать короткие ссылки.</p></noscript>
   </main>
 </body>
 </html>

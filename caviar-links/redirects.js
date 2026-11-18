@@ -1,3 +1,5 @@
+export const shortOrigin = 'https://caviar.global';
+
 const allowedHosts = new Set([
   'caviar.global',
   'www.caviar.global',
@@ -15,6 +17,14 @@ export function isSlug(slug) {
   return typeof slug === 'string' && slug.length <= 64 && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug);
 }
 
+export function destinationUrl(destination) {
+  const url = new URL(destination);
+  if (url.protocol !== 'https:' || url.username || url.password || url.port || !allowedHosts.has(url.hostname)) {
+    throw new Error('Укажите HTTPS-ссылку на caviar.global или caviar-phones.ru.');
+  }
+  return url.href;
+}
+
 export function readLinks(data) {
   if (!data || Array.isArray(data) || typeof data !== 'object') {
     throw new Error('links.json must be an object.');
@@ -26,12 +36,7 @@ export function readLinks(data) {
       throw new Error(`Invalid short link: ${slug}`);
     }
 
-    const url = new URL(destination);
-    if (url.protocol !== 'https:' || url.username || url.password || url.port || !allowedHosts.has(url.hostname)) {
-      throw new Error(`Destination must use an approved Caviar HTTPS domain: ${slug}`);
-    }
-
-    links.set(slug, url.href);
+    links.set(slug, destinationUrl(destination));
   }
   return links;
 }

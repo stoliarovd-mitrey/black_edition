@@ -1,5 +1,9 @@
 {
   "name": "caviar-links",
   "private": true,
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "test": "node --test worker.test.mjs",
+    "deploy": "node build.mjs && npx --yes wrangler@4.164.0 deploy --config .wrangler/caviar-links/wrangler.json"
+  }
 }
