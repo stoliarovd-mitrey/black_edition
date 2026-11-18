@@ -309,7 +309,7 @@ a{color:inherit}
 .itemlist{display:grid;grid-template-columns:repeat(3,1fr);gap:40px 30px}
 .itemlist .item{text-align:center}
 .itemlist .item[hidden]{display:none}
-.itemlist .image a{display:flex;align-items:center;justify-content:center;aspect-ratio:1/1;background:#111;overflow:hidden}
+.itemlist .image a{display:flex;align-items:center;justify-content:center;aspect-ratio:350/506;background:#111;overflow:hidden}
 .itemlist .image img{width:100%;height:100%;object-fit:contain;transition:transform .5s ease}
 .itemlist .item:hover .image img{transform:scale(1.04)}
 .itemlist .box a{display:block;text-decoration:none;color:#fff;padding-top:14px}
