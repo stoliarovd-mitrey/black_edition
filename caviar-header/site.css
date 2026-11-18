@@ -44,8 +44,7 @@ a{color:inherit}
 
 /* перекрываем общие правила original.css (footer и заголовки там заглавными) */
 .foot{text-transform:none}
-.dcard h3,.path h3,.pcard h4,.news h3,.gift-list b,.lp-hero h1 em{text-transform:none}
-.lp-hero h1 em{text-transform:uppercase}
+.dcard h3,.path h3,.pcard h4,.news h3,.lp-hero h1 em{text-transform:uppercase}
 .form .agree{text-transform:none;letter-spacing:0;font-size:13px}
 .btn,.crumbs a,.req-contacts a,.foot a,.news a,.pcard,.himher a{overflow:visible}
 @media (min-width:1181px){
@@ -217,15 +216,6 @@ a{color:inherit}
 .ctor-shot .code{position:absolute;left:50%;bottom:0;transform:translateX(-50%);max-width:92%;padding:10px 14px;background:#0d1117;border:1px solid var(--line2);font:600 11.5px/1.4 ui-monospace,Menlo,Consolas,monospace;color:var(--gold-l);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ctor-note{margin:18px 0 0;font-size:13px;color:var(--muted)}
 
-.gift .wrap{display:grid;grid-template-columns:.9fr 1.1fr;align-items:center;gap:64px}
-.gift-img{display:flex;justify-content:center;align-items:flex-end;gap:4%;height:520px;background:radial-gradient(55% 55% at 50% 55%,#2a2520 0%,rgba(17,17,17,0) 70%)}
-.gift-img img{height:96%;width:auto;filter:drop-shadow(0 24px 30px rgba(0,0,0,.55))}
-.gift-img img + img{height:82%}
-.gift-list{margin:26px 0 32px;padding:0;list-style:none;display:grid;gap:16px}
-.gift-list li{display:grid;grid-template-columns:28px 1fr;gap:14px;align-items:start}
-.gift-list li::before{content:"";width:28px;height:28px;border:1px solid var(--gold);border-radius:50%;background:radial-gradient(circle,var(--gold) 0 3px,transparent 3.5px)}
-.gift-list b{display:block;font-size:16px;font-weight:700;margin-bottom:2px}
-.gift-list span{color:#c2c0b8;font-size:14.5px}
 
 .req{background:var(--bg2);border-top:1px solid var(--line)}
 .req .wrap{display:grid;grid-template-columns:.9fr 1.1fr;gap:64px;align-items:start}
@@ -268,7 +258,7 @@ a{color:inherit}
 }
 @media (max-width:900px){
   .sec{padding:72px 0}
-  .promo-in,.lp-hero .hero-grid,.ctor .wrap,.gift .wrap,.req .wrap{grid-template-columns:1fr}
+  .promo-in,.lp-hero .hero-grid,.ctor .wrap,.req .wrap{grid-template-columns:1fr}
   .promo-in{align-content:center;gap:12px;padding:30px 0 60px;text-align:center}
   .promo-copy p{margin-left:auto;margin-right:auto}
   .promo-copy .btns{justify-content:center}
@@ -279,8 +269,7 @@ a{color:inherit}
   .paths{grid-template-columns:1fr}
   .steps{grid-template-columns:1fr 1fr}
   .ctor-shot{height:460px}
-  .gift-img{height:420px;order:-1}
-}
+  }
 @media (max-width:640px){
   .wrap{width:calc(100% - 32px)}
   .rail-track{grid-auto-columns:78%}
