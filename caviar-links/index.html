@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <title>Короткие ссылки Caviar</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #13120f; color: #f4f0e8; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    main { width: min(100% - 2.5rem, 49rem); margin: clamp(3rem, 11vw, 8rem) auto; }
+    header { padding-bottom: 2rem; border-bottom: 1px solid #494137; }
+    h1 { margin: 0; font: 400 clamp(2.35rem, 7vw, 4.25rem)/1.1 Georgia, serif; }
+    p { color: #c7bfb2; line-height: 1.55; }
+    a { color: #edca93; text-underline-offset: .22em; }
+    a:focus-visible { outline: 2px solid #edca93; outline-offset: .3rem; }
+    ul { padding: 0; margin: 0; list-style: none; }
+    li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1.5rem; padding: 1.5rem 0; border-bottom: 1px solid #494137; }
+    code { overflow-wrap: anywhere; font-size: .96rem; }
+    [hidden] { display: none; }
+  </style>
+  <script type="module" src="./preview.js"></script>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Короткие ссылки Caviar</h1>
+      <div id="controls" hidden>
+        <p>Проверьте переход перед публикацией на go.caviar.global.</p>
+        <a href="https://github.com/stoliarovd-mitrey/black_edition/edit/main/caviar-links/links.json">Изменить ссылки в GitHub</a>
+      </div>
+    </header>
+    <p id="status" role="status">Загружаем ссылки…</p>
+    <ul id="links" aria-label="Тестовые переходы"></ul>
+    <noscript><p>Для проверки перехода включите JavaScript.</p></noscript>
+  </main>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "name": "caviar-links",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-11-18",
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [
+    { "pattern": "go.caviar.global", "custom_domain": true }
+  ]
+}
