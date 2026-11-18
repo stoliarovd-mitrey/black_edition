@@ -14,6 +14,12 @@
       track.style.transform = `translateX(${-100 * i}%)`;
       $$('button', dots).forEach((b, n) => b.classList.toggle('on', n === i));
       slides.forEach((s, n) => s.setAttribute('aria-hidden', n === i ? 'false' : 'true'));
+      // картинки текущего и соседних слайдов грузим сразу: ленивые картинки за краем ленты сами не подгружаются
+      [i, i + 1, i - 1].forEach(k => $$('img[loading="lazy"]', slides[(k + slides.length) % slides.length]).forEach(img => { img.loading = 'eager'; }));
+      // видео-фон, как на caviar-phones.ru: играет только активный слайд
+      slides.forEach((s, n) => { const v = $('video', s); if (!v) return;
+        if (n === i) { v.preload = 'auto'; v.addEventListener('playing', () => s.classList.add('vr'), { once: true }); v.play().catch(() => {}); }
+        else v.pause(); });
       if (user) restart();
     }
     function restart() { clearInterval(timer); timer = setInterval(() => go(i + 1), 6500); }

@@ -60,6 +60,8 @@ a{color:inherit}
 .hs-track{display:flex;transition:transform .8s cubic-bezier(.65,.05,.25,1)}
 .hs .item{position:relative;flex:0 0 100%;height:calc(100vh - 66px);min-height:560px;max-height:900px;overflow:hidden;background:#000}
 .hs .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hs .vid{position:absolute;z-index:1;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s ease;pointer-events:none}
+.hs .item.vr .vid{opacity:1}
 .hs .fg{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;width:100%;height:100%}
 .hs .fg img{width:auto;max-width:100%;height:100%;object-fit:contain}
 .hs-arrow{position:absolute;z-index:5;top:50%;width:52px;height:52px;margin-top:-26px;border:0;background:none;cursor:pointer;opacity:.85}
@@ -98,16 +100,6 @@ a{color:inherit}
 .pcard .cat{margin:18px 0 6px;font-size:12.5px;color:#cfcfcf}
 .pcard h4{margin:0 0 18px;font-size:20px;font-weight:600}
 .pcard .btn{pointer-events:none}
-
-/* баннер-анонс на главной */
-.cta-band{position:relative;overflow:hidden;background:radial-gradient(60% 120% at 80% 50%,#1d2430 0%,#0d1117 60%);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.cta-band .wrap{display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:48px;padding:80px 0}
-.cta-band .phones{display:flex;justify-content:center;align-items:flex-end;gap:2%;height:420px}
-.cta-band .phones img{height:88%;width:auto;filter:drop-shadow(0 24px 30px rgba(0,0,0,.55))}
-.cta-band .phones img:nth-child(2){height:100%}
-.cta-band ul{margin:0 0 30px;padding:0;list-style:none;display:grid;gap:10px}
-.cta-band li{position:relative;padding-left:22px;color:#d6d4cc}
-.cta-band li::before{content:"";position:absolute;left:0;top:.75em;width:10px;height:1px;background:var(--gold)}
 
 /* для него / для неё */
 .himher{display:grid;grid-template-columns:1fr 1fr;gap:0}
@@ -276,7 +268,7 @@ a{color:inherit}
 }
 @media (max-width:900px){
   .sec{padding:72px 0}
-  .promo-in,.lp-hero .hero-grid,.cta-band .wrap,.ctor .wrap,.gift .wrap,.req .wrap{grid-template-columns:1fr}
+  .promo-in,.lp-hero .hero-grid,.ctor .wrap,.gift .wrap,.req .wrap{grid-template-columns:1fr}
   .promo-in{align-content:center;gap:12px;padding:30px 0 60px;text-align:center}
   .promo-copy p{margin-left:auto;margin-right:auto}
   .promo-copy .btns{justify-content:center}
@@ -288,7 +280,6 @@ a{color:inherit}
   .steps{grid-template-columns:1fr 1fr}
   .ctor-shot{height:460px}
   .gift-img{height:420px;order:-1}
-  .cta-band .phones{height:340px;order:-1}
 }
 @media (max-width:640px){
   .wrap{width:calc(100% - 32px)}
