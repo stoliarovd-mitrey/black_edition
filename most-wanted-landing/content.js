@@ -19,13 +19,17 @@
   const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
   const nodes = [];
   while (walker.nextNode()) nodes.push(walker.currentNode);
+  let textIndex = 0;
   for (const node of nodes) {
     const element = node.parentElement;
     const value = node.textContent.trim();
     if (!value || !/[\p{L}\p{N}]/u.test(value) || element.closest('script,style,svg,video,[data-close],.motion-toggle,.skip-link,[data-cms-field]')) continue;
     const prefix = node.textContent.match(/^\s*/)[0];
     const suffix = node.textContent.match(/\s*$/)[0];
-    fields.push({id: `text-${String(fields.length + 1).padStart(3, '0')}`, kind: 'text', label: value, section: sectionName(element), value, original: value, node, element, prefix, suffix});
+    // text-023 belonged to the removed intro link. Keep saved IDs after it stable.
+    textIndex++;
+    if (textIndex === 23) textIndex++;
+    fields.push({id: `text-${String(textIndex).padStart(3, '0')}`, kind: 'text', label: value, section: sectionName(element), value, original: value, node, element, prefix, suffix});
   }
   // Explicit fields can be added without shifting existing saved text IDs.
   document.querySelectorAll('[data-cms-field]').forEach(element => {
