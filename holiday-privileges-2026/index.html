@@ -22,19 +22,28 @@
 .catalog-card span{font-size:13px;font-weight:700;text-decoration:underline}
 .catalog-card:hover{border-color:var(--gold)}
 .catalog-link{margin-top:24px;display:flex;justify-content:center}.bespoke{display:grid;grid-template-columns:1fr 1fr;min-height:370px;background:var(--navy);color:#fff}.bespoke-visual{position:relative;min-width:0;min-height:0;aspect-ratio:16/9;overflow:hidden;background:#101a2a}
-.bespoke-visual img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}.bespoke-copy{padding:clamp(35px,5vw,75px);align-self:center}.bespoke-copy .eyebrow{color:var(--gold-light);margin-bottom:12px}.bespoke-copy p:not(.eyebrow){color:#d6dbe2;margin:18px 0 25px;max-width:430px}.certificate{display:grid;grid-template-columns:1fr 1fr;gap:clamp(25px,5vw,80px);align-items:center}.certificate img{aspect-ratio:4/3;object-fit:cover}.certificate .eyebrow{margin-bottom:10px}.certificate p:not(.eyebrow){color:#62666c;max-width:470px;margin:16px 0 25px}.consult{background:var(--paper);text-align:center}.consult h2{margin:12px 0}.consult p:not(.eyebrow){max-width:600px;margin:auto;color:#656971}.contact-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:25px}.terms{border-top:1px solid var(--line);margin-top:32px;text-align:left;max-width:800px;margin-inline:auto}.terms summary{padding:17px 0;font-weight:700;cursor:pointer;font-size:14px}.terms p{font-size:13px;max-width:none!important;text-align:left;margin-bottom:10px!important}.footer{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px var(--pad);background:white;border-top:1px solid var(--line);font-size:12px;color:#666}.footer a{font-weight:700}.footer img{width:62px;height:50px;object-fit:contain}.skip{position:absolute;top:-100px;background:white;padding:10px;z-index:5}.skip:focus{top:5px}@media(max-width:880px){.header-nav{display:none}.section-heading{display:block}.section-heading>p{margin-top:13px}.gift-grid{gap:12px}.gift-body{padding:17px}.gift-body h3{font-size:22px}}@media(max-width:760px){.catalog-grid,.bespoke{grid-template-columns:1fr}}
+.bespoke-visual img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}.bespoke-copy{padding:clamp(35px,5vw,75px);align-self:center}.bespoke-copy .eyebrow{color:var(--gold-light);margin-bottom:12px}.bespoke-copy p:not(.eyebrow){color:#d6dbe2;margin:18px 0 25px;max-width:430px}
+.private-gifting{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(25px,5vw,80px);align-items:center}
+.private-gifting-photo{aspect-ratio:4/3;object-fit:cover}
+.private-gifting-copy .eyebrow{margin-bottom:10px}
+.private-gifting-copy>p:not(.eyebrow){color:#62666c;max-width:480px;margin:16px 0 25px}
+.private-gifting-channels{max-width:470px}
+.private-gifting-channels summary::-webkit-details-marker{display:none}
+.private-gifting-channels .gift-channel-links{margin-top:12px}
+.private-gifting-channels .max-message-status{font-size:14px;color:#666}
+.consult{background:var(--paper);text-align:center}.consult h2{margin:12px 0}.consult p:not(.eyebrow){max-width:600px;margin:auto;color:#656971}.contact-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:25px}.terms{border-top:1px solid var(--line);margin-top:32px;text-align:left;max-width:800px;margin-inline:auto}.terms summary{padding:17px 0;font-weight:700;cursor:pointer;font-size:14px}.terms p{font-size:13px;max-width:none!important;text-align:left;margin-bottom:10px!important}.footer{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px var(--pad);background:white;border-top:1px solid var(--line);font-size:12px;color:#666}.footer a{font-weight:700}.footer img{width:62px;height:50px;object-fit:contain}.skip{position:absolute;top:-100px;background:white;padding:10px;z-index:5}.skip:focus{top:5px}@media(max-width:880px){.header-nav{display:none}.section-heading{display:block}.section-heading>p{margin-top:13px}.gift-grid{gap:12px}.gift-body{padding:17px}.gift-body h3{font-size:22px}}@media(max-width:760px){.catalog-grid,.bespoke{grid-template-columns:1fr}}
 @media(max-width:650px){.site-header{height:68px}.brand img{width:60px;height:49px}
 .hero{min-height:0;flex-direction:column;background-position:right top}
 .hero::before{background:linear-gradient(0deg,#101925 0%,rgba(16,25,37,.94) 43%,transparent 85%)}
 .hero-package{position:relative;inset:auto;width:min(76%,340px);height:auto;margin:24px auto 0}
 .hero-content{width:100%;padding:22px var(--pad) 36px}
-.hero .eyebrow{margin-bottom:12px}.hero .lead{margin:13px 0 10px}.hero .intro{margin-bottom:20px}.hero .dates{margin-top:12px}.subnav{justify-content:start}.gift-grid,.certificate{grid-template-columns:1fr}.gift-body{padding:22px}.selection{align-items:stretch;flex-direction:column;padding:20px;gap:13px}.certificate{gap:25px}.footer{flex-wrap:wrap}.contact-actions .btn{flex:1 1 140px}.section{padding-block:38px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+.hero .eyebrow{margin-bottom:12px}.hero .lead{margin:13px 0 10px}.hero .intro{margin-bottom:20px}.hero .dates{margin-top:12px}.subnav{justify-content:start}.gift-grid,.private-gifting{grid-template-columns:1fr}.gift-body{padding:22px}.selection{align-items:stretch;flex-direction:column;padding:20px;gap:13px}.footer{flex-wrap:wrap}.contact-actions .btn{flex:1 1 140px}.section{padding-block:38px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
 .site-header,.footer{background:#101925;color:#f7f7f5;border-color:#344153}.footer{color:#d6dbe2}.header-contact{color:#f7f7f5}</style></head><body>
 <a class="skip" href="#main">Перейти к содержанию</a>
 <header class="site-header"><a class="brand" href="https://caviar-phones.ru/" aria-label="Caviar, главная"><img src="../most-wanted-landing/assets/caviar.svg" alt="Caviar" width="69" height="57"></a><nav class="header-nav" aria-label="Основная навигация"><a href="https://caviar-phones.ru/catalog/custom-iphone/iphone-18/">Смартфоны</a><a href="#gifts">Королевский подарок</a><a href="#bespoke">Индивидуальный дизайн</a></nav><a class="header-contact" href="#contact">Связаться с Caviar</a></header>
 <main id="main">
 <section class="hero" aria-labelledby="hero-title"><img class="hero-package" src="assets/holiday-hero-package.webp" alt="Смартфон Caviar в открытом синем футляре с фирменной подарочной упаковкой" width="966" height="1053" fetchpriority="high"><div class="hero-content"><p class="eyebrow">Caviar · Festive Season 2026</p><h1 id="hero-title">Королевский<br>подарок</h1><p class="lead">В этом декабре Caviar дарит больше.</p><p class="intro">Приобретите смартфон Caviar и выберите один из подарков, подготовленных к праздничному сезону.</p><a class="btn gold" href="#gifts">Выбрать подарок</a><p class="dates">С 1 по 31 декабря 2026 года*</p></div></section>
-<nav class="subnav" aria-label="Разделы страницы"><a href="#gifts">Подарки на выбор</a><a href="#catalog">Рекомендации Caviar</a><a href="#bespoke">Индивидуальный дизайн</a><a href="#certificate">Сертификаты</a></nav>
+<nav class="subnav" aria-label="Разделы страницы"><a href="#gifts">Подарки на выбор</a><a href="#catalog">Рекомендации Caviar</a><a href="#bespoke">Индивидуальный дизайн</a><a href="#private-gifting">Подбор подарка</a></nav>
 <section class="section" id="gifts"><div class="wrap"><div class="section-heading"><div><p class="eyebrow">Королевский подарок</p><h2>Выберите свой подарок</h2></div><p>В декабре мы подготовили для клиентов Caviar несколько вариантов подарков. Выберите тот, который предпочтёте получить вместе со смартфоном.</p></div><div class="gift-grid" role="group" aria-label="Выбор подарка">
 <article class="gift"><img class="gift-photo" src="assets/holiday-certificate-card.webp" alt="Белый подарочный сертификат Caviar Royal Gift" loading="lazy" width="640" height="480"><div class="gift-body"><p class="eyebrow">01 / Свобода выбора</p><h3>Подарочный сертификат</h3><p><strong>50&nbsp;000&nbsp;₽</strong> на следующую покупку в Caviar.</p><button class="select-gift" type="button" data-gift="Сертификат Caviar на 50 000 ₽ на следующую покупку" aria-pressed="false">Выбрать сертификат</button></div></article>
 <article class="gift"><img class="gift-photo" src="assets/holiday-gastronomic-set.webp" alt="Визуализация подарочного набора с чёрной икрой" loading="lazy" width="920" height="690"><div class="gift-body"><p class="eyebrow">02 / К праздничному столу</p><h3>Гастрономический комплект</h3><p>Подарочный набор с икрой для новогоднего вечера. Состав можно уточнить у персонального менеджера.</p><button class="select-gift" type="button" data-gift="Гастрономический комплект" aria-pressed="false">Выбрать комплект</button></div></article>
@@ -85,7 +94,26 @@
 <section class="bespoke" id="bespoke"><div class="bespoke-visual">
   <img src="assets/bespoke-assembly.webp?v=56ca2f4" alt="Сборка индивидуального смартфона Caviar с часовым модулем. Рядом часовой пинцет и прецизионная отвёртка." width="1440" height="810" loading="lazy">
 </div><div class="bespoke-copy"><p class="eyebrow">Caviar Bespoke</p><h2>Подарок в единственном экземпляре</h2><p>Семейный герб, инициалы или символ, значимый для близкого человека. Мастера Caviar создадут индивидуальный дизайн на основе ваших пожеланий.</p><a class="btn gold" href="https://caviar-phones.ru/bespoke/inspiration/">Создать свой Caviar</a></div></section>
-<section class="section" id="certificate"><div class="wrap certificate"><img src="assets/holiday-certificate-detail.webp" alt="Белый подарочный сертификат Caviar Royal Gift" loading="lazy" width="960" height="720"><div><p class="eyebrow">Подарочный сертификат Caviar</p><h2>Оставьте выбор за ним. Или за ней.</h2><p>Если вы хотите подарить Caviar, но ещё не определились с дизайном, оформите сертификат на конкретную модель или сумму. Получатель сможет выбрать свой смартфон.</p><a class="btn dark" href="https://caviar-phones.ru/best-sellers/gift-certificate_id28773">Оформить сертификат</a></div></div></section>
+<section class="section" id="private-gifting">
+  <div class="wrap private-gifting" id="certificate">
+    <img class="private-gifting-photo" src="assets/private-gifting.webp" alt="Консультант Caviar показывает клиенту два смартфона в фирменных лотках" loading="lazy" width="960" height="720">
+    <div class="private-gifting-copy">
+      <p class="eyebrow">Caviar Private Gifting</p>
+      <h2>Персональный подбор подарка</h2>
+      <p>Расскажите, для кого вы ищете подарок и к какой дате он нужен. Ваш менеджер Caviar предложит несколько моделей с учётом вкусов получателя и вашего бюджета. Если захотите изменить детали дизайна, менеджер покажет возможные варианты и уточнит сроки изготовления.</p>
+      <details class="private-gifting-channels">
+        <summary class="btn dark">Подобрать подарок с менеджером</summary>
+        <div class="gift-channel-links" role="group" aria-label="Выберите мессенджер">
+          <a class="btn outline" id="private-gifting-max" href="https://max.ru/u/f9LHodD0cOKNTjR24U3SrBr77iq-IJ02acnq_0q9-OIiOWoy6e-uougUpjY" target="_blank" rel="noopener" aria-describedby="private-gifting-max-status">MAX</a>
+          <a class="btn outline" href="https://t.me/Caviar_Russia_officiall?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BF%D0%BE%D0%B4%D0%BE%D0%B1%D1%80%D0%B0%D1%82%D1%8C%20%D0%BF%D0%BE%D0%B4%D0%B0%D1%80%D0%BE%D0%BA%20Caviar.%20%D0%9F%D0%BE%D0%BC%D0%BE%D0%B6%D0%B5%D1%82%D0%B5%20%D1%81%20%D0%B2%D1%8B%D0%B1%D0%BE%D1%80%D0%BE%D0%BC%3F" target="_blank" rel="noopener">Telegram</a>
+          <a class="btn outline" href="https://wa.me/79101040490?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BF%D0%BE%D0%B4%D0%BE%D0%B1%D1%80%D0%B0%D1%82%D1%8C%20%D0%BF%D0%BE%D0%B4%D0%B0%D1%80%D0%BE%D0%BA%20Caviar.%20%D0%9F%D0%BE%D0%BC%D0%BE%D0%B6%D0%B5%D1%82%D0%B5%20%D1%81%20%D0%B2%D1%8B%D0%B1%D0%BE%D1%80%D0%BE%D0%BC%3F" target="_blank" rel="noopener">WhatsApp</a>
+        </div>
+        <p class="max-message-status" id="private-gifting-max-status" role="status">При открытии MAX текст скопируется. Вставьте его в чат.</p>
+        <textarea class="max-message" id="private-gifting-max-message" aria-label="Сообщение для MAX" rows="3" readonly hidden>Здравствуйте! Хочу подобрать подарок Caviar. Поможете с выбором?</textarea>
+      </details>
+    </div>
+  </div>
+</section>
 <section class="section consult" id="contact"><div class="wrap"><p class="eyebrow">Персональный сервис</p><h2>Подготовим ваш подарок к празднику</h2><p>Менеджер Caviar поможет подобрать смартфон, уточнить сроки изготовления и условия новогоднего предложения.</p><div class="contact-actions"><a class="btn dark" href="tel:+79101040490">+7 (910) 104-04-90</a><a class="btn outline" href="https://max.ru/u/f9LHodD0cOKNTjR24U3SrBr77iq-IJ02acnq_0q9-OIiOWoy6e-uougUpjY" target="_blank" rel="noopener">MAX</a><a class="btn outline" href="https://t.me/Caviar_Russia_officiall" target="_blank" rel="noopener">Telegram</a><a class="btn outline" href="https://wa.me/79101040490" target="_blank" rel="noopener">WhatsApp</a></div><details class="terms"><summary>Условия акции «Королевский подарок»</summary><p>Предварительный период предложения: 1–31 декабря 2026 года. Подарок предоставляется при приобретении смартфона Caviar на условиях кампании. Подарочный сертификат по акции действует на следующую покупку в Caviar. Его номинал составляет 50&nbsp;000&nbsp;₽. Доступность подарков и сроки получения уточняются при оформлении заказа.</p><p>Изображения носят иллюстративный характер. Окончательные условия предложения согласовываются отдельно.</p></details></div></section>
 </main><footer class="footer"><a href="https://caviar-phones.ru/" aria-label="Главная Caviar"><img src="../most-wanted-landing/assets/caviar.svg" alt="Caviar" width="62" height="50"></a><span>© Caviar 2026</span><a href="https://caviar-phones.ru/info/contacts/">Контакты</a></footer>
 <script>
@@ -133,21 +161,30 @@ giftButtons.forEach(button => {
   });
 });
 
-maxLink.addEventListener('click', async event => {
-  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-  const message = maxMessage.value;
+function enableMaxDraft(link, field, status) {
+  link.addEventListener('click', async event => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const message = field.value;
 
-  try {
-    await navigator.clipboard.writeText(message);
-    if (maxMessage.value !== message) return;
-    maxMessage.hidden = true;
-    maxStatus.textContent = 'Текст скопирован. Вставьте его в чат MAX.';
-  } catch {
-    if (maxMessage.value !== message) return;
-    maxMessage.hidden = false;
-    maxStatus.textContent = 'Скопируйте текст ниже и вставьте его в чат MAX.';
-  }
-});
+    try {
+      await navigator.clipboard.writeText(message);
+      if (field.value !== message) return;
+      field.hidden = true;
+      status.textContent = 'Текст скопирован. Вставьте его в чат MAX.';
+    } catch {
+      if (field.value !== message) return;
+      field.hidden = false;
+      status.textContent = 'Скопируйте текст ниже и вставьте его в чат MAX.';
+    }
+  });
+}
+
+enableMaxDraft(maxLink, maxMessage, maxStatus);
+enableMaxDraft(
+  document.getElementById('private-gifting-max'),
+  document.getElementById('private-gifting-max-message'),
+  document.getElementById('private-gifting-max-status')
+);
 
 updateDraft('');
 maxStatus.hidden = false;
