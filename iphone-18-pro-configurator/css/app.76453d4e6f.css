@@ -1,0 +1,526 @@
+:root { --bg:#1d1e21; --panel:#26272b; --line:#3a3b40; --text:#e8e8e6; --muted:#9a9a98; --acc:#c9c9c4; --sheet-h:46vh; }
+* { box-sizing:border-box; }
+html,body { margin:0; height:100%; background:var(--bg); color:var(--text); font:15px/1.35 -apple-system, "Helvetica Neue", Arial, sans-serif; overscroll-behavior:none; }
+button { font:inherit; color:inherit; background:none; border:1px solid var(--line); border-radius:8px; padding:8px 12px; cursor:pointer; }
+#app { position:fixed; inset:0; display:grid; grid-template-columns:minmax(0,1fr); grid-template-rows:auto minmax(0,1fr) auto auto; overflow:hidden; }
+#app > * { min-width:0; }
+.top { display:flex; justify-content:space-between; align-items:center; padding:10px 14px; padding-top:max(10px, env(safe-area-inset-top)); z-index:3; }
+.title { display:flex; flex-direction:column; } .title span { font-size:17px; letter-spacing:.06em; text-transform:uppercase; } .title small { color:var(--muted); font-size:11px; }
+.tools { display:flex; gap:8px; } .tools button { width:40px; height:40px; padding:0; font-size:18px; }
+#viewport { position:relative; min-height:0; }
+#gl { position:absolute; inset:0; width:100%; height:100%; display:block; touch-action:none; }
+#hint { position:absolute; left:50%; bottom:8px; transform:translateX(-50%); font-size:11px; color:var(--muted); pointer-events:none; transition:opacity .4s; }
+#sheet { background:var(--panel); border-top:1px solid var(--line); border-radius:16px 16px 0 0; display:flex; flex-direction:column; height:var(--sheet-h); transition:height .3s ease; min-height:0; }
+#handle { display:flex; justify-content:center; padding:8px 0 4px; cursor:pointer; } #handle span { width:44px; height:4px; border-radius:2px; background:var(--line); }
+#tabs { display:flex; gap:4px; overflow-x:auto; padding:0 10px; scrollbar-width:none; flex:none; } #tabs::-webkit-scrollbar { display:none; }
+#tabs button { border:none; border-bottom:2px solid transparent; border-radius:0; white-space:nowrap; padding:8px 10px; color:var(--muted); }
+#tabs button.on { color:var(--text); border-bottom-color:var(--acc); } #tabs button.done::after { content:" ·"; color:var(--acc); }
+#panel { flex:1; overflow-y:auto; padding:10px 14px; min-height:0; }
+.bottom { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:8px 14px; padding-bottom:max(8px, env(safe-area-inset-bottom)); border-top:1px solid var(--line); background:var(--bg); }
+.sum { display:flex; flex-direction:column; min-width:0; } .sum small { color:var(--muted); font-size:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+#order { background:var(--acc); color:#111; border:none; white-space:nowrap; }
+h4 { margin:12px 0 6px; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); font-weight:600; }
+.chips { display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; scrollbar-width:none; } .chips::-webkit-scrollbar { display:none; }
+.row { display:flex; align-items:center; gap:10px; margin:6px 0; } .row label { width:110px; color:var(--muted); font-size:12px; } .row input[type=range] { flex:1; } .row output { width:56px; text-align:right; font-size:12px; }
+input[type=text], select, textarea { width:100%; background:#1b1c1f; color:var(--text); border:1px solid var(--line); border-radius:8px; padding:9px; font:inherit; }
+.note { font-size:12px; color:#d9b56a; margin:6px 0; } .muted { color:var(--muted); font-size:12px; }
+.spec { font-size:13px; } .spec div { display:flex; justify-content:space-between; gap:12px; padding:3px 0; border-bottom:1px solid #2f3034; } .spec span:last-child { text-align:right; }
+.btns { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0; }
+dialog { background:var(--panel); color:var(--text); border:1px solid var(--line); border-radius:14px; width:min(420px, 92vw); } dialog::backdrop { background:#000a; }
+dialog form > * { margin:6px 0; }
+/* studio: dark background with a soft light spot behind the phone (the canvas is transparent) */
+#viewport { background: radial-gradient(120% 80% at 50% 38%, #3a3b40 0%, #232428 45%, #121214 100%); }
+
+/* ---------- UX changes 08.11.2026 (FigJam board "Changes") ---------- */
+/* sheet: the height is set by the content (fitSheet), the handle is larger */
+#handle { padding: 10px 0 8px; } #handle span { width: 54px; height: 5px; }
+#sheet { position: relative; }
+.sum span { white-space: nowrap; }
+/* desktop elements are hidden on the phone */
+#steps, .phead { display: none; }
+
+@media (min-width: 900px) {
+  /* as in the Caviar configurator: viewport | step list with values | options panel */
+  #app { grid-template-columns: minmax(0, 1fr) 240px 400px; grid-template-rows: auto minmax(0, 1fr) auto; }
+  .top { grid-column: 1 / 4; } #viewport { grid-column: 1; grid-row: 2 / 4; }
+  #steps { display: flex; flex-direction: column; grid-column: 2; grid-row: 2 / 4; min-height: 0; background: #1f2023; border-left: 1px solid var(--line); }
+  #stepList { flex: 1; overflow-y: auto; }
+  #stepList button { display: block; width: 100%; text-align: left; border: none; border-bottom: 1px solid var(--line); border-radius: 0; padding: 12px 16px; border-left: 2px solid transparent; }
+  #stepList button b { display: block; font-weight: 500; font-size: 14px; } #stepList button small { color: var(--muted); font-size: 11.5px; }
+  #stepList button.on { background: #2a2b2f; border-left-color: var(--acc); }
+  .build { padding: 12px 14px 14px; border-top: 1px solid var(--line); } .build small { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .codebox { display: flex; align-items: center; gap: 6px; margin: 6px 0 8px; padding: 8px; border: 1px solid var(--line); border-radius: 8px; background: #17181a; }
+  .codebox span { flex: 1; font: 11px/1.35 Menlo, monospace; word-break: break-all; max-height: 4.1em; overflow: hidden; }
+  .codebox button { padding: 4px 8px; }
+  #sheet { grid-column: 3; grid-row: 2; height: auto !important; border-radius: 0; border-top: none; border-left: 1px solid var(--line); }
+  #tabs, #handle { display: none; }
+  .phead { display: flex; justify-content: space-between; align-items: center; padding: 14px 14px 4px; } .phead span { font-size: 20px; }
+  .bottom { grid-column: 3; grid-row: 3; flex-direction: column-reverse; align-items: stretch; gap: 6px; border-left: 1px solid var(--line); }
+  .bottom .sum { align-items: center; } #order { width: 100%; padding: 12px; text-transform: uppercase; letter-spacing: .1em; }
+}
+.sum small { font-size: 11px; color: var(--muted); } .sum b { font-size: 17px; font-weight: 600; white-space: nowrap; }
+@media (min-width: 900px) { .bottom .sum { flex-direction: row; justify-content: center; gap: 8px; } }
+#viewport.tight #hint { display: none; }
+@media (min-width: 900px) { .chips { flex-wrap: wrap; overflow: visible; } }
+/* start screen: choice of the customisation type (11.11.2026) */
+#start { position:fixed; inset:0; z-index:50; display:flex; align-items:center; justify-content:center; padding:16px; background:rgba(18,19,22,.92); backdrop-filter:blur(6px); }
+#start[hidden] { display:none; }
+#start .start-in { width:min(720px,100%); display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+#start h2 { grid-column:1/-1; margin:0 0 6px; font-weight:500; font-size:22px; text-align:center; }
+#start button { text-align:left; display:flex; flex-direction:column; gap:8px; padding:20px; border-radius:14px; border:1px solid var(--line); background:var(--panel); min-height:150px; }
+#start button:hover { border-color:var(--acc); }
+#start b { font-size:18px; font-weight:600; } #start span { color:var(--muted); font-size:14px; line-height:1.4; }
+@media (max-width:620px) { #start .start-in { grid-template-columns:1fr; } #start button { min-height:0; } }
+/* menu with swatches (11.11.2026, the Zodiac configurator logic): group cards, round swatches, subsection, choice card */
+.chips { display:grid; grid-template-columns:repeat(auto-fill, minmax(84px, 1fr)); gap:12px 8px; overflow:visible; padding:4px 0; }
+.sw { display:flex; flex-direction:column; align-items:center; gap:7px; padding:4px 2px; border:none; background:none; font-size:11px; text-align:center; color:var(--muted); line-height:1.2; }
+.sw.on { color:var(--text); } .sw .lb { max-width:96px; }
+.icw { position:relative; display:inline-flex; flex:none; }
+.ic { width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:1px solid #0007; box-shadow:inset 0 1px 0 #fff2; background:#2c2d31; font-style:normal; }
+.ic.ph { background:radial-gradient(circle at 35% 30%, #4a4b50, #26272b); color:var(--muted); font-size:18px; }
+.sw.on .ic { outline:2px solid var(--acc); outline-offset:3px; }
+.on > .icw::after { content:"✓"; position:absolute; right:-4px; bottom:-2px; width:16px; height:16px; border-radius:50%; background:var(--acc); color:#111; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+.cards { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.card { display:flex; align-items:center; gap:10px; padding:9px 10px; border:1px solid var(--line); border-radius:10px; text-align:left; min-width:0; }
+.card .ic { width:34px; height:34px; font-size:14px; } .card .tx { display:flex; flex-direction:column; min-width:0; }
+.card b { font-weight:500; font-size:13px; } .card small { color:var(--muted); font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.card.on { border-color:var(--acc); background:#303135; } .card.on > .icw::after { right:-6px; bottom:-4px; }
+.card.off { opacity:.4; cursor:default; } .sw:disabled { opacity:.4; cursor:default; }
+h4.subh { color:var(--acc); margin-left:4px; }
+.detail { display:flex; gap:12px; align-items:center; margin:14px 0 6px; padding:12px; border:1px solid var(--line); border-radius:10px; background:#222326; }
+.detail .ic { width:56px; height:56px; } .detail b { font-weight:500; } .detail p { margin:4px 0 0; color:var(--muted); font-size:12px; }
+@media (min-width: 900px) { .chips { grid-template-columns:repeat(auto-fill, minmax(92px, 1fr)); } }
+/* 3D camera plate swatches (13.11.2026): finishes caption under the texture name; image swatch without a placeholder background */
+.sw .lb small { display:block; margin-top:2px; font-size:10px; color:var(--muted); }
+.ic[style*="swatches/"] { background-color:transparent; border-color:transparent; box-shadow:0 2px 6px #0006; }
+
+/* storage text swatch (13.11.2026): the capacity inside the circle — a metal "coin", the selected one — a border */
+.ic.tx { flex-direction:column; gap:0; background:radial-gradient(circle at 34% 28%, #5a5b61, #2a2b2f 62%, #1d1e21); color:var(--muted); line-height:1; }
+.ic.tx b { font-size:15px; font-weight:600; letter-spacing:-.2px; } .ic.tx small { font-size:9px; margin-top:2px; letter-spacing:.4px; }
+.sw.on .ic.tx { color:var(--text); }
+.card.noic { padding:11px 12px; }
+
+/* ===== Menu theme as in the Caviar configurator (caviar-phones.ru/collections/zodiac/contructor, 14.11.2026) =====
+   palette: background #0D1117, panel #10151C, step list #0F141B, cards #151A22, lines — white 9 %; text #F2EFE8 / #D9D5CB / #9A968C;
+   gold #A89974 (hover #968758, light #C9BC98). Font Nunito Sans, group headings — gold in caps, buttons — "pills" */
+:root { --bg:#0D1117; --panel:#10151C; --nav:#0F141B; --card:#151A22; --line:rgba(255,255,255,.09); --text:#F2EFE8; --ink2:#D9D5CB; --muted:#9A968C;
+  --acc:#A89974; --gold:#A89974; --gold-h:#968758; --gold-l:#C9BC98; --ease:cubic-bezier(.2,.7,.2,1); }
+html, body { font-family:"Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif; font-weight:400; -webkit-font-smoothing:antialiased; }
+/* Traditional Chinese (/zh/): the interface font has no CJK glyphs, they come from the system Traditional Chinese fonts */
+html:lang(zh), html:lang(zh) body { font-family:"Nunito Sans", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", "Noto Sans CJK TC", system-ui, sans-serif; }
+button { border-color:var(--line); border-radius:999px; transition:background .2s, color .2s, border-color .2s; }
+button:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+.top { background:var(--bg); }
+.title span { font-weight:800; letter-spacing:.06em; font-size:18px; } .title small { color:var(--muted); font-size:12px; }
+.tools button { background:rgba(255,255,255,.05); border:1px solid var(--line); }
+.tools button:hover { background:rgba(168,153,116,.16); color:var(--gold-l); }
+#viewport { background:radial-gradient(70% 60% at 50% 52%, #121822 0%, #0B0F15 62%, #080B10 100%); }
+/* animated viewport background (owner's change 18.11.2026, modelled on codepen.io/omabedor-gwran/pen/yyLLmNJ "Luxury Wave Background"):
+   two large blurred spots slowly rotate towards each other, two highlights breathe barely noticeably. Colour — the brand blue
+   matching the page palette. The blur is made with gradients, not the blur filter: the layer is not recomputed, only the rotation moves.
+   The motion is very slow (one turn in 4–6 minutes); with "reduce motion" the background is still. The 3D canvas is transparent and lies on top */
+#vbg { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+#vbg i, #vbg b { position:absolute; display:block; will-change:transform; }
+#vbg i { left:-50%; top:-50%; width:200%; height:200%; animation:vbgTurn 260s linear infinite; }
+#vbg i:nth-child(1) { background:radial-gradient(34% 30% at 32% 40%, rgba(38,78,148,.46) 0%, rgba(38,78,148,.16) 45%, transparent 72%); }
+#vbg i:nth-child(2) { background:radial-gradient(30% 34% at 66% 62%, rgba(24,52,112,.56) 0%, rgba(24,52,112,.18) 48%, transparent 74%); animation-duration:360s; animation-direction:reverse; }
+#vbg b { width:52vmin; height:52vmin; border-radius:50%; background:radial-gradient(circle, rgba(72,124,204,.20) 0%, rgba(72,124,204,.07) 40%, transparent 70%); animation:vbgGlow 24s ease-in-out infinite alternate; }
+#vbg b:nth-child(3) { left:8%; top:6%; } #vbg b:nth-child(4) { right:4%; bottom:2%; animation-delay:-12s; }
+@keyframes vbgTurn { to { transform:rotate(360deg); } } @keyframes vbgGlow { from { opacity:1; } to { opacity:.55; } }
+@media (prefers-reduced-motion:reduce) { #vbg i, #vbg b { animation:none; } }
+body.starting #vbg { display:none; }
+/* options panel */
+#sheet { background:var(--panel); border-color:var(--line); }
+.phead span { font-size:22px; font-weight:800; }
+#panel { padding:6px 20px 18px; scrollbar-width:thin; scrollbar-color:#2A313C transparent; }
+h4 { font-size:11.5px; font-weight:700; letter-spacing:.1em; color:var(--gold); margin:20px 0 12px; }
+#panel > h4:first-child, #panel > :first-child h4:first-child { margin-top:8px; }
+h4.subh { color:var(--gold); margin:16px 0 12px 10px; padding-left:16px; border-left:1px solid rgba(168,153,116,.45); }
+.muted { color:var(--muted); font-size:12.5px; line-height:1.45; } .note { color:var(--gold-l); font-size:12.5px; }
+/* round swatches: a gold ring on the selected one, the tick — a gold circle with a dark outline in the panel colour */
+.chips { grid-template-columns:repeat(auto-fill, minmax(88px, 1fr)); gap:14px 4px; }
+.sw { gap:6px; padding:4px 0; border-radius:12px; color:var(--ink2); font-size:12px; line-height:1.25; }
+.sw .ic { width:56px; height:56px; box-shadow:0 0 0 1px var(--line), 0 6px 16px rgba(0,0,0,.35); border:none; transition:transform .2s var(--ease); }
+.sw:hover .ic { transform:scale(1.06); }
+.sw.on { color:var(--text); font-weight:700; }
+.sw.on .ic, .sw.on .ic.tx { outline:2px solid var(--gold); outline-offset:2px; }
+/* highlight of the selected swatch (owner's change 17.11.2026): a soft gold glow in the brand colour behind the circle; 17.11.2026 — denser, less diffuse */
+.sw .ic { transition:transform .2s var(--ease), box-shadow .25s var(--ease); }
+.sw.on .ic { box-shadow:0 0 0 1px var(--line), 0 0 9px 3px rgba(168,153,116,.62), 0 0 20px 5px rgba(168,153,116,.26), 0 6px 16px rgba(0,0,0,.35); }
+.on > .icw::after { content:""; right:-5px; bottom:-5px; width:20px; height:20px; background:var(--gold) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230D1117' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/12px no-repeat; border:2px solid var(--panel); }
+.sw .lb small { color:var(--muted); font-weight:400; }
+.chips.signs { grid-template-columns:repeat(6, minmax(0, 1fr)); gap:10px 4px; }
+.chips.signs .ic { width:48px; height:48px; } .chips.signs .sw { font-size:11.5px; }
+@media (max-width:520px) { .chips.signs { grid-template-columns:repeat(4, minmax(0, 1fr)); } }
+.ic.tx { background:radial-gradient(circle at 34% 28%, #3a4250, #1a2029 62%, #10151C); color:var(--ink2); }
+.ic.ph { background:radial-gradient(circle at 35% 30%, #2a3240, #151A22); color:var(--gold-l); }
+/* cards */
+.cards { gap:8px; }
+.card { position:relative; border-radius:12px; border:1px solid var(--line); background:rgba(255,255,255,.024); padding:10px; }
+.card:hover { border-color:rgba(168,153,116,.45); }
+.card b { font-weight:700; font-size:14px; color:var(--ink2); } .card small { color:var(--muted); font-size:12px; }
+.card .ic { width:44px; height:44px; box-shadow:0 0 0 1px var(--line); border:none; }
+.card.on { border-color:var(--gold); background:rgba(168,153,116,.12); } .card.on b { color:var(--text); }
+.card.on > .icw::after { right:-4px; bottom:-4px; }
+.card.noic.on::after { content:""; position:absolute; top:8px; right:8px; width:20px; height:20px; border-radius:50%; background:var(--gold) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230D1117' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/12px no-repeat; }
+.detail { margin-top:18px; padding:14px; border-radius:14px; background:rgba(255,255,255,.03); border:1px solid var(--line); gap:14px; }
+.detail .ic { width:68px; height:68px; box-shadow:0 0 0 1px var(--line), 0 8px 22px rgba(0,0,0,.4); border:none; }
+.detail b { font-weight:700; font-size:14px; color:var(--text); } .detail p { color:var(--gold-l); font-size:12.5px; }
+/* symbol themes — tabs like the "summary" at the top of the Caviar configurator */
+.cards2 { margin-top:8px; }
+.grptabs { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:6px; margin:16px 0 4px; }
+.grptab { display:flex; flex-direction:column; align-items:flex-start; justify-content:center; gap:1px; min-width:0; padding:7px 9px; border-radius:10px; border:1px solid var(--line); background:none; text-align:left; line-height:1.2; }
+.grptab b { font-size:12.5px; font-weight:700; color:var(--ink2); } .grptab small { font-size:11px; color:var(--muted); max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.grptab:hover { border-color:rgba(168,153,116,.45); }
+.grptab.on { border-color:var(--gold); background:rgba(168,153,116,.13); } .grptab.on b { color:var(--text); }
+.grptab.has small { color:var(--gold-l); }
+/* sliders, fields */
+input[type=range] { accent-color:var(--gold); } .row label, .row output { color:var(--muted); }
+input[type=text], select, textarea { background:#0B0F15; border:1px solid #2A313C; border-radius:0; color:var(--text); }
+input[type=text]:focus, select:focus, textarea:focus { outline:none; border-color:var(--gold); }
+/* navigation and order */
+.bottom { background:#0E1319; border-color:var(--line); }
+#order { background:var(--gold); color:var(--bg); font-weight:800; letter-spacing:.08em; text-transform:uppercase; font-size:13.5px; border-radius:999px; }
+#order:hover { background:var(--gold-h); }
+.sum small { color:var(--muted); } .sum b { color:var(--gold); font-weight:800; }
+.spec div { border-color:var(--line); } .spec span:first-child { color:var(--muted); }
+dialog { background:var(--card); border:1px solid var(--line); border-radius:16px; } dialog::backdrop { background:rgba(5,7,10,.72); backdrop-filter:blur(6px); }
+#start { background:rgba(5,7,10,.88); }
+#start button { background:var(--card); border-color:var(--line); border-radius:16px; } #start button:hover { border-color:var(--gold); }
+#start b { font-weight:800; } #start h2 { font-weight:800; }
+#handle span { background:#2A313C; }
+#tabs button { border-radius:0; } #tabs button.on { border-bottom-color:var(--gold); } #tabs button.done::after { color:var(--gold); }
+@media (min-width:900px) {
+  #app { grid-template-columns:minmax(0,1fr) 216px 490px; }   /* change 17.11.2026: step captions removed — the list is 70 px narrower, the options block 70 px wider; change 19.11.2026: the step menu is wider (180 → 216 px), the options block unchanged */
+  #steps { background:var(--nav); border-color:var(--line); }
+  #stepList { padding:14px 10px; display:flex; flex-direction:column; gap:2px; }
+  #stepList button { position:relative; display:grid; grid-template-columns:26px 1fr; gap:10px; align-items:start; padding:9px 10px; border:none; border-radius:10px; opacity:.62; }
+  #stepList button:hover { opacity:1; background:rgba(255,255,255,.04); }
+  #stepList button.done, #stepList button.on { opacity:1; }
+  #stepList .n { width:26px; height:26px; border-radius:50%; display:grid; place-items:center; font-style:normal; font-size:12px; font-weight:700; border:1px solid var(--line); color:var(--muted); }
+  #stepList button.done .n { border-color:rgba(168,153,116,.55); color:var(--gold-l); }
+  #stepList button b { font-size:13.5px; font-weight:700; color:var(--ink2); } #stepList button small { font-size:12px; line-height:1.3; color:var(--muted); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  #stepList button.on { background:rgba(168,153,116,.12); border-left:none; }
+  #stepList button.on::before { content:""; position:absolute; left:0; top:10px; bottom:10px; width:2px; border-radius:2px; background:var(--gold); }
+  #stepList button.on .n { background:var(--gold); border-color:var(--gold); color:var(--bg); }
+  #stepList button.on b { color:var(--text); } #stepList button.on small { color:var(--gold-l); }
+  .build { border-color:var(--line); padding:16px 20px; } .build small { color:var(--gold); font-weight:700; letter-spacing:.1em; }
+  .codebox { background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:10px; } .codebox span { font:800 12px/1.35 "Nunito Sans", sans-serif; letter-spacing:.03em; }
+  .codebox button { border:none; color:var(--muted); } .codebox button:hover { color:var(--gold-l); }
+  #sheet { border-color:var(--line); }
+  .phead { padding:20px 20px 6px; }
+  .bottom { border-color:var(--line); padding:12px 20px 16px; } #order { padding:13px 20px; }
+}
+.title { min-width:0; } .title span { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+@media (max-width:899px) { .title span { font-size:15px; } #tabs button { font-size:13.5px; font-weight:600; } }
+/* owner's changes 14.11.2026: a dense symbol grid in all themes (captions in 2 lines), a barely visible swatch outline,
+   buttons without rounding — as in the Caviar configurator (radius 2 px); swatches, view angles and step numbers stay round */
+.chips.signs .sw .lb { font-size:11.5px; line-height:1.2; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; max-width:100%; }
+.sw .ic, .card .ic, .detail .ic { box-shadow:0 0 0 1px rgba(255,255,255,.1), 0 6px 16px rgba(0,0,0,.35); }
+.ic[style*="swatches/"] { box-shadow:0 0 0 1px rgba(255,255,255,.1), 0 4px 12px rgba(0,0,0,.4); }
+button, .card, .grptab, .detail, .codebox, #start button, dialog, #order, .tools button { border-radius:2px !important; }
+#stepList button { border-radius:2px; }
+/* divider next to the group heading (owner's change 14.11.2026, as in the Caviar configurator): a gold heading — a thin line to the edge */
+#panel h4:not(.subh) { display:flex; align-items:center; gap:14px; }
+#panel h4:not(.subh)::after { content:""; flex:1; height:1px; background:var(--line); }
+
+/* ===== "Changes" board 14.11.2026 =====
+   1 — step list as in the reference: no numbers, full-width items with dividers, the current one — a bar on the left
+   2 — build code only in "Summary" (hidden in the side panel)        3 — no captions under the option names
+   6 — "With symbol / Without symbol" as cards, a subordinate block with a line on the left   8 — no "Next" block   11 — no view angle buttons */
+@media (min-width:900px) {
+  #stepList { padding:6px 0; gap:0; }
+  #stepList button { display:block; padding:22px 20px; border-radius:0 !important; border-bottom:1px solid var(--line); opacity:1; }
+  #stepList button:hover { background:rgba(255,255,255,.03); }
+  #stepList button b { display:block; font-size:13px; font-weight:700; color:var(--ink2); letter-spacing:.01em; }
+  #stepList button small { display:block; margin-top:3px; font-size:11.5px; color:var(--muted); }
+  #stepList button.on { background:rgba(255,255,255,.035); }
+  #stepList button.on::before { left:0; top:0; bottom:0; width:2px; border-radius:0; background:var(--gold-l); }   /* a bar the full height of the block (owner's change 18.11.2026) */
+  #stepList button.on b { color:var(--text); } #stepList button.on small { color:var(--muted); }
+  .build small, .codebox { display:none; }
+  .build { display:none; }   /* change 19.11.2026: the "Build" block is empty (the "Ready-made designs" button was replaced by a menu section) — it produced a second bar under "Summary" */
+}
+.card small, .sw .lb small, .grptab small { display:none !important; }
+.card.optc { padding:12px; } .card.optc b { font-size:14px; }
+.ic.none { background:#10151C; position:relative; overflow:hidden; }
+.ic.none::after { content:""; position:absolute; left:50%; top:12%; bottom:12%; width:1.5px; background:var(--gold-l); transform:rotate(45deg); }
+.dep { margin:16px 0 0 10px; padding-left:16px; border-left:1px solid rgba(168,153,116,.45); }
+.dep .dep { margin-left:0; padding-left:0; border-left:none; }
+.dep h4.subh { margin-left:0; padding-left:0; border-left:none; }
+.grptabs { margin-top:0; }
+.cards.one { grid-template-columns:1fr; margin-top:14px; }
+#hint { bottom:14px; }
+/* board changes 14.11.2026: 2 — a caption on the sheet tab (collapse / expand the menu), 4 — the specification in "Summary" is more spacious */
+#handle { align-items:center; gap:10px; }
+#handleLbl { font-size:10.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--gold-l); }
+#handle:active #handleLbl { color:var(--text); }
+.spec { font-size:13px; line-height:1.45; } .spec div { padding:10px 0; gap:18px; } .spec span:first-child { flex:0 0 38%; }
+/* audit 14.11.2026, stage 1: message about the result of opening a build code (on top of the start screen and the panels) */
+#toast { position:fixed; left:50%; top:16px; transform:translateX(-50%); z-index:60; width:min(520px, calc(100vw - 32px)); padding:14px 18px; background:var(--card); color:var(--text);
+  border:1px solid rgba(168,153,116,.55); border-radius:2px; box-shadow:0 12px 40px rgba(0,0,0,.55); font-size:13px; line-height:1.45; cursor:pointer; }
+#toast[hidden] { display:none; }
+#toast p { margin:0; } #toast p + p { margin-top:4px; color:var(--ink2); } #toast p:first-child { color:var(--gold-l); font-weight:600; }
+
+/* audit, stage 4 (B6): indicator of parts still loading in the viewport and an action button in the message */
+/* owner's change 19.11.2026: when a design is loading and a part takes long to load — a loading effect over the whole scene: the scene is dimmed and slightly
+   blurred, a soft highlight sweeps across it, in the centre — a thin gold ring and a caption. The scene can be rotated during loading too */
+#busy { position:absolute; inset:0; z-index:3; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; overflow:hidden;
+  pointer-events:none; background:radial-gradient(260px 200px at 50% 50%, rgba(8,11,16,.86), rgba(8,11,16,.62) 55%, rgba(8,11,16,.4) 100%); backdrop-filter:blur(3px) saturate(.8); -webkit-backdrop-filter:blur(3px) saturate(.8);
+  opacity:0; visibility:hidden; transition:opacity .45s ease, visibility 0s linear .45s; }
+#busy.on { opacity:1; visibility:visible; transition:opacity .35s ease, visibility 0s; }
+#busy .ring { width:54px; height:54px; border-radius:50%; border:1px solid rgba(201,188,152,.18); border-top-color:var(--gold-l); animation:busySpin 1.1s linear infinite; }
+#busy b { font-size:12px; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:var(--gold-l); animation:busyPulse 1.8s ease-in-out infinite; }
+#busy .sweep { position:absolute; top:-20%; bottom:-20%; left:-60%; width:45%; transform:skewX(-18deg);
+  background:linear-gradient(90deg, transparent, rgba(201,188,152,.10) 45%, rgba(255,255,255,.08) 50%, rgba(201,188,152,.10) 55%, transparent); animation:busySweep 2.2s ease-in-out infinite; }
+@keyframes busySpin { to { transform:rotate(360deg); } }
+@keyframes busyPulse { 0%, 100% { opacity:.55; } 50% { opacity:1; } }
+@keyframes busySweep { 0% { left:-60%; } 100% { left:120%; } }
+@media (prefers-reduced-motion: reduce) { #busy .sweep { display:none; } #busy .ring { animation-duration:2.4s; } #busy b { animation:none; } }
+#toast button { margin-top:10px; min-height:44px; padding:0 18px; border-radius:10px; border:0; background:var(--gold, #c9a45c); color:#14110a; font:600 14px inherit; cursor:pointer; }
+
+/* audit, stage 5: scenario and steps */
+/* L11 — a group with a single option */
+.only { display:flex; justify-content:space-between; align-items:baseline; gap:16px; margin-top:18px; padding:12px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); font-size:13px; }
+.only span { color:var(--muted); letter-spacing:.08em; text-transform:uppercase; font-size:11px; } .only b { font-weight:600; text-align:right; }
+.chips[hidden] { display:none; }
+.btns.savespec { margin-top:12px; } .btns.savespec button { flex:1; min-height:48px; }   /* "Download specification" — on all screens, under "Download design" (18.11.2026) */
+.btns.savedesign { margin-top:16px; } .btns.savedesign button { flex:1; min-height:48px; border-color:rgba(168,153,116,.6); color:var(--gold-l); font-weight:700; }   /* "Download design" (15.11.2026): on all screens */
+/* L12, L13 — start screen: customisation type cards and "Continue" */
+#start { overflow-y:auto; align-items:flex-start; } #start .start-in { margin:auto; }
+#start .start-note { grid-column:1/-1; margin:0; color:var(--muted); font-size:14px; line-height:1.45; text-align:center; }
+#start button.mode { padding:0; gap:0; overflow:hidden; min-height:0; }
+#start button.mode.on { border-color:var(--gold); }
+#start button.mode img { display:block; width:100%; height:auto; aspect-ratio:4/5; max-height:42vh; object-fit:contain; background:#0b0d10; }
+#start button.mode .tx { display:flex; flex-direction:column; gap:8px; padding:16px 18px 18px; }
+#start button.mode em { margin-left:10px; font-style:normal; font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--gold-l); }
+#start button.mode i { margin-top:4px; font-style:normal; font-size:17px; font-weight:700; color:var(--text); white-space:nowrap; }
+#start button.mode i small { margin-left:10px; font-size:11px; font-weight:400; color:var(--muted); }
+#start .resume { grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; gap:14px; padding:16px 18px; background:var(--card); border:1px solid rgba(168,153,116,.55); }
+#start .resume span { display:flex; flex-direction:column; gap:4px; color:var(--text); } #start .resume small { color:var(--muted); font-size:13px; }
+#start .resume button, #start button.back { flex-direction:row; align-items:center; justify-content:center; min-height:48px; padding:0 22px; text-align:center; border-color:rgba(168,153,116,.6); color:var(--gold-l); font-weight:700; }
+#start .resume button:hover, #start button.back:hover { background:var(--gold); color:var(--bg); }
+#start button.back { grid-column:1/-1; }
+@media (max-width:620px) { #start button.mode { flex-direction:row; align-items:stretch; } #start button.mode img { width:38%; aspect-ratio:auto; height:auto; min-height:150px; max-height:none; object-fit:cover; } #start button.mode .tx { flex:1; padding:14px; } #start button.mode .tx > span { font-size:13px; }
+  #start .resume { flex-direction:column; align-items:stretch; } }
+
+/* ===== audit, stage 6: framing and phone ===== */
+/* E10 — tap targets from 44 px, text from 12 px */
+button, input[type=text], select, textarea, input[type=range] { min-height:44px; }
+.tools button { width:44px; height:44px; }
+.card { min-height:48px; } .grptab { min-height:44px; }
+h4, #handleLbl, .only span, #hint, .sum small, .row label, .row output, .chips.signs .sw, .chips.signs .sw .lb, #start button.mode em, #start button.mode i small { font-size:12px; }
+.ic.tx b { font-size:14px; } .ic.tx small { font-size:12px; margin-top:1px; letter-spacing:0; }
+@media (min-width:900px) { #stepList button small { font-size:12px; } }
+/* E2 — a fade at the bottom edge of the panel: the list continues below */
+#sheet { overflow:hidden; }
+#sheet::after { content:""; position:absolute; left:0; right:0; bottom:0; height:56px; background:linear-gradient(to bottom, rgba(16,21,28,0), var(--panel) 88%); pointer-events:none; opacity:0; transition:opacity .2s; }
+#sheet.more::after { opacity:1; }
+/* E5 — controls hint: appears when a build is open */
+#hint { opacity:0; white-space:nowrap; }
+/* E9 — phone: the sheet over the viewport, three positions; a short header */
+@media (max-width:899px) {
+  #app { grid-template-rows:auto minmax(0,1fr) auto; }
+  #viewport, #sheet { grid-row:2; grid-column:1; }
+  #sheet { align-self:end; z-index:2; height:46vh; box-shadow:0 -10px 30px rgba(0,0,0,.45); transition:height .32s var(--ease); }
+  #sheet.drag { transition:none; }
+  .bottom { grid-row:3; }
+  .top { padding:4px 12px; padding-top:max(4px, env(safe-area-inset-top)); } .title small { display:none; }
+  #handle { min-height:44px; padding:0; flex:none; touch-action:none; user-select:none; -webkit-user-select:none; }
+  #tabs button { min-height:44px; }
+  #hint { bottom:calc(var(--inset, 0px) + 10px); }
+}
+
+/* logo in the header (owner's change 15.11.2026): colours as in the caviar-phones.ru header — the crest is gold, the lettering is light */
+.brand { display:flex; align-items:center; gap:14px; min-width:0; } .brand .logo { display:block; height:44px; width:auto; flex:none; }
+@media (max-width:899px) { .brand { gap:10px; } .brand .logo { height:40px; } }
+/* title in the centre of the header (owner's change 15.11.2026): "Configurator iPhone 18 Pro Max" — in the centre of the window, not pressed against the logo;
+   the width is limited so as not to overlap the logo and the buttons on the right; narrower than 950 px — after the logo, narrower than 420 px — only the logo in the header: the model is visible on the "Model" step */
+.top { position:relative; }
+.top > .title { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); max-width:calc(100% - 2 * 290px); text-align:center; pointer-events:none; }
+.top > .title em { font-style:normal; font-weight:400; } .top > .title b { font-weight:800; }
+@media (max-width:949px) { .top > .title { position:static; transform:none; max-width:none; flex:1; min-width:0; margin:0 12px; text-align:left; } }   /* does not fit in the centre — right after the logo */
+/* ===== audit, stage 8: summary, specification, order dialog ===== */
+dialog { max-height:min(90vh, 760px); overflow-y:auto; width:min(480px, 94vw); padding:22px; }
+#dlgBody h3 { margin:0 0 14px; font-size:20px; font-weight:800; }
+.osum { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 16px; background:rgba(168,153,116,.1); border:1px solid rgba(168,153,116,.45); }
+.osum span { display:flex; flex-direction:column; gap:3px; min-width:0; } .osum b { font-size:16px; font-weight:800; } .osum small { font-size:12px; color:var(--muted); }
+.osum i { font-style:normal; font-size:19px; font-weight:800; color:var(--gold-l); white-space:nowrap; }
+#dlgBody .spec { margin:8px 0 4px; } #dlgBody .spec div { padding:8px 0; }
+#dlgBody .btns button { flex:1 1 auto; } #orderSpec { border-color:rgba(168,153,116,.6); color:var(--gold-l); font-weight:700; }
+
+/* header: a single "Close" button (owner's change 15.11.2026) */
+
+/* ===== audit, stage 9: accessibility ===== */
+.fl { display:block; margin:12px 0 6px; font-size:13px; font-weight:600; color:var(--ink2); }           /* a permanent label above the field instead of a disappearing placeholder */
+#closeBtn { font-size:17px; }
+@media (max-width:899px) { input[type=text], select, textarea { font-size:16px; } }                      /* page zoom is allowed: the iPhone itself zooms into a field with a font smaller than 16 px on every tap */
+:focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+@media (prefers-reduced-motion:reduce) { #sheet, .sw .ic, button { transition:none !important; } }
+
+/* enquiry dialog (owner's change 15.11.2026: like the enquiry form of the Zodiac configurator on caviar-phones.ru) */
+#dlg { width:min(460px, 94vw); padding:28px; border-radius:16px !important; box-shadow:0 24px 64px rgba(0,0,0,.6); scrollbar-width:thin; scrollbar-color:#2A313C transparent; }
+#dlg::backdrop { background:rgba(5,7,10,.72); backdrop-filter:blur(6px); }
+/* "Ready-made designs" dialog (18.11.2026): a carousel following the owner's sketch — a large card in the centre, two smaller ones on each side.
+   --w — the width of the central card; the shift (--k, in widths) and the scale (--s) of each card are set by the code according to its distance from the centre */
+/* "Build examples" — a catalogue of ready-made designs in the panel of the first section (owner's change 19.11.2026) */
+.rg-lead { margin:0 0 14px; }
+.rgrid { display:grid; grid-template-columns:1fr 1fr; gap:10px;   /* two columns (owner's change 19.11.2026) */
+  }
+.rg { display:flex; flex-direction:column; align-items:center; gap:8px; min-width:0; padding:12px 6px 10px; border:1px solid var(--line); border-radius:2px; background:rgba(255,255,255,.02); color:var(--ink2); cursor:pointer; transition:border-color .2s, background .2s, color .2s; }
+.rg img { display:block; width:100%; max-width:150px; height:auto; aspect-ratio:460/972; object-fit:contain; filter:drop-shadow(0 8px 12px rgba(0,0,0,.5)); }
+.rg.cover { padding:0; overflow:hidden; } .rg.cover img { max-width:none; aspect-ratio:560/956; object-fit:cover; filter:none; }   /* full-card render without a caption (23.11.2026) */
+.rg-tabs { margin:0 0 14px; }
+.rg b { font-size:13px; font-weight:700; line-height:1.25; text-align:center; }
+.rg:hover { border-color:rgba(168,153,116,.6); color:var(--text); } .rg.on { border-color:var(--gold); background:rgba(168,153,116,.1); color:var(--text); }
+.ready-more { margin:16px 0 4px; font-size:13px; } .ready-more a { color:var(--gold-l); }
+#dlgBody { position:relative; } #dlgBody > * { margin:0; }
+#dlgBody h3 { margin:0 0 6px; font-size:22px; font-weight:800; color:var(--text); padding-right:36px; }
+.dlg-x { position:absolute; top:-14px; right:-14px; width:34px; height:34px; display:grid; place-items:center; padding:0; border:0 !important; background:none; color:var(--muted); }
+.dlg-x:hover { color:var(--text); background:rgba(255,255,255,.06); } .dlg-x svg { width:18px; height:18px; }
+.lead-lead { margin:0 0 12px !important; color:#CFCAC0; font-size:14px; line-height:1.45; }
+.lead-form { display:grid; gap:12px; margin-top:16px !important; }
+.lead-f { display:grid; gap:5px; font-size:12.5px; color:var(--muted); }
+.lead-f input, .lead-f select, .lead-f textarea { width:100%; padding:11px 12px; border-radius:0; border:1px solid #2A313C; background:#0F141B; color:var(--text); font:inherit; font-size:16px; resize:vertical; box-sizing:border-box; }
+.lead-f input:focus, .lead-f select:focus, .lead-f textarea:focus { border-color:var(--gold); outline:none; }
+.lead-f input.is-invalid { border-color:#E59A8F; }
+.lead-consent { display:flex; gap:10px; align-items:flex-start; font-size:12.5px; color:var(--muted); line-height:1.45; }
+.lead-consent input { margin-top:2px; accent-color:var(--gold); width:16px; height:16px; flex:0 0 auto; } .lead-consent a { color:var(--gold-l); }
+.lead-err { min-height:1em; margin:0 !important; color:#E59A8F; font-size:12.5px; }
+.lead-cta { display:block; width:100%; padding:13px 20px; border:0; border-radius:2px !important; background:var(--gold); color:#0D1117; font-weight:800; font-size:13.5px; letter-spacing:.08em; text-transform:uppercase; cursor:pointer; }
+.lead-cta:hover { background:var(--gold-h); } .lead-cta:disabled { opacity:.6; cursor:progress; }
+.lead-thanks { text-align:center; } .lead-thanks h3 { padding:0 !important; } .lead-thanks .lead-cta { margin-top:16px; }
+@media (max-width:480px) { #dlg { padding:22px 18px; } .dlg-x { top:-10px; right:-8px; } }
+
+/* navigation bar in the viewport (16.11.2026): bottom left corner; on the phone — above the sheet */
+#nav { position:absolute; left:16px; bottom:16px; z-index:4; display:flex; align-items:center; gap:4px; padding:5px; border-radius:999px; background:rgba(10,13,18,.72); border:1px solid var(--line); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+/* a circle, not a square (owner's change 18.11.2026): the general rule "buttons have 2 px corners" is set with !important — here it is overridden */
+/* even 44 × 44 circles (owner's change 18.11.2026): the general rule "a button is no lower than 44 px" stretched the 38 px button into an oval */
+#nav button { width:44px; height:44px; min-height:0; flex:none; padding:0; display:grid; place-items:center; border:1px solid transparent; border-radius:999px !important; background:none; color:var(--muted); }
+#nav button:hover { color:var(--gold-l); background:rgba(168,153,116,.14); }
+#nav button[aria-pressed="true"] { color:var(--gold); border-color:rgba(168,153,116,.55); background:rgba(168,153,116,.12); }
+#nav button:disabled { opacity:.35; cursor:default; background:none; }
+#nav svg { width:19px; height:19px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+#nav .sep { width:1px; height:22px; background:var(--line); margin:0 2px; }
+body.starting #nav { display:none; }
+@media (max-width:899px) { #nav { left:10px; bottom:calc(var(--inset, 0px) + 10px); gap:2px; padding:4px; } }
+/* "Camera plate" step (copy 17.11.2026): the captions of the shape cards and of the finish under the texture — visible */
+.plate-step .card small, .plate-step .sw .lb small { display:block !important; }
+/* ---------- Interactive guide (19.11.2026) ---------- */
+.tools #tourBtn { width:auto; padding:0 14px; font-size:12px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--gold-l); border-color:rgba(168,153,116,.5); white-space:nowrap; }
+.tools #tourBtn:hover { background:var(--gold); color:var(--bg); }
+#tourHole { position:fixed; z-index:70; pointer-events:none; border:2px solid var(--gold); border-radius:4px; box-shadow:0 0 0 200vmax rgba(5,7,11,.74), 0 0 0 5px rgba(168,153,116,.22);
+  transition:left .3s var(--ease), top .3s var(--ease), width .3s var(--ease), height .3s var(--ease); animation:tourpulse 1.8s ease-in-out infinite; }
+#tourHole.flat { box-shadow:0 0 0 200vmax rgba(5,7,11,.74); animation:none; }
+#tourHole.nudge { border-color:var(--gold-l); animation:tournudge .35s; }
+@keyframes tourpulse { 50% { box-shadow:0 0 0 200vmax rgba(5,7,11,.74), 0 0 0 10px rgba(168,153,116,.08); } }
+@keyframes tournudge { 30% { margin-left:-5px; } 60% { margin-left:5px; } }
+#tourPop { position:fixed; left:0; top:0; z-index:71; width:min(340px, calc(100vw - 16px)); padding:16px 18px 14px; background:var(--card); color:var(--text); border:1px solid rgba(168,153,116,.55); border-radius:2px; box-shadow:0 18px 44px rgba(0,0,0,.6);
+  display:flex; flex-direction:column; gap:8px; transition:transform .3s var(--ease); }
+#tourPop small { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); }
+#tourPop b { font-size:17px; font-weight:800; line-height:1.2; } #tourPop p { margin:0; font-size:14px; line-height:1.45; color:var(--ink2); }
+.tour-b { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:6px; }
+.tour-end { padding:10px 0; background:none; border:0 !important; color:var(--muted); font-size:13px; text-decoration:underline; text-underline-offset:3px; cursor:pointer; } .tour-end:hover { color:var(--text); }
+.tour-next { min-height:40px; padding:0 22px; background:var(--gold); color:var(--bg); border:0; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; cursor:pointer; } .tour-next:hover { background:var(--gold-h); }
+@media (prefers-reduced-motion:reduce) { #tourHole, #tourPop { transition:none; animation:none; } }
+
+/* Start screen — redesign 19.11.2026 following the owner's sketch: two full-screen halves, a thin line between them, in the centre of each —
+   smoothly alternating renders of ready-made designs, below them the name, the description and a gold "Open" button */
+#start { padding:0; background:#0B0E13; backdrop-filter:none; -webkit-backdrop-filter:none; align-items:stretch; overflow-y:auto; }
+#start .start-in { width:100%; min-height:100%; margin:0; display:flex; flex-direction:column; gap:0; }
+#start .sp-cols { flex:1; display:grid; grid-template-columns:1fr 1fr; }
+#start .sp { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0; padding:48px 32px; text-align:center; }
+#start .sp + .sp { border-left:1px solid rgba(255,255,255,.22); }
+#start .sp-pics { position:relative; height:min(46vh, 80vw); max-width:40vw; aspect-ratio:460/972; cursor:pointer; }
+#start .sp-pics img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; opacity:0; transition:opacity 1.2s ease-in-out; }
+#start .sp-pics img.on { opacity:1; z-index:2; } #start .sp-pics img.prev { opacity:1; z-index:1; transition:none; }
+#start .sp h2 { margin:44px 0 0; font-size:32px; font-weight:400; letter-spacing:.01em; color:var(--text); }
+#start .sp p { max-width:540px; margin:16px 0 0; font-size:14px; line-height:1.45; color:var(--ink2); }
+#start .sp-price { margin-top:12px; font-style:normal; font-size:15px; font-weight:700; color:var(--text); }
+#start .sp-price small { margin-left:8px; font-size:11px; font-weight:400; color:var(--muted); }
+#start button.sp-open { margin-top:36px; min-height:0; width:204px; height:46px; padding:0; display:block; text-align:center; font-size:17px; font-weight:500;
+  background:var(--gold); border:none; color:#fff; border-radius:0 !important; transition:background .2s; }
+#start button.sp-open:hover { background:var(--gold-h); }
+#start .sp.cur button.sp-open { outline:1px solid var(--gold-l); outline-offset:3px; }
+#start .resume { margin:0; border:none; border-bottom:1px solid rgba(255,255,255,.12); padding:14px 32px; background:transparent; }
+#start .start-note { margin:0; padding:0 24px 10px; }
+#start button.back { grid-column:auto; align-self:center; margin:0 0 24px; }
+@media (prefers-reduced-motion: reduce) { #start .sp-pics img { transition:none; } }
+@media (max-width:700px) {
+  #start .sp-cols { grid-template-columns:1fr; }
+  #start .sp { padding:20px 20px 22px; }
+  #start .sp + .sp { border-left:none; border-top:1px solid rgba(255,255,255,.22); }
+  #start .sp-pics { width:auto; max-width:none; height:22vh; }   /* both halves fit on the phone screen */
+  #start .sp h2 { margin-top:14px; font-size:24px; }
+  #start .sp p { margin-top:10px; font-size:13px; }
+  #start button.sp-open { margin-top:14px; height:42px; }
+  #start .resume { padding:14px 20px; }
+}
+/* phone (owner's change 21.11.2026 "so that the text fits in full, maybe on two lines"): the title is not truncated with an ellipsis and is not
+   hidden on narrow screens — "Configurator" on the first line, the model on the second, a smaller font; the "Guide" button and the spacing are tighter */
+@media (max-width:599px) {
+  .top > .title { margin:0 8px; } .top > .title span { display:block; white-space:normal; overflow:visible; text-overflow:clip; font-size:clamp(9.5px, 2.9vw, 13px); line-height:1.18; letter-spacing:.04em; }
+  .top > .title em { display:block; } .tools { gap:6px; } .tools #tourBtn { padding:0 9px; font-size:11px; letter-spacing:.04em; }
+}
+@media (max-width:429px) {   /* narrow phone: the logo and the buttons are slightly smaller — the model fits on one line under the word "Configurator" */
+  .brand .logo { height:34px; } .top > .title { margin:0 6px 0 8px; } .top > .title span { letter-spacing:.02em; }
+  .tools #tourBtn { padding:0 7px; font-size:10px; letter-spacing:.02em; height:40px; } .tools #closeBtn { width:40px; height:40px; }
+}
+/* Customisation type selection screen — redesign 21.11.2026 (owner's change: advertising shots and the restrained style of automotive luxury):
+   black background, two full-height halves with a photograph, a thin uppercase font with letter-spacing, outline buttons, a slow zoom-in
+   of the shot under the cursor. The rules below override the earlier versions of the screen (the #start lines higher up in the file). */
+#start { padding:0; background:#000; align-items:stretch; overflow-y:auto; }
+#start .start-in { position:relative; width:100%; min-height:100%; margin:0; display:flex; flex-direction:column; gap:0; }
+#start .st-head { position:absolute; top:0; left:0; right:0; z-index:3; display:flex; flex-direction:column; align-items:center; gap:12px; padding:max(30px, env(safe-area-inset-top)) 16px 0; pointer-events:none; }
+#start .st-head img { display:block; height:44px; width:auto; }
+#start .st-head span { padding-left:.34em; font-size:11px; font-weight:400; letter-spacing:.34em; text-transform:uppercase; color:rgba(255,255,255,.7); }
+#start .sp-cols { flex:1; display:grid; grid-template-columns:1fr 1fr; min-height:100vh; min-height:100dvh; }
+#start .sp { position:relative; isolation:isolate; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:0; padding:0 32px 9vh; text-align:center; background:#000; cursor:pointer; }
+#start .sp + .sp { border-left:1px solid rgba(255,255,255,.16); border-top:none; }
+#start .sp-bg { position:absolute; inset:0 0 auto 0; z-index:-2; width:100%; height:calc(100% - 9vh - 250px); object-fit:cover; object-position:50% 22%; transform-origin:50% 35%;
+  -webkit-mask-image:linear-gradient(#000 78%, transparent 100%); mask-image:linear-gradient(#000 78%, transparent 100%);   /* the shot — above the text (250 px — the height of the text block), the bottom fades into black */ transition:transform 1.8s cubic-bezier(.2,.6,.2,1), opacity .9s ease; }
+#start .sp::after { content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; background:linear-gradient(180deg, rgba(0,0,0,.62) 0%, rgba(0,0,0,0) 20%); }   /* darkening under the logo */
+#start .sp-tx { display:flex; flex-direction:column; align-items:center; max-width:460px; }
+#start .sp-num { font-size:11px; font-weight:400; letter-spacing:.34em; color:var(--gold-l); }
+#start .sp h2 { margin:14px 0 0; padding-left:.24em; font-size:clamp(20px, 2.2vw, 32px); font-weight:300; line-height:1.25; letter-spacing:.24em; text-transform:uppercase; color:#fff; }
+#start .sp p { max-width:none; min-height:4.95em; margin:18px 0 0; font-size:14px; font-weight:300; line-height:1.65; color:rgba(255,255,255,.76); }   /* three lines: the headings of the two halves at the same height */
+#start .sp-price { margin-top:14px; font-style:normal; font-size:13px; font-weight:400; letter-spacing:.12em; color:#fff; } #start .sp-price small { margin-left:10px; font-size:11px; color:rgba(255,255,255,.55); }
+#start button.sp-open, #start .st-foot button { display:inline-flex; flex-direction:row; align-items:center; justify-content:center; gap:14px; width:auto; min-height:0; height:48px; padding:0 30px 0 34px; background:transparent;
+  border:1px solid rgba(255,255,255,.6); border-radius:0 !important; color:#fff; font-size:11.5px; font-weight:500; letter-spacing:.28em; text-transform:uppercase; white-space:nowrap; transition:background .35s, color .35s, border-color .35s; }
+#start button.sp-open { margin-top:30px; }
+#start button.sp-open::after, #start .st-foot button::after { content:"→"; font-size:15px; letter-spacing:0; transition:transform .35s; }
+#start .sp.cur button.sp-open { outline:none; border-color:var(--gold-l); color:var(--gold-l); }
+#start .st-foot { position:absolute; left:0; right:0; bottom:0; z-index:3; display:flex; align-items:center; justify-content:center; gap:28px; padding:14px 32px max(14px, env(safe-area-inset-bottom)); background:rgba(0,0,0,.72);
+  border-top:1px solid rgba(255,255,255,.16); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+#start .st-foot span { display:flex; flex-direction:column; gap:4px; text-align:left; color:#fff; font-size:13px; } #start .st-foot b { font-weight:500; letter-spacing:.14em; text-transform:uppercase; font-size:12px; }
+#start .st-foot small { color:rgba(255,255,255,.62); font-size:12.5px; line-height:1.45; } #start .st-foot button { height:42px; flex:none; grid-column:auto; margin:0; }
+#start .has-foot .sp { padding-bottom:calc(9vh + 74px); } #start .has-foot .sp-bg { height:calc(100% - 9vh - 324px); }
+@media (hover:hover) {
+  #start .sp:hover .sp-bg { transform:scale(1.045); } #start .sp-cols:hover .sp:not(:hover) .sp-bg { opacity:.5; }
+  #start .sp:hover button.sp-open, #start button.sp-open:focus-visible, #start .st-foot button:hover { background:#fff; border-color:#fff; color:#000; }
+  #start .sp:hover button.sp-open::after, #start .st-foot button:hover::after { transform:translateX(4px); }
+}
+@media (prefers-reduced-motion: reduce) { #start .sp-bg, #start button.sp-open::after { transition:none; } #start .sp:hover .sp-bg { transform:none; } }
+@media (max-width:700px) {
+  #start .st-head { position:static; gap:8px; padding:max(14px, env(safe-area-inset-top)) 16px 12px; background:#000; } #start .st-head img { height:32px; } #start .st-head span { font-size:9px; letter-spacing:.28em; }   /* on the phone the header is a separate strip, not over the shot */
+  #start .sp-cols { grid-template-columns:1fr; grid-auto-rows:1fr; }
+  #start .sp-cols { min-height:0; } #start .sp { min-height:calc(50vh - 42px); min-height:calc(50dvh - 42px); padding:0 20px 22px; }
+  #start .sp + .sp { border-left:none; border-top:1px solid rgba(255,255,255,.16); }
+  #start .sp-bg, #start .has-foot .sp-bg { height:calc(100% - 196px); object-position:50% 20%; }
+  #start .sp::after { background:none; }
+  #start .sp h2 { margin-top:8px; font-size:19px; letter-spacing:.2em; padding-left:.2em; } #start .sp p { min-height:0; margin-top:10px; font-size:12.5px; line-height:1.5; }
+  #start button.sp-open { margin-top:14px; height:42px; padding:0 22px 0 26px; }
+  #start .has-foot .sp { padding-bottom:22px; }
+  #start .st-foot { position:static; flex-direction:column; align-items:stretch; gap:12px; padding:14px 20px max(14px, env(safe-area-inset-bottom)); } #start .st-foot span { text-align:center; }
+}
+@media (max-width:700px) and (max-height:720px) {   /* short phone: no description — room is left for the shot, both halves still on one screen */
+  #start .sp p { display:none; } #start .sp-bg, #start .has-foot .sp-bg { height:calc(100% - 128px); object-position:50% 36%; }
+}
+
+/* International manager, matching the specification contact card. */
+.manager-contact { padding:24px; margin:24px 0; border:1px solid rgba(255,255,255,.14); border-radius:14px; background:#121820; }
+.manager-contact > strong { font-size:1.25rem; }
+.manager-contact dl { margin:18px 0 0; display:grid; gap:14px; }
+.manager-contact dt { font-size:.875rem; color:#aaa69d; }
+.manager-contact dd { margin:3px 0 0; overflow-wrap:anywhere; }
+.manager-contact a { color:#e9e6df; text-decoration:underline; text-underline-offset:3px; }
+.manager-contact a:hover { color:#c9bc98; }

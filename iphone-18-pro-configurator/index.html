@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en" translate="no">
+<head>
+<meta charset="utf-8">
+<meta name="google" content="notranslate">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><!-- page zoom is allowed (audit, stage 9, E11) -->
+<title>iPhone 18 Pro Configurator</title>
+<meta name="description" content="Caviar configurator: design your own iPhone 18 Pro or Pro Max — camera plate, frame, insert, symbol, nameplate and engraving. View your design in 3D and download the specification.">
+<meta name="theme-color" content="#0d1117">
+<link rel="icon" href="https://teatromisterio.github.io/Test-Constructor-iPhone-18-Pro/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="https://teatromisterio.github.io/Test-Constructor-iPhone-18-Pro/assets/apple-touch-icon.png">
+<link rel="stylesheet" href="https://teatromisterio.github.io/Test-Constructor-iPhone-18-Pro/vendor/fonts/fonts.8d8c7d8820.css"><!-- self-hosted fonts: interface, engraving, nameplate -->
+<link rel="stylesheet" href="css/app.76453d4e6f.css">
+<style>/* loading screen: the styles are in the page so that it works even before css/app.css is loaded */
+#boot { position:fixed; inset:0; z-index:100; display:flex; align-items:center; justify-content:center; padding:24px; background:#0b0d10; color:#e9e6df; font:16px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; text-align:center; }
+#boot[hidden] { display:none; } #boot .boot-in { max-width:min(100%, 640px); } #boot p { max-width:420px; margin:18px auto 0; } #boot.fail p { margin-top:0; }
+/* loading — the letters blur out and come back one after another (modelled on codepen.io/42EG4M1/pen/bVMzze, owner's change 18.11.2026), brand gold */
+#bootSpin { display:flex; flex-wrap:wrap; justify-content:center; gap:.2em 1.1em; color:#A89974; font:600 clamp(13px, 3.6vw, 19px)/1.5 "Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif; text-transform:uppercase; } #bootSpin[hidden] { display:none; }
+#bootSpin .w { display:inline-flex; gap:.5em; white-space:nowrap; } #bootSpin i { display:inline-block; font-style:normal; animation:bootblur 1.5s linear infinite alternate; }
+#boot:not(.fail) #bootMsg { position:absolute; width:1px; height:1px; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }   /* loading stages — for the screen reader only; on failure the message is visible */
+#bootRetry { margin-top:20px; min-height:48px; padding:0 28px; border-radius:12px; border:0; background:#c9a45c; color:#14110a; font:600 16px system-ui, sans-serif; cursor:pointer; } #bootRetry[hidden] { display:none; }
+@keyframes bootblur { from { filter:blur(0); } to { filter:blur(4px); } } @media (prefers-reduced-motion:reduce) { #bootSpin i { animation:none; } }</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://teatromisterio.github.io/Test-Constructor-iPhone-18-Pro/vendor/three/build/three.module.min.js",
+  "three/addons/": "https://teatromisterio.github.io/Test-Constructor-iPhone-18-Pro/vendor/three/addons/",
+  "./js/app.js": "./js/app.f8e2fe6031.js",
+  "./js/code.js": "./js/code.b28ca8d71e.js",
+  "./js/engrave.js": "./js/engrave.fac7ce252a.js",
+  "./js/i18n.js": "./js/i18n.7e3162c8c7.js",
+  "./js/light.js": "./js/light.fa2815cef1.js",
+  "./js/metrika.js": "./js/metrika.141bfd52e9.js",
+  "./js/normalize.js": "./js/normalize.267787222e.js",
+  "./js/rules.js": "./js/rules.bd0942727d.js",
+  "./js/scene.js": "./js/scene.8c1174947f.js",
+  "./js/studio.js": "./js/studio.0b4c62abe4.js",
+  "./js/translations.en.js": "./js/translations.en.3352ec9cfc.js",
+  "./js/translations.zh.js": "./js/translations.zh.392fbdb0fe.js"
+} }
+</script>
+<link rel="modulepreload" href="js/app.f8e2fe6031.js">
+<link rel="modulepreload" href="js/code.b28ca8d71e.js">
+<link rel="modulepreload" href="js/engrave.fac7ce252a.js">
+<link rel="modulepreload" href="js/i18n.7e3162c8c7.js">
+<link rel="modulepreload" href="js/light.fa2815cef1.js">
+<link rel="modulepreload" href="js/metrika.141bfd52e9.js">
+<link rel="modulepreload" href="js/normalize.267787222e.js">
+<link rel="modulepreload" href="js/rules.bd0942727d.js">
+<link rel="modulepreload" href="js/scene.8c1174947f.js">
+<link rel="modulepreload" href="js/studio.0b4c62abe4.js">
+<link rel="modulepreload" href="js/translations.en.3352ec9cfc.js">
+<link rel="modulepreload" href="js/translations.zh.392fbdb0fe.js">
+<link rel="modulepreload" href="https://teatromisterio.github.io/Test-Constructor-iPhone-18-Pro/vendor/three/build/three.module.min.js">
+<link rel="modulepreload" href="https://teatromisterio.github.io/Test-Constructor-iPhone-18-Pro/vendor/three/addons/controls/OrbitControls.js">
+<link rel="modulepreload" href="https://teatromisterio.github.io/Test-Constructor-iPhone-18-Pro/vendor/three/addons/loaders/GLTFLoader.js">
+<link rel="modulepreload" href="https://teatromisterio.github.io/Test-Constructor-iPhone-18-Pro/vendor/three/addons/loaders/DRACOLoader.js">
+<link rel="modulepreload" href="https://teatromisterio.github.io/Test-Constructor-iPhone-18-Pro/vendor/three/addons/utils/BufferGeometryUtils.js">
+<link rel="preload" href="data/body_colors.e469690860.json" as="fetch" crossorigin>
+<link rel="preload" href="data/catalog.5cdf68201f.json" as="fetch" crossorigin>
+<link rel="preload" href="https://teatromisterio.github.io/Test-Constructor-iPhone-18-Pro/vendor/fonts/nunito-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+</head>
+<body>
+<!-- Loading and failure screen (audit 14.11.2026, stage 4, B6): visible until the phone model is loaded; on failure — a message and "Retry" -->
+<div id="boot" role="status" aria-live="polite"><div class="boot-in"><div id="bootSpin" aria-hidden="true"><span class="w"><i style="animation-delay:0.00s">L</i><i style="animation-delay:0.12s">O</i><i style="animation-delay:0.24s">A</i><i style="animation-delay:0.36s">D</i><i style="animation-delay:0.48s">I</i><i style="animation-delay:0.60s">N</i><i style="animation-delay:0.72s">G</i></span><span class="w"><i style="animation-delay:0.00s">C</i><i style="animation-delay:0.12s">O</i><i style="animation-delay:0.24s">N</i><i style="animation-delay:0.36s">F</i><i style="animation-delay:0.48s">I</i><i style="animation-delay:0.60s">G</i><i style="animation-delay:0.72s">U</i><i style="animation-delay:0.84s">R</i><i style="animation-delay:0.96s">A</i><i style="animation-delay:1.08s">T</i><i style="animation-delay:1.20s">O</i><i style="animation-delay:1.32s">R</i></span></div><p id="bootMsg">Loading configurator…</p><button id="bootRetry" type="button" hidden>Retry</button></div></div>
+<noscript><div style="position:fixed;inset:0;z-index:101;display:flex;align-items:center;justify-content:center;padding:24px;background:#0b0d10;color:#e9e6df;font:16px/1.45 system-ui,sans-serif;text-align:center">To use the configurator, enable JavaScript in your browser settings.</div></noscript>
+<script>
+(function () {
+  var boot = document.getElementById('boot'), msg = document.getElementById('bootMsg'), btn = document.getElementById('bootRetry'), spin = document.getElementById('bootSpin');
+  var done = false, failed = false, NET = 'The configurator could not be loaded. Check your internet connection and click “Retry”.';
+  function fail(text, noRetry) { if (done || failed) return; failed = true; msg.textContent = text; spin.hidden = true; boot.classList.add('fail'); btn.hidden = !!noRetry; }
+  btn.onclick = function () { location.reload(); };
+  var timer = setTimeout(function () { fail('Loading is taking too long. Check your internet connection and click “Retry”.'); }, 30000);
+  window.__boot = {
+    NET: NET,
+    step: function (text) { if (!done && !failed) msg.textContent = text; },                      // loading stage
+    done: function () { if (failed) return; done = true; clearTimeout(timer); boot.hidden = true; },
+    fail: fail,
+    isDone: function () { return done; },
+    show: function (text, label) { done = false; failed = false; boot.hidden = false; btn.textContent = label || 'Retry'; fail(text); }   // failure after loading (3D context lost)
+  };
+  // 3D graphics unavailable: the configurator does not start, the person gets a clear message
+  var gl = null; try { var c = document.createElement('canvas'); gl = c.getContext('webgl2') || c.getContext('webgl'); } catch (e) {}
+  if (!gl) { window.__noWebGL = true; fail('This browser cannot display 3D graphics, so the configurator cannot run here. Open this page in another browser (Safari, Chrome) or on another device.', true); return; }
+  // until loading is complete any error of a script or a page file is a loading failure
+  window.addEventListener('error', function () { fail(NET); }, true);
+  window.addEventListener('unhandledrejection', function () { fail(NET); });
+})();
+</script>
+<div id="app">
+  <header class="top">
+    <div class="brand"><img class="logo" src="assets/logo.svg" alt="Caviar" width="61" height="40"></div>
+    <div class="title"><span><em>Configurator</em> <b id="title">iPhone 18 Pro Max</b></span></div>
+    <div class="tools">
+      <button type="button" id="tourBtn" title="Step-by-step configurator guide">Guide</button>
+      <button id="closeBtn" title="Close and return to customisation types" aria-label="Close and return to customisation types">✕</button>
+    </div>
+  </header>
+  <main id="viewport"><div id="vbg" aria-hidden="true"><i></i><i></i><b></b><b></b></div><canvas id="gl" role="img" aria-label="3D model of the phone with your chosen design. You can rotate it and zoom in."></canvas><div id="busy" role="status" aria-live="polite"><i class="sweep" aria-hidden="true"></i><span class="ring" aria-hidden="true"></span><b>Loading components</b></div><div id="hint"></div><div id="nav" role="toolbar" aria-label="View controls"><button type="button" data-nav="rotate" aria-pressed="true" title="Rotate (left mouse button, one finger)" aria-label="Rotate"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4v4.5h-4.5"/></svg></button><button type="button" data-nav="pan" aria-pressed="false" title="Pan (or Shift + mouse, two fingers)" aria-label="Pan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18"/><path d="M9 6l3-3 3 3M9 18l3 3 3-3M6 9l-3 3 3 3M18 9l3 3-3 3"/></svg></button><span class="sep" aria-hidden="true"></span><button type="button" data-nav="in" title="Zoom in" aria-label="Zoom in"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><button type="button" data-nav="out" title="Zoom out" aria-label="Zoom out"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg></button></div>
+  </main>
+  <aside id="steps">
+    <nav id="stepList" aria-label="Design steps"></nav>
+    <div class="build"><small>Design</small>
+      <div class="codebox"><span id="codeD"></span><button id="copyD" title="Copy code">⧉</button></div>
+    </div>
+  </aside>
+  <section id="sheet">
+    <div id="handle" role="button" tabindex="0" aria-controls="panel" title="Drag or click to change the menu height"><span></span><b id="handleLbl">Collapse menu</b></div>
+    <div class="phead"><span id="ptitle"></span></div>
+    <nav id="tabs" aria-label="Design steps"></nav>
+    <div id="panel" role="region" aria-labelledby="ptitle"></div>
+  </section>
+  <footer class="bottom">
+    <div class="sum"><b id="price">Price on request</b></div>
+    <button id="order">Place an order</button>
+  </footer>
+</div>
+<dialog id="dlg" aria-label="Enquiry"><form method="dialog" id="dlgBody"></form></dialog>
+<script type="module" src="js/app.f8e2fe6031.js"></script>
+</body>
+</html>

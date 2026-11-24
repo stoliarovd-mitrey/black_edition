@@ -1,0 +1,216 @@
+{
+ "source": "Базовое устройство/3d/*.glb + data/colors.json",
+ "roles": [
+  "AL_anodized",
+  "AL_polished",
+  "GLASS_back_matte",
+  "GLASS_logo_gloss",
+  "ANTENNA_polymer"
+ ],
+ "colors": {
+  "black": {
+   "display": "Black — глубокий графитово-чёрный, нейтральный, без синевы",
+   "swatch": "#2B2B2D",
+   "materials": {
+    "GLASS_logo_gloss": {
+     "color_linear": [
+      0.0273,
+      0.0273,
+      0.0296
+     ],
+     "metalness": 0.6,
+     "roughness": 0.08
+    },
+    "GLASS_back_matte": {
+     "color_linear": [
+      0.0116,
+      0.0116,
+      0.0123
+     ],
+     "metalness": 0,
+     "roughness": 0.5
+    },
+    "AL_anodized": {
+     "color_linear": [
+      0.0242,
+      0.0242,
+      0.0262
+     ],
+     "metalness": 0.75,
+     "roughness": 0.46
+    },
+    "AL_polished": {
+     "color_linear": [
+      0.0423,
+      0.0423,
+      0.0467
+     ],
+     "metalness": 1,
+     "roughness": 0.1
+    },
+    "ANTENNA_polymer": {
+     "color_linear": [
+      0.0168,
+      0.0168,
+      0.0185
+     ],
+     "metalness": 0,
+     "roughness": 0.45
+    }
+   }
+  },
+  "silver": {
+   "display": "Silver — светлый холодно-серебристый, почти белый матовый алюминий",
+   "swatch": "#D9D9D8",
+   "materials": {
+    "GLASS_logo_gloss": {
+     "color_linear": [
+      0.5841,
+      0.5841,
+      0.5841
+     ],
+     "metalness": 0.6,
+     "roughness": 0.08
+    },
+    "GLASS_back_matte": {
+     "color_linear": [
+      0.6445,
+      0.6445,
+      0.6308
+     ],
+     "metalness": 0,
+     "roughness": 0.5
+    },
+    "AL_anodized": {
+     "color_linear": [
+      0.6939,
+      0.6939,
+      0.6867
+     ],
+     "metalness": 0.92,
+     "roughness": 0.48
+    },
+    "AL_polished": {
+     "color_linear": [
+      0.7913,
+      0.7913,
+      0.7913
+     ],
+     "metalness": 1,
+     "roughness": 0.1
+    },
+    "ANTENNA_polymer": {
+     "color_linear": [
+      0.552,
+      0.552,
+      0.5457
+     ],
+     "metalness": 0,
+     "roughness": 0.45
+    }
+   }
+  },
+  "glacier": {
+   "display": "Glacier — светлый ледяной голубой с серым подтоном (не бирюза, не синий)",
+   "swatch": "#A6B3C7",
+   "materials": {
+    "GLASS_logo_gloss": {
+     "color_linear": [
+      0.2623,
+      0.3185,
+      0.4125
+     ],
+     "metalness": 0.6,
+     "roughness": 0.08
+    },
+    "GLASS_back_matte": {
+     "color_linear": [
+      0.3095,
+      0.3712,
+      0.4735
+     ],
+     "metalness": 0,
+     "roughness": 0.5
+    },
+    "AL_anodized": {
+     "color_linear": [
+      0.3813,
+      0.4508,
+      0.5711
+     ],
+     "metalness": 0.95,
+     "roughness": 0.46
+    },
+    "AL_polished": {
+     "color_linear": [
+      0.4851,
+      0.5583,
+      0.6867
+     ],
+     "metalness": 1,
+     "roughness": 0.1
+    },
+    "ANTENNA_polymer": {
+     "color_linear": [
+      0.2961,
+      0.3564,
+      0.4564
+     ],
+     "metalness": 0,
+     "roughness": 0.45
+    }
+   }
+  },
+  "burgundy": {
+   "display": "Burgundy — глубокий винно-бордовый, тёплый, тёмный (не красный, не розовый)",
+   "swatch": "#5E2A33",
+   "materials": {
+    "GLASS_logo_gloss": {
+     "color_linear": [
+      0.0685,
+      0.0194,
+      0.0252
+     ],
+     "metalness": 0.6,
+     "roughness": 0.08
+    },
+    "GLASS_back_matte": {
+     "color_linear": [
+      0.0423,
+      0.013,
+      0.0168
+     ],
+     "metalness": 0,
+     "roughness": 0.5
+    },
+    "AL_anodized": {
+     "color_linear": [
+      0.1119,
+      0.0232,
+      0.0331
+     ],
+     "metalness": 0.85,
+     "roughness": 0.45
+    },
+    "AL_polished": {
+     "color_linear": [
+      0.1946,
+      0.0423,
+      0.0595
+     ],
+     "metalness": 1,
+     "roughness": 0.1
+    },
+    "ANTENNA_polymer": {
+     "color_linear": [
+      0.0762,
+      0.0176,
+      0.0242
+     ],
+     "metalness": 0,
+     "roughness": 0.45
+    }
+   }
+  }
+ }
+}
