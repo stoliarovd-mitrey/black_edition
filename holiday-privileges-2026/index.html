@@ -27,8 +27,25 @@
 .private-gifting-photo{aspect-ratio:4/3;object-fit:cover}
 .private-gifting-copy .eyebrow{margin-bottom:10px}
 .private-gifting-copy>p:not(.eyebrow){color:#62666c;max-width:480px;margin:16px 0 25px}
-.private-gifting-channels{max-width:470px}
-.private-gifting-channels summary::-webkit-details-marker{display:none}
+.gift-quiz,.private-gifting-channels{max-width:470px}
+.gift-quiz[hidden],.gift-quiz-step[hidden],.gift-quiz-actions [hidden],.private-gifting-channels [hidden]{display:none}
+.gift-quiz-progress,.gift-quiz-hint{color:#62666c;font-size:14px}
+.gift-quiz-progress{margin:0 0 7px}
+.gift-quiz-step{border:0;margin:0;padding:0;min-width:0}
+.gift-quiz-step legend{font-size:18px;font-weight:700;line-height:1.3;padding:0;margin:0 0 12px}
+.gift-quiz-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,164px),1fr));gap:8px}
+.gift-quiz-option{display:flex;align-items:center;gap:8px;min-height:47px;padding:9px 11px;border:1px solid var(--line);color:var(--ink);font-size:14px;cursor:pointer}
+.gift-quiz-option:has(input:checked){border-color:#a78d58;background:#f8f5ee}
+.gift-quiz-option input{flex:none;margin:0;accent-color:var(--navy)}
+.gift-quiz-label{display:block;font-size:14px;font-weight:700;margin-bottom:5px}
+.gift-quiz-field{display:block;width:100%;min-width:0;padding:11px 12px;min-height:46px;border:1px solid var(--line);border-radius:0;background:#fff;color:var(--ink);font:inherit}
+.gift-quiz-hint{margin-top:7px}
+.gift-quiz-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}
+.gift-quiz-review{display:grid;gap:5px;margin:12px 0;color:#414851;font-size:14px}
+.gift-quiz-review>div{display:flex;flex-wrap:wrap;column-gap:8px}
+.gift-quiz-review dt{font-weight:700}
+.gift-quiz-review dd{min-width:0;margin:0;overflow-wrap:anywhere}
+.gift-quiz-edit{margin:12px 0 0;padding:0;border:0;background:none;color:var(--ink);font:inherit;font-size:14px;text-decoration:underline;cursor:pointer}
 .private-gifting-channels .gift-channel-links{margin-top:12px}
 .private-gifting-channels .max-message-status{font-size:14px;color:#666}
 .consult{background:var(--paper);text-align:center}.consult h2{margin:12px 0}.consult p:not(.eyebrow){max-width:600px;margin:auto;color:#656971}.contact-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:25px}.terms{border-top:1px solid var(--line);margin-top:32px;text-align:left;max-width:800px;margin-inline:auto}.terms summary{padding:17px 0;font-weight:700;cursor:pointer;font-size:14px}.terms p{font-size:13px;max-width:none!important;text-align:left;margin-bottom:10px!important}.footer{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px var(--pad);background:white;border-top:1px solid var(--line);font-size:12px;color:#666}.footer a{font-weight:700}.footer img{width:62px;height:50px;object-fit:contain}.skip{position:absolute;top:-100px;background:white;padding:10px;z-index:5}.skip:focus{top:5px}@media(max-width:880px){.header-nav{display:none}.section-heading{display:block}.section-heading>p{margin-top:13px}.gift-grid{gap:12px}.gift-body{padding:17px}.gift-body h3{font-size:22px}}@media(max-width:760px){.catalog-grid,.bespoke{grid-template-columns:1fr}}
@@ -100,17 +117,51 @@
     <div class="private-gifting-copy">
       <p class="eyebrow">Caviar Private Gifting</p>
       <h2>Персональный подбор подарка</h2>
-      <p>Расскажите, для кого вы ищете подарок и к какой дате он нужен. Ваш менеджер Caviar предложит несколько моделей с учётом вкусов получателя и вашего бюджета. Если захотите изменить детали дизайна, менеджер покажет возможные варианты и уточнит сроки изготовления.</p>
-      <details class="private-gifting-channels">
-        <summary class="btn dark">Подобрать подарок с менеджером</summary>
+      <p>Ответьте на три коротких вопроса. Менеджер Caviar предложит подходящие модели и подскажет, что можно подготовить к нужной дате.</p>
+      <form class="gift-quiz" id="private-gifting-quiz" hidden>
+        <p class="gift-quiz-progress" id="gift-quiz-progress" aria-live="polite">Вопрос 1 из 3</p>
+        <fieldset class="gift-quiz-step">
+          <legend tabindex="-1">Для кого вы выбираете подарок?</legend>
+          <div class="gift-quiz-options">
+            <label class="gift-quiz-option"><input type="radio" name="recipient" value="Близкому человеку" required> Близкому человеку</label>
+            <label class="gift-quiz-option"><input type="radio" name="recipient" value="Другу или подруге" required> Другу или подруге</label>
+            <label class="gift-quiz-option"><input type="radio" name="recipient" value="Коллеге или партнёру" required> Коллеге или партнёру</label>
+            <label class="gift-quiz-option"><input type="radio" name="recipient" value="Другому человеку" required> Другому человеку</label>
+          </div>
+        </fieldset>
+        <fieldset class="gift-quiz-step" hidden disabled>
+          <legend tabindex="-1">К какой дате нужен подарок?</legend>
+          <label class="gift-quiz-label" for="gift-quiz-date">Желаемая дата</label>
+          <input class="gift-quiz-field" id="gift-quiz-date" type="date" name="date" aria-describedby="gift-quiz-date-hint">
+          <p class="gift-quiz-hint" id="gift-quiz-date-hint">Если даты пока нет, нажмите «Далее».</p>
+        </fieldset>
+        <fieldset class="gift-quiz-step" hidden disabled>
+          <legend tabindex="-1">На какой бюджет вы рассчитываете?</legend>
+          <label class="gift-quiz-label" for="gift-quiz-budget">Бюджет</label>
+          <input class="gift-quiz-field" id="gift-quiz-budget" type="text" name="budget" maxlength="80" autocomplete="off" placeholder="Сумма или диапазон в рублях" aria-describedby="gift-quiz-budget-hint">
+          <p class="gift-quiz-hint" id="gift-quiz-budget-hint">Если хотите обсудить бюджет с менеджером, оставьте поле пустым.</p>
+        </fieldset>
+        <div class="gift-quiz-actions">
+          <button class="btn outline" id="gift-quiz-back" type="button" hidden>Назад</button>
+          <button class="btn dark" id="gift-quiz-next" type="submit">Далее</button>
+        </div>
+      </form>
+      <div class="private-gifting-channels" id="private-gifting-channels">
+        <h3 id="gift-quiz-result-title" tabindex="-1">Связаться с менеджером</h3>
+        <dl class="gift-quiz-review" id="gift-quiz-review" hidden>
+          <div><dt>Для кого</dt><dd id="gift-review-recipient"></dd></div>
+          <div><dt>Желаемая дата</dt><dd id="gift-review-date"></dd></div>
+          <div><dt>Бюджет</dt><dd id="gift-review-budget"></dd></div>
+        </dl>
         <div class="gift-channel-links" role="group" aria-label="Выберите мессенджер">
           <a class="btn outline" id="private-gifting-max" href="https://max.ru/u/f9LHodD0cOKNTjR24U3SrBr77iq-IJ02acnq_0q9-OIiOWoy6e-uougUpjY" target="_blank" rel="noopener" aria-describedby="private-gifting-max-status">MAX</a>
-          <a class="btn outline" href="https://t.me/Caviar_Russia_officiall?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BF%D0%BE%D0%B4%D0%BE%D0%B1%D1%80%D0%B0%D1%82%D1%8C%20%D0%BF%D0%BE%D0%B4%D0%B0%D1%80%D0%BE%D0%BA%20Caviar.%20%D0%9F%D0%BE%D0%BC%D0%BE%D0%B6%D0%B5%D1%82%D0%B5%20%D1%81%20%D0%B2%D1%8B%D0%B1%D0%BE%D1%80%D0%BE%D0%BC%3F" target="_blank" rel="noopener">Telegram</a>
-          <a class="btn outline" href="https://wa.me/79101040490?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BF%D0%BE%D0%B4%D0%BE%D0%B1%D1%80%D0%B0%D1%82%D1%8C%20%D0%BF%D0%BE%D0%B4%D0%B0%D1%80%D0%BE%D0%BA%20Caviar.%20%D0%9F%D0%BE%D0%BC%D0%BE%D0%B6%D0%B5%D1%82%D0%B5%20%D1%81%20%D0%B2%D1%8B%D0%B1%D0%BE%D1%80%D0%BE%D0%BC%3F" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="btn outline" data-quiz-draft href="https://t.me/Caviar_Russia_officiall?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BF%D0%BE%D0%B4%D0%BE%D0%B1%D1%80%D0%B0%D1%82%D1%8C%20%D0%BF%D0%BE%D0%B4%D0%B0%D1%80%D0%BE%D0%BA%20Caviar.%20%D0%9F%D0%BE%D0%BC%D0%BE%D0%B6%D0%B5%D1%82%D0%B5%20%D1%81%20%D0%B2%D1%8B%D0%B1%D0%BE%D1%80%D0%BE%D0%BC%3F" target="_blank" rel="noopener">Telegram</a>
+          <a class="btn outline" data-quiz-draft href="https://wa.me/79101040490?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BF%D0%BE%D0%B4%D0%BE%D0%B1%D1%80%D0%B0%D1%82%D1%8C%20%D0%BF%D0%BE%D0%B4%D0%B0%D1%80%D0%BE%D0%BA%20Caviar.%20%D0%9F%D0%BE%D0%BC%D0%BE%D0%B6%D0%B5%D1%82%D0%B5%20%D1%81%20%D0%B2%D1%8B%D0%B1%D0%BE%D1%80%D0%BE%D0%BC%3F" target="_blank" rel="noopener">WhatsApp</a>
         </div>
         <p class="max-message-status" id="private-gifting-max-status" role="status">При открытии MAX текст скопируется. Вставьте его в чат.</p>
         <textarea class="max-message" id="private-gifting-max-message" aria-label="Сообщение для MAX" rows="3" readonly hidden>Здравствуйте! Хочу подобрать подарок Caviar. Поможете с выбором?</textarea>
-      </details>
+        <button class="gift-quiz-edit" id="gift-quiz-edit" type="button" hidden>Изменить ответы</button>
+      </div>
     </div>
   </div>
 </section>
@@ -186,6 +237,77 @@ enableMaxDraft(
   document.getElementById('private-gifting-max-status')
 );
 
+const quiz = document.getElementById('private-gifting-quiz');
+const quizSteps = [...quiz.querySelectorAll('.gift-quiz-step')];
+const quizProgress = document.getElementById('gift-quiz-progress');
+const quizBack = document.getElementById('gift-quiz-back');
+const quizNext = document.getElementById('gift-quiz-next');
+const quizContacts = document.getElementById('private-gifting-channels');
+const quizResultTitle = document.getElementById('gift-quiz-result-title');
+const quizReview = document.getElementById('gift-quiz-review');
+const quizEdit = document.getElementById('gift-quiz-edit');
+const quizMaxMessage = document.getElementById('private-gifting-max-message');
+const quizMaxStatus = document.getElementById('private-gifting-max-status');
+const quizMaxHint = quizMaxStatus.textContent;
+const quizGreeting = quizMaxMessage.value;
+let quizStep = 0;
+
+function showQuizStep(index) {
+  quizStep = index;
+  quizSteps.forEach((step, position) => {
+    step.hidden = position !== index;
+    step.disabled = step.hidden;
+  });
+  quizProgress.textContent = `Вопрос ${index + 1} из ${quizSteps.length}`;
+  quizBack.hidden = index === 0;
+  quizNext.textContent = index === quizSteps.length - 1 ? 'К выбору мессенджера' : 'Далее';
+  quizSteps[index].querySelector('legend').focus();
+}
+
+quiz.addEventListener('submit', event => {
+  event.preventDefault();
+  if (quizStep < quizSteps.length - 1) {
+    showQuizStep(quizStep + 1);
+    return;
+  }
+
+  const date = quiz.elements.date.value.split('-').reverse().join('.');
+  const answers = [
+    ['recipient', 'Для кого', quiz.elements.recipient.value],
+    ['date', 'Желаемая дата', date || 'Пока не определена'],
+    ['budget', 'Бюджет', quiz.elements.budget.value.trim() || 'Хочу обсудить с менеджером'],
+  ];
+  answers.forEach(([id, , value]) => {
+    document.getElementById('gift-review-' + id).textContent = value;
+  });
+  const message = [quizGreeting, ...answers.map(([, label, value]) => label + ': ' + value)].join('\n');
+
+  quizContacts.querySelectorAll('[data-quiz-draft]').forEach(link => {
+    const url = new URL(link.href);
+    url.searchParams.set('text', message);
+    link.href = url.href;
+  });
+  quizMaxMessage.value = message;
+  quizMaxMessage.hidden = true;
+  quizMaxStatus.textContent = quizMaxHint;
+
+  quiz.hidden = true;
+  quizResultTitle.textContent = 'Отправьте ответы менеджеру';
+  quizReview.hidden = false;
+  quizEdit.hidden = false;
+  quizContacts.hidden = false;
+  quizResultTitle.focus();
+});
+
+quizBack.addEventListener('click', () => showQuizStep(quizStep - 1));
+quizEdit.addEventListener('click', () => {
+  quizContacts.hidden = true;
+  quiz.hidden = false;
+  showQuizStep(0);
+});
+
+quizContacts.hidden = true;
+quiz.hidden = false;
 updateDraft('');
 maxStatus.hidden = false;
 </script></body></html>
