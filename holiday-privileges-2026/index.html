@@ -125,7 +125,7 @@
           <div class="gift-quiz-options">
             <label class="gift-quiz-option"><input type="radio" name="recipient" value="Близкому человеку" required> Близкому человеку</label>
             <label class="gift-quiz-option"><input type="radio" name="recipient" value="Другу или подруге" required> Другу или подруге</label>
-            <label class="gift-quiz-option"><input type="radio" name="recipient" value="Коллеге или партнёру" required> Коллеге или партнёру</label>
+            <label class="gift-quiz-option"><input type="radio" name="recipient" value="Коллеге или бизнес-партнёру" required> Коллеге или бизнес-партнёру</label>
             <label class="gift-quiz-option"><input type="radio" name="recipient" value="Другому человеку" required> Другому человеку</label>
           </div>
         </fieldset>
@@ -137,9 +137,15 @@
         </fieldset>
         <fieldset class="gift-quiz-step" hidden disabled>
           <legend tabindex="-1">На какой бюджет вы рассчитываете?</legend>
-          <label class="gift-quiz-label" for="gift-quiz-budget">Бюджет</label>
-          <input class="gift-quiz-field" id="gift-quiz-budget" type="text" name="budget" maxlength="80" autocomplete="off" placeholder="Сумма или диапазон в рублях" aria-describedby="gift-quiz-budget-hint">
-          <p class="gift-quiz-hint" id="gift-quiz-budget-hint">Если хотите обсудить бюджет с менеджером, оставьте поле пустым.</p>
+          <div class="gift-quiz-options">
+            <label class="gift-quiz-option"><input type="radio" name="budget" value="50 000–150 000 ₽"> 50 000–150 000 ₽</label>
+            <label class="gift-quiz-option"><input type="radio" name="budget" value="150 000–300 000 ₽"> 150 000–300 000 ₽</label>
+            <label class="gift-quiz-option"><input type="radio" name="budget" value="300 000–500 000 ₽"> 300 000–500 000 ₽</label>
+            <label class="gift-quiz-option"><input type="radio" name="budget" value="500 000–750 000 ₽"> 500 000–750 000 ₽</label>
+            <label class="gift-quiz-option"><input type="radio" name="budget" value="750 000–1 млн ₽"> 750 000–1 млн ₽</label>
+            <label class="gift-quiz-option"><input type="radio" name="budget" value="От 1 млн ₽"> От 1 млн ₽</label>
+          </div>
+          <p class="gift-quiz-hint">Можно продолжить без выбора бюджета.</p>
         </fieldset>
         <div class="gift-quiz-actions">
           <button class="btn outline" id="gift-quiz-back" type="button" hidden>Назад</button>
@@ -275,7 +281,7 @@ quiz.addEventListener('submit', event => {
   const answers = [
     ['recipient', 'Для кого', quiz.elements.recipient.value],
     ['date', 'Желаемая дата', date || 'Пока не определена'],
-    ['budget', 'Бюджет', quiz.elements.budget.value.trim() || 'Хочу обсудить с менеджером'],
+    ['budget', 'Бюджет', quiz.elements.budget.value || 'Хочу обсудить с менеджером'],
   ];
   answers.forEach(([id, , value]) => {
     document.getElementById('gift-review-' + id).textContent = value;
