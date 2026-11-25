@@ -1,0 +1,103 @@
+@font-face {
+  font-family: 'Nunito Sans';
+  src: url('../most-wanted-landing/assets/NunitoSans.ttf') format('truetype');
+  font-weight: 200 1000;
+  font-display: swap;
+}
+:root {
+  font-family: 'Nunito Sans', system-ui, sans-serif;
+  color: #152033;
+  background: #f1eee8;
+  --navy: #101925;
+  --paper: #faf8f4;
+  --gold: #d6bd8a;
+  --line: #dad4c8;
+  --muted: #555d67;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; display: grid; grid-template-rows: auto auto 1fr; }
+h1, h2, h3, p { margin: 0; }
+button, input, textarea { font: inherit; }
+button { cursor: pointer; }
+button:disabled { opacity: .45; cursor: default; }
+:focus-visible { outline: 2px solid #916e32; outline-offset: 3px; }
+[hidden] { display: none !important; }
+.toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 24px; padding: 15px clamp(16px, 2.7vw, 36px); color: #fff; background: var(--navy);
+}
+.editor-brand { display: flex; align-items: center; gap: 15px; }
+.editor-brand img { object-fit: contain; }
+.editor-brand h1 { font-size: clamp(17px, 2vw, 23px); line-height: 1.15; }
+.editor-brand p { margin-top: 4px; font-size: 13px; color: #c8ccd1; }
+.toolbar-actions, .viewport-options, .dialog-actions {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+}
+.primary, .secondary { border: 1px solid; min-height: 38px; padding: 8px 12px; font-size: 13px; font-weight: 750; }
+.primary { background: var(--gold); color: #171b22; border-color: var(--gold); }
+.primary:hover:not(:disabled) { background: #e7d4ad; border-color: #e7d4ad; }
+.secondary { background: transparent; color: inherit; border-color: var(--line); }
+.secondary:hover:not(:disabled), .secondary[aria-pressed="true"] { background: #eae1cf; color: #152033; }
+.toolbar .secondary { border-color: #626974; }
+.editor-status { padding: 8px clamp(16px, 2.7vw, 36px); background: #fff; border-bottom: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+.editor-status[data-error="true"], #publish-status[data-error="true"] { color: #942f2f; }
+.workspace {
+  display: grid; grid-template-columns: minmax(145px, .62fr) minmax(280px, 1.24fr) minmax(350px, 2.35fr);
+  height: calc(100dvh - 114px); min-height: 440px;
+}
+.sidebar, .form-pane, .preview-pane { min-width: 0; min-height: 0; }
+.sidebar { overflow: auto; padding: 19px 13px; border-right: 1px solid var(--line); }
+.sidebar h2, .preview-toolbar h2 { margin: 0 4px 11px; font-size: 14px; }
+.sidebar nav { display: grid; gap: 4px; }
+.sidebar button {
+  border: 0; border-left: 2px solid transparent; padding: 9px 9px; background: transparent; color: inherit;
+  text-align: left; font-size: 14px; line-height: 1.3;
+}
+.sidebar button[aria-current="true"] { background: #e9e1d1; border-color: #92753e; font-weight: 750; }
+.sidebar button:hover { background: #e9e1d1; }
+.form-pane { background: var(--paper); overflow: auto; padding: 18px clamp(14px, 1.7vw, 23px); border-right: 1px solid var(--line); }
+.form-head { display: flex; align-items: center; justify-content: space-between; gap: 9px; margin-bottom: 18px; }
+.form-head h2 { font-size: 19px; }
+.field { display: grid; gap: 5px; margin-bottom: 14px; min-width: 0; }
+.field label, .field > span, #publish-form label { font-size: 13px; font-weight: 750; }
+.field input:not([type="file"]), .field textarea, #github-token {
+  min-width: 0; width: 100%; padding: 8px 9px; border: 1px solid #c5bda9; color: var(--navy); background: #fff; font-size: 14px;
+}
+.field textarea { resize: vertical; min-height: 44px; }
+.field input[type="file"] { max-width: 100%; font-size: 12px; }
+.field input[type="file"]::file-selector-button { margin: 0 7px 0 0; padding: 7px; border: 1px solid var(--line); background: #eee8dc; cursor: pointer; }
+.image-field { background: #f1eee6; padding: 10px; border: 1px solid var(--line); }
+.image-field img { width: 100%; height: 125px; object-fit: contain; background: #e6e1d6; }
+.field-group { border-top: 1px solid var(--line); padding-top: 10px; margin: 20px 0 10px; font-size: 15px; }
+.advanced > summary { font-size: 14px; font-weight: 750; cursor: pointer; margin: 13px 0; }
+.help { font-size: 13px; color: var(--muted); }
+.preview-pane { display: grid; grid-template-rows: auto 1fr; background: #e5e0d5; }
+.preview-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; background: var(--paper); border-bottom: 1px solid var(--line); }
+.preview-toolbar h2 { margin: 0; }
+.preview-stage { padding: 12px; display: flex; justify-content: center; min-height: 0; }
+.preview-stage iframe { display: block; width: 100%; height: 100%; flex: none; border: 1px solid var(--line); background: #fff; }
+.preview-stage.is-mobile iframe { width: min(390px, 100%); border-radius: 8px; }
+.mobile-preview { display: none; }
+dialog { width: min(460px, calc(100% - 28px)); border: 1px solid #ad9a71; background: var(--paper); color: var(--navy); padding: 22px; }
+dialog::backdrop { background: #101925a8; }
+#publish-form { display: grid; gap: 10px; }
+#publish-form h2 { font-size: 22px; }
+#publish-status:not(:empty) { font-size: 14px; }
+.token-link { color: inherit; font-size: 13px; justify-self: start; }
+.dialog-actions { justify-content: flex-end; }
+@media (max-width: 830px) {
+  .toolbar { flex-wrap: wrap; gap: 12px; }
+  .workspace { grid-template-columns: 1fr; grid-template-rows: auto 1fr; height: auto; }
+  .sidebar { padding: 9px 14px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .sidebar h2 { display: none; }
+  .sidebar nav { display: flex; overflow: auto; }
+  .sidebar button { white-space: nowrap; border-left: 0; border-bottom: 2px solid transparent; }
+  .sidebar button[aria-current="true"] { border-color: #92753e; }
+  .form-pane { border: 0; }
+  .preview-pane { display: none; min-height: 65dvh; }
+  .workspace.show-preview .preview-pane { display: grid; }
+  .workspace.show-preview .fields { display: none; }
+  .workspace.show-preview { grid-template-rows: auto auto 1fr; }
+  .form-head { margin-bottom: 10px; }
+  .mobile-preview { display: block; }
+}

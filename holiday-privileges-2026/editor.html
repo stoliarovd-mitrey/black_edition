@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Редактор «Королевский подарок» | Caviar</title>
+  <link rel="icon" href="../most-wanted-landing/assets/caviar.svg">
+  <link rel="stylesheet" href="editor.css">
+  <script src="editor.js" defer></script>
+</head>
+<body>
+  <header class="toolbar">
+    <div class="editor-brand">
+      <img src="../most-wanted-landing/assets/caviar.svg" alt="Caviar" width="48" height="40">
+      <div><h1>Королевский подарок</h1><p>Редактор лендинга</p></div>
+    </div>
+    <div class="toolbar-actions">
+      <button id="discard" type="button" class="secondary" disabled>Сбросить черновик</button>
+      <button id="download" type="button" class="secondary" disabled>Скачать HTML</button>
+      <button id="publish" type="button" class="primary" disabled>Опубликовать</button>
+    </div>
+  </header>
+  <p id="editor-status" class="editor-status" role="status" aria-live="polite">Загружаем страницу…</p>
+  <main class="workspace" id="workspace">
+    <aside class="sidebar">
+      <h2>Разделы</h2>
+      <nav id="section-nav" aria-label="Разделы лендинга"></nav>
+    </aside>
+    <section class="form-pane" aria-labelledby="section-title">
+      <div class="form-head">
+        <h2 id="section-title">Тексты и изображения</h2>
+        <button class="secondary mobile-preview" id="mobile-preview" type="button" aria-pressed="false">Предпросмотр</button>
+      </div>
+      <div id="fields" class="fields"></div>
+    </section>
+    <section class="preview-pane" aria-labelledby="preview-title">
+      <div class="preview-toolbar">
+        <h2 id="preview-title">Предпросмотр</h2>
+        <div class="viewport-options" role="group" aria-label="Размер предпросмотра">
+          <button type="button" class="secondary" data-viewport="desktop" aria-pressed="true">Широкий</button>
+          <button type="button" class="secondary" data-viewport="mobile" aria-pressed="false">Телефон</button>
+        </div>
+      </div>
+      <div class="preview-stage" id="preview-stage">
+        <iframe id="preview-frame" title="Предпросмотр лендинга Caviar" sandbox="allow-scripts"></iframe>
+      </div>
+    </section>
+  </main>
+  <dialog id="publish-dialog" aria-labelledby="publish-title">
+    <form id="publish-form">
+      <h2 id="publish-title">Опубликовать правки</h2>
+      <p>Изменения попадут в ветку <strong>main</strong> репозитория <strong>black_edition</strong>. После обновления GitHub Pages их увидят посетители лендинга.</p>
+      <label for="github-token">Токен GitHub</label>
+      <input id="github-token" type="password" required autocomplete="off" spellcheck="false">
+      <p class="help">Нужен fine-grained token для этого репозитория с правом <strong>Contents: Read and write</strong>. Редактор использует токен для публикации через GitHub и удаляет его после запроса.</p>
+      <a class="token-link" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">Создать токен на GitHub</a>
+      <p id="publish-status" role="status" aria-live="polite"></p>
+      <div class="dialog-actions">
+        <button id="cancel-publish" type="button" class="secondary">Отмена</button>
+        <button id="confirm-publish" type="submit" class="primary">Опубликовать</button>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>
